@@ -1,0 +1,37 @@
+{
+  "name": "rive-react",
+  "version": "0.0.1",
+  "description": "React wrapper around the rive-js library",
+  "main": "dist/index.js",
+  "typings": "dist/types/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "bunchee src/index.ts -m --no-sourcemap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rive-app/rive-react.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rive-app/rive-react/issues"
+  },
+  "homepage": "https://github.com/rive-app/rive-react#readme",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rive-js": "^0.7.14"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.13.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^7.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.9",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "bunchee": "^1.6.0",
+    "jest": "^27.0.4",
+    "ts-jest": "^27.0.2"
+  }
+}

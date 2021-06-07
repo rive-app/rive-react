@@ -1,6 +1,6 @@
 {
   "name": "rive-react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React wrapper around the rive-js library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -8,7 +8,8 @@
     "test": "jest",
     "build": "bunchee src/index.ts -m --no-sourcemap",
     "lint": "eslint -c .eslintrc.js 'src/**/*{.ts,.tsx}'",
-    "format": "prettier --write src"
+    "format": "prettier --write src",
+    "types:check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

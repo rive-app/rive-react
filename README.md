@@ -2,7 +2,7 @@
 
 React Runtime for [Rive](https://rive.app).
 
-Provides a wrapper around [Rive.js](https://github.com/rive-app/rive-wasm), which gives full control over the web runtime while making it super simple to use in React applications.
+A wrapper around [Rive.js](https://github.com/rive-app/rive-wasm), providing full control over the js runtime while making it super simple to use in React applications.
 
 ## Create and ship interactive animations to any platform
 

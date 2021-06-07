@@ -1,7 +1,6 @@
-import React from "react";
-import { Layout } from "rive-js";
-import { ComponentProps } from "react";
-import useRive from "../hooks/useRive";
+import { Layout } from 'rive-js';
+import React, { ComponentProps } from 'react';
+import useRive from '../hooks/useRive';
 
 export type RiveProps = {
   src: string;
@@ -18,7 +17,7 @@ const Rive = ({
   layout,
   autoplay,
   ...rest
-}: RiveProps & ComponentProps<"div">) => {
+}: RiveProps & ComponentProps<'div'>) => {
   const params = {
     src,
     artboard,

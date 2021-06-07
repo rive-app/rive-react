@@ -5,15 +5,15 @@ import React, {
   useState,
   ComponentProps,
   RefCallback,
-} from "react";
-import { Rive, EventType } from "rive-js";
+} from 'react';
+import { Rive, EventType } from 'rive-js';
 import {
   UseRiveParameters,
   UseRiveOptions,
   RiveState,
   Dimensions,
-} from "../types";
-import { useWindowSize } from "../utils";
+} from '../types';
+import { useWindowSize } from '../utils';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -24,16 +24,16 @@ function RiveComponent({
   setContainerRef,
   setCanvasRef,
   ...rest
-}: RiveComponentProps & ComponentProps<"div">) {
+}: RiveComponentProps & ComponentProps<'div'>) {
   const containerStyle = {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   };
 
   return (
     <div
       ref={setContainerRef}
-      style={"className" in rest ? undefined : containerStyle}
+      style={'className' in rest ? undefined : containerStyle}
       {...rest}
     >
       <canvas ref={setCanvasRef} />
@@ -122,14 +122,14 @@ export default function useRive(
       width !== dimensions.width || height !== dimensions.height;
     if (canvasRef.current && rive && boundsChanged) {
       if (options.fitCanvasToArtboardHeight) {
-        containerRef.current.style.height = height + "px";
+        containerRef.current.style.height = height + 'px';
       }
       if (options.useDevicePixelRatio) {
         const dpr = window.devicePixelRatio || 1;
         canvasRef.current.width = dpr * width;
         canvasRef.current.height = dpr * height;
-        canvasRef.current.style.width = width + "px";
-        canvasRef.current.style.height = height + "px";
+        canvasRef.current.style.width = width + 'px';
+        canvasRef.current.style.height = height + 'px';
       } else {
         canvasRef.current.width = width;
         canvasRef.current.height = height;
@@ -218,7 +218,7 @@ export default function useRive(
     };
   }, [rive]);
 
-  const Component = useCallback((props: ComponentProps<"div">): JSX.Element => {
+  const Component = useCallback((props: ComponentProps<'div'>): JSX.Element => {
     return (
       <RiveComponent
         setContainerRef={setContainerRef}

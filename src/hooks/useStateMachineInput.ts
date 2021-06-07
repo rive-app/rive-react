@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Rive, StateMachineInput } from "rive-js";
+import { useState, useEffect } from 'react';
+import { Rive, StateMachineInput } from 'rive-js';
 
 /**
  * Custom hook for fetching a stateMachine input from a rive file.

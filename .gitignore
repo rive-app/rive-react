@@ -4,3 +4,4 @@ dist
 .env
 .idea
 .vscode
+examples/**/package-lock.json

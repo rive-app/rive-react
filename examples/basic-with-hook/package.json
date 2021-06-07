@@ -1,5 +1,5 @@
 {
-  "name": "basic",
+  "name": "basic-with-hook",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

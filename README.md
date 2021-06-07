@@ -26,7 +26,7 @@ Rive React provides a basic component as it's default import for displaying simp
 import Rive from 'rive-react';
 
 function Example() {
-  return <Rive src="loader.riv" autoplay />;
+  return <Rive src="loader.riv" />;
 }
 
 export default Example;

@@ -5,3 +5,4 @@ import useStateMachineInput from './hooks/useStateMachineInput';
 export default Rive;
 export { useRive, useStateMachineInput };
 export { RiveState, UseRiveParameters, UseRiveOptions } from './types';
+export * from 'rive-js';

@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 
 window.IntersectionObserver = class IntersectionObserver {
   readonly root: Element | null;
@@ -9,7 +9,7 @@ window.IntersectionObserver = class IntersectionObserver {
 
   constructor() {
     this.root = null;
-    this.rootMargin = "";
+    this.rootMargin = '';
     this.thresholds = [];
   }
 
@@ -24,20 +24,20 @@ window.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 };
 
-jest.mock("rive-js", () => ({
+jest.mock('rive-js', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),
   })),
   Layout: jest.fn(),
   Fit: {
-    Cover: "cover",
+    Cover: 'cover',
   },
   Alignment: {
-    Center: "center",
+    Center: 'center',
   },
   EventType: {
-    Load: "load",
+    Load: 'load',
   },
   StateMachineInputType: {
     Number: 1,

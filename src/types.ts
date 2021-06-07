@@ -1,7 +1,7 @@
-import { RefCallback, ComponentProps } from "react";
-import { Rive, RiveParameters } from "rive-js";
+import { RefCallback, ComponentProps } from 'react';
+import { Rive, RiveParameters } from 'rive-js';
 
-export type UseRiveParameters = Partial<Omit<RiveParameters, "canvas">> | null;
+export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
 
 export type UseRiveOptions = {
   useDevicePixelRatio: boolean;
@@ -28,5 +28,5 @@ export type RiveState = {
   setCanvasRef: RefCallback<HTMLCanvasElement>;
   setContainerRef: RefCallback<HTMLElement>;
   rive: Rive | null;
-  RiveComponent: (props: ComponentProps<"div">) => JSX.Element;
+  RiveComponent: (props: ComponentProps<'div'>) => JSX.Element;
 };

@@ -5,9 +5,8 @@ import useRive from '../hooks/useRive';
 export type RiveProps = {
   src: string;
   artboard?: string;
-  animations?: string;
+  animations?: string | string[];
   layout?: Layout;
-  autoplay?: boolean;
 };
 
 const Rive = ({
@@ -15,7 +14,6 @@ const Rive = ({
   artboard,
   animations,
   layout,
-  autoplay,
   ...rest
 }: RiveProps & ComponentProps<'div'>) => {
   const params = {
@@ -23,7 +21,7 @@ const Rive = ({
     artboard,
     animations,
     layout,
-    autoplay,
+    autoplay: true,
   };
 
   const { RiveComponent } = useRive(params);

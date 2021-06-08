@@ -1,6 +1,6 @@
 {
   "name": "rive-react",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "React wrapper around the rive-js library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "rive-js": "^0.7.14"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.13.0",
@@ -46,6 +47,8 @@
     "eslint-plugin-react": "^7.24.0",
     "jest": "^27.0.4",
     "prettier": "^2.3.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "ts-jest": "^27.0.2"
   }
 }

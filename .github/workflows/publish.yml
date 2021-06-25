@@ -1,0 +1,27 @@
+name: Publish to NPM
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+jobs:
+  merge_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install Modules
+        run: npm ci
+      - name: Run type check
+        run: npm run types:check
+      - name: Run Linter
+        run: npm run lint
+      - name: Run Tests
+        run: npm test
+      - name: Build
+        run: npm build
+      - name: Publish
+        run: npm run publish

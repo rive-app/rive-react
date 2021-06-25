@@ -9,7 +9,8 @@
     "build": "bunchee src/index.ts -m --no-sourcemap",
     "lint": "eslint -c .eslintrc.js 'src/**/*{.ts,.tsx}'",
     "format": "prettier --write src",
-    "types:check": "tsc --noEmit"
+    "types:check": "tsc --noEmit",
+    "publish": "./scripts/publish.sh"
   },
   "repository": {
     "type": "git",

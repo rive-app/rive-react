@@ -9,7 +9,7 @@
   },
   "github": {
     "release": true,
-    "releaseName": "Release ${version}"
+    "releaseName": "${version}"
   },
   "hooks": {
     "after:bump": "npx auto-changelog -p"

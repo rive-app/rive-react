@@ -10,7 +10,7 @@
     "lint": "eslint -c .eslintrc.js 'src/**/*{.ts,.tsx}'",
     "format": "prettier --write src",
     "types:check": "tsc --noEmit",
-    "publish": "./scripts/publish.sh"
+    "release": "release-it"
   },
   "repository": {
     "type": "git",

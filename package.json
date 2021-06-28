@@ -4,6 +4,9 @@
   "description": "React wrapper around the rive-js library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
+  "files": [
+    "./dist/**"
+  ],
   "scripts": {
     "test": "jest",
     "build": "bunchee src/index.ts -m --no-sourcemap",

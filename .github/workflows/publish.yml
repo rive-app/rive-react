@@ -22,7 +22,7 @@ jobs:
       - name: Run Tests
         run: npm test
       - name: Build
-        run: npm build
+        run: npm run build
       - name: Git config
         run: |
           git config --local user.email 'hello@rive.app'

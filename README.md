@@ -94,13 +94,13 @@ export default Example;
 - `stateMachines?`: _(optional)_ Name of list of names of state machines to load.
 - `layout?`: _(optional)_ Layout object to define how animations are displayed on the canvas. See [Rive.js](https://github.com/rive-app/rive-wasm#layout) for more details.
 - `autoplay?`: _(optional)_ If `true`, the animation will automatically start playing when loaded. Defaults to false.
-- `onload?`: _(optional)_ Callback that get's fired when the .rive file loads .
-- `onloaderror?`: _(optional)_ Callback that get's fired when an error occurs loading the .riv file.
-- `onplay?`: _(optional)_ Callback that get's fired when the animation starts playing.
-- `onpause?`: _(optional)_ Callback that get's fired when the animation pauses.
-- `onstop?`: _(optional)_ Callback that get's fired when the animation stops playing.
-- `onloop?`: _(optional)_ Callback that get's fired when the animation completes a loop.
-- `onstatechange?`: _(optional)_ Callback that get's fired when a state change occurs.
+- `onLoad?`: _(optional)_ Callback that get's fired when the .rive file loads .
+- `onLoadError?`: _(optional)_ Callback that get's fired when an error occurs loading the .riv file.
+- `onPlay?`: _(optional)_ Callback that get's fired when the animation starts playing.
+- `onPause?`: _(optional)_ Callback that get's fired when the animation pauses.
+- `onStop?`: _(optional)_ Callback that get's fired when the animation stops playing.
+- `onLoop?`: _(optional)_ Callback that get's fired when the animation completes a loop.
+- `onStateChange?`: _(optional)_ Callback that get's fired when a state change occurs.
 
 #### opts
 

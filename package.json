@@ -1,6 +1,6 @@
 {
   "name": "rive-react",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "React wrapper around the rive-js library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",

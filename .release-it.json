@@ -12,6 +12,6 @@
     "releaseName": "${version}"
   },
   "hooks": {
-    "after:bump": "npx auto-changelog -p"
+    "after:bump": ["npx auto-changelog -p", "git add ./CHANGELOG.md"]
   }
 }

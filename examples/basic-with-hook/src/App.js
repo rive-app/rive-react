@@ -1,8 +1,8 @@
-import { useRive } from "rive-react";
+import { useRive } from 'rive-react';
 
 function App() {
   const params = {
-    src: "poison-loader.riv",
+    src: 'poison-loader.riv',
     autoplay: true,
   };
 
@@ -10,7 +10,7 @@ function App() {
 
   return (
     // The animation will fit to the parent element.
-    <div style={{ height: "500px", width: "500px" }}>
+    <div style={{ height: '500px', width: '500px' }}>
       <RiveComponent />
     </div>
   );

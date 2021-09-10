@@ -73,7 +73,7 @@ export default Example;
 
 #### Parameters
 
-- `riveParams`: Set of parameters that are passed to the Rive.js `Rive` class constructor. `null` and `undefined` can be passed to conditionally display the .rive file.
+- `riveParams`: Set of parameters that are passed to the Rive.js `Rive` class constructor. `null` and `undefined` can be passed to conditionally display the .riv file.
 - `opts`: Rive React specific options.
 
 #### Return Values
@@ -115,19 +115,29 @@ The `useStateMachineInput` hook is provided to make it easier to interact with s
 import { useRive, useStateMachineInput } from 'rive-react';
 
 function Example() {
+  const STATE_MACHINE_NAME = 'button';
+  const INPUT_NAME = 'onClick';
+
   const { RiveComponent, rive } = useRive({
     src: 'button.riv',
-    stateMachines: 'button',
+    stateMachines: STATE_MACHINE_NAME,
     autoplay: true,
   });
 
-  const onClickInput = useStateMachineInput(rive, 'button', 'onClick');
+  const onClickInput = useStateMachineInput(
+    rive,
+    STATE_MACHINE_NAME,
+    INPUT_NAME
+  );
 
-  return <RiveComponent onClick={() => onClickInput && onClickInput.fire())} />;
+  // This example is using a state machine with a trigger input.
+  return <RiveComponent onClick={() => onClickInput.fire()} />;
 }
 
 export default Example;
 ```
+
+See our [examples](examples) folder for working examples of [Boolean](examples/state-machine-boolean-input) and [Number](examples/state-machine-number-input) inputs.
 
 #### Parameters
 
@@ -141,4 +151,4 @@ A Rive.js `stateMachineInput` object.
 
 ## Examples
 
-The `examples` shows a number of different ways to use Rive React. See the instructions for each example to run locally.
+The [examples](examples) shows a number of different ways to use Rive React. See the instructions for each example to run locally.

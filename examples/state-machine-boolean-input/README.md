@@ -1,4 +1,4 @@
-# State Machine Button
+# State Machine Boolean Input
 
 This example shows how to interact with a state machine, using various onMouse\* callbacks to trigger transations.
 

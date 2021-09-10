@@ -121,15 +121,19 @@ function Example() {
     autoplay: true,
   });
 
-  const onClickInput = useStateMachineInput(rive, 'button', 'onClick');
+  const onClickInput = useStateMachineInput({
+    rive: rive,
+    stateMachineName: 'button',
+    inputName: 'onClick',
+  });
 
-  return <RiveComponent onClick={() => onClickInput && onClickInput.fire())} />;
+  return <RiveComponent onClick={() => onClickInput && onClickInput.fire()} />;
 }
 
 export default Example;
 ```
 
-#### Parameters
+#### params
 
 - `rive`: A `Rive` object. This is returned by the `useRive` hook.
 - `stateMachineName`: Name of the state machine.

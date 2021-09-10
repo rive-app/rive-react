@@ -6,7 +6,7 @@ import React, {
   ComponentProps,
   RefCallback,
 } from 'react';
-import { Rive, EventType } from 'rive-js';
+import { Rive, EventType, StateMachineInputType } from 'rive-js';
 import {
   UseRiveParameters,
   UseRiveOptions,
@@ -228,7 +228,34 @@ export default function useRive(
     );
   }, []);
 
+  const debug = useCallback(() => {
+    if (!rive) {
+      console.log({
+        loaded: false,
+      });
+      return;
+    }
+
+    const stateMachines = rive.stateMachineNames.map((stateMachineName) => ({
+      stateMachineName,
+      stateMachineInputs: (rive.stateMachineInputs(stateMachineName) ?? []).map(
+        (stateMachineInput) => ({
+          name: stateMachineInput.name,
+          value: stateMachineInput.value,
+          type: StateMachineInputType[stateMachineInput.type],
+        })
+      ),
+    }));
+
+    console.log({
+      activeArtboard: rive.activeArtboard,
+      animationsNames: rive.animationNames,
+      stateMachines,
+    });
+  }, [rive]);
+
   return {
+    debug,
     canvas: canvasRef.current,
     setCanvasRef,
     setContainerRef,

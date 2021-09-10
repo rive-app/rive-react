@@ -9,7 +9,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "rive-react": "0.0.1",
+    "rive-react": "file:../..",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

@@ -1,6 +1,18 @@
 import { RefCallback, ComponentProps } from 'react';
 import { Rive, RiveParameters } from 'rive-js';
 
+/**
+ * @typedef UseStateMachineInputParameters
+ * @property rive - Rive Instance
+ * @property stateMachineName - Name of the state machine
+ * @property inputName - Name of the input
+ */
+export type UseStateMachineInputParameters = {
+  rive: Rive | null;
+  stateMachineName?: string;
+  inputName?: string;
+};
+
 export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
 
 export type UseRiveOptions = {
@@ -24,6 +36,7 @@ export type Dimensions = {
  * @property rive - The loaded Rive Animation
  */
 export type RiveState = {
+  debug: () => void;
   canvas: HTMLCanvasElement | null;
   setCanvasRef: RefCallback<HTMLCanvasElement>;
   setContainerRef: RefCallback<HTMLElement>;

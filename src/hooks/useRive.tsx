@@ -36,7 +36,7 @@ function RiveComponent({
       style={'className' in rest ? undefined : containerStyle}
       {...rest}
     >
-      <canvas ref={setCanvasRef} />
+      <canvas ref={setCanvasRef} style={{ verticalAlign: 'top' }} />
     </div>
   );
 }

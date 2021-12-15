@@ -10,6 +10,7 @@
   "scripts": {
     "test": "jest",
     "build": "bunchee src/index.ts -m --no-sourcemap",
+    "dev": "watch 'npm run build' src",
     "lint": "eslint -c .eslintrc.js 'src/**/*{.ts,.tsx}'",
     "format": "prettier --write src",
     "types:check": "tsc --noEmit",
@@ -41,7 +42,7 @@
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "auto-changelog": "^2.3.0",
-    "bunchee": "^1.6.0",
+    "bunchee": "^1.7.3",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -55,6 +56,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "release-it": "^14.10.0",
-    "ts-jest": "^27.0.2"
+    "ts-jest": "^27.0.2",
+    "watch": "^1.0.2"
   }
 }

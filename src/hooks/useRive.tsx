@@ -6,7 +6,7 @@ import React, {
   ComponentProps,
   RefCallback,
 } from 'react';
-import { Rive, EventType } from 'rive-js';
+import { Rive, EventType } from '@rive/webgl_single';
 import {
   UseRiveParameters,
   UseRiveOptions,
@@ -125,11 +125,12 @@ export default function useRive(
         containerRef.current.style.height = height + 'px';
       }
       if (options.useDevicePixelRatio) {
-        const dpr = window.devicePixelRatio || 1;
-        canvasRef.current.width = dpr * width;
-        canvasRef.current.height = dpr * height;
-        canvasRef.current.style.width = width + 'px';
-        canvasRef.current.style.height = height + 'px';
+        console.log('updating canvas width, height');
+        // const dpr = window.devicePixelRatio || 1;
+        // canvasRef.current.width = dpr * width;
+        // canvasRef.current.height = dpr * height;
+        // canvasRef.current.style.width = width + 'px';
+        // canvasRef.current.style.height = height + 'px';
       } else {
         canvasRef.current.width = width;
         canvasRef.current.height = height;

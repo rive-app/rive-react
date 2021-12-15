@@ -1,11 +1,13 @@
-import Rive from 'rive-react';
+import SizeExample from './SizeExample';
+import FlowerExample from './FlowerExample';
 
 function App() {
   return (
     // The animation will fit to the parent element.
-    <div style={{ height: '500px', width: '500px' }}>
-      <Rive src="poison-loader.riv" autoplay />
-    </div>
+    <>
+      <SizeExample />
+      <FlowerExample />
+    </>
   );
 }
 

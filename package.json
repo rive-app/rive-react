@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "rive-js": "0.7.33"
+    "@rive/webgl_single": "file:../rive-wasm/js/npm/webgl_single"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0"

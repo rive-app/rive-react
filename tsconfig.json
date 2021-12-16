@@ -11,7 +11,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./dist",
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "offscreencanvas"],
     "rootDir": "src",
     "strict": true,
     "target": "es5",

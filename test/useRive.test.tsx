@@ -2,9 +2,9 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { mocked } from 'jest-mock';
 
 import useRive from '../src/hooks/useRive';
-import * as rive from 'rive-js';
+import * as rive from '@rive-app/canvas';
 
-jest.mock('rive-js', () => ({
+jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),

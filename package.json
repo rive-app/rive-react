@@ -36,7 +36,7 @@
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/react-hooks": "^7.0.0",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.0.3",
     "@types/react": "^17.0.9",
     "@types/testing-library__jest-dom": "^5.9.5",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
@@ -56,7 +56,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "release-it": "^14.10.0",
-    "ts-jest": "^27.0.2",
+    "ts-jest": "^27.1.1",
     "watch": "^1.0.2"
   }
 }

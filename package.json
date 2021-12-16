@@ -39,8 +39,8 @@
     "@types/jest": "^27.0.3",
     "@types/react": "^17.0.9",
     "@types/testing-library__jest-dom": "^5.9.5",
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
     "auto-changelog": "^2.3.0",
     "bunchee": "^1.7.3",
     "eslint": "^7.28.0",
@@ -50,13 +50,14 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.27.1",
     "jest": "^27.0.4",
     "prettier": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "release-it": "^14.10.0",
     "ts-jest": "^27.1.1",
+    "typescript": "^4.5.4",
     "watch": "^1.0.2"
   }
 }

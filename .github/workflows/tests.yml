@@ -7,7 +7,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Modules
-        run: npm ci
+        run: npm install
       - name: Run type check
         run: npm run types:check
       - name: Run Linter

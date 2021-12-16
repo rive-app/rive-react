@@ -19,4 +19,9 @@ module.exports = {
     'no-var': 'error',
     eqeqeq: ['error', 'smart'],
   },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 };

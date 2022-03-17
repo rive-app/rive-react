@@ -4,17 +4,29 @@
 
 # Rive React
 
-React Runtime for [Rive](https://rive.app).
+![Rive hero image](https://rive-app.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fff44ed5f-1eea-4154-81ef-84547e61c3fd%2Frive_notion.png?table=block&id=f198cab2-c0bc-4ce8-970c-42220379bcf3&spaceId=9c949665-9ad9-445f-b9c4-5ee204f8b60c&width=2000&userId=&cache=v2)
 
-A wrapper around [Rive.js](https://github.com/rive-app/rive-wasm), providing full control over the js runtime while making it super simple to use in React applications.
+React runtime for [Rive](https://rive.app).
 
-Detailed runtime documentation can be found in [Rive's help center](https://help.rive.app/runtimes).
+A wrapper around the [JS/Wasm runtime](https://github.com/rive-app/rive-wasm), providing full control over the js runtime while providing components and hooks for React applications.
 
-## Create and ship interactive animations to any platform
+<!-- Detailed runtime documentation can be found in [Rive's help center](https://help.rive.app/runtimes). -->
 
-[Rive](https://rive.app) is a real-time interactive design and animation tool. Use our collaborative editor to create motion graphics that respond to different states and user inputs. Then load your animations into apps, games, and websites with our lightweight open-source runtimes.
+## What is Rive
 
-## Installation
+[Rive](https://rive.app) is a real-time interactive design and animation tool that helps teams create and run interactive animations anywhere. Designers and developers use our collaborative editor to create motion graphics that respond to different states and user inputs. Our lightweight open-source runtime libraries allow them to load their animations into apps, games, and websites.
+
+:house_with_garden: [Homepage](https://rive.app/)
+
+:blue_book: [Docs](https://help.rive.app/getting-started/welcome-to-rive)
+
+🛠 [Resources](https://rive.app/resources/)
+
+## Getting Started
+
+Follow along for a quick start in using the Rive React runtime.
+
+### Installation
 
 There are two main variants of the React runtime:
 
@@ -34,23 +46,21 @@ Read more in our [web runtime docs](https://github.com/rive-app/rive-wasm/blob/m
 
 _Note: This library is using React hooks so the minimum version required for both react and react-dom is 16.8.0._
 
-## Usage
+### Usage
 
-### Component
-
-Rive React provides a basic component as it's default import for displaying simple animations. Note that any animations or state machines instantiated through this component will autoplay.
+Rive React provides a basic component as it's default import for displaying simple animations. Include the code below in your React project to test out an example Rive animation.
 
 ```js
 import Rive from '@rive-app/react-canvas';
 
 function Example() {
-  return <Rive src="loader.riv" />;
+  return <Rive src="https://cdn.rive.app/animations/vehicles.riv" />;
 }
 
 export default Example;
 ```
 
-#### Props
+### Props
 
 - `src`: File path or URL to the .riv file to display.
 - `artboard`: _(optional)_ Name to display.
@@ -62,16 +72,19 @@ export default Example;
 #### Styles and Classes
 
 When rendering out a Rive component, in the DOM, it will show as a `<div>` element that contains the `<canvas>` element that powers the Rive animations. The purpose of the `<div>` element is to help control the sizing of the component. By default, the container has the following styles set on the `style` attribute:
+
 ```css
 width: 100%;
 height: 100%;
 ```
 
-If you decide to pass in a `className` to the Rive component, you will override these attributes, and you will need to either set these style attributes in your CSS associated with that `className`, or set your own sizing preferences. 
+If you decide to pass in a `className` to the Rive component, you will override these attributes, and you will need to either set these style attributes in your CSS associated with that `className`, or set your own sizing preferences.
 
 ### useRive Hook
 
-For more advanced usage, the `useRive` hook is provided. The hook will return a component and a [Rive.js](https://github.com/rive-app/rive-wasm) `Rive` object which gives you control of the current rive file.
+In many cases, you may not only need the React component to render your animation, but also the Rive object instance that controls it as well. The `useRive` hook provides both of these. This hook returns a component and a `rive` object which gives you control of the current Rive file.
+
+See more in the [JS docs](https://github.com/rive-app/rive-wasm) to understand what you can control with the `rive` object.
 
 ```js
 import { useRive } from '@rive-app/react-canvas';
@@ -168,7 +181,7 @@ See our [examples](examples) folder for working examples of [Boolean](examples/s
 - `rive`: A `Rive` object. This is returned by the `useRive` hook.
 - `stateMachineName`: Name of the state machine.
 - `inputName`: Name of the state machine input.
-- `initialValue`: Initial value to set on a state machine input when it's loaded in, for number or boolean inputs. **Note** that this may trigger any transitional animations between the initial state and any next states that depend on the input this `initialValue` is being set to. If this is problematic or conflicting for your case, we recommend setting the true initial value of the input on your state machine in the Rive editor. 
+- `initialValue`: Initial value to set on a state machine input when it's loaded in, for number or boolean inputs. **Note** that this may trigger any transitional animations between the initial state and any next states that depend on the input this `initialValue` is being set to. If this is problematic or conflicting for your case, we recommend setting the true initial value of the input on your state machine in the Rive editor.
 
 #### Return Value
 
@@ -185,24 +198,25 @@ https://rive-app.github.io/rive-react. To run locally, simply run `npm run story
 
 Starting in v 1.0.0, we've migrated from wrapping around the `@rive-app/canvas` runtime (which uses the `CanvasRendereringContext2D` renderer) to the `@rive-app/webgl` runtime (which uses the WebGL renderer). The high-level API doesn't require any change to upgrade, but there are some notes to consider about the backing renderer.
 
-The backing `WebGL` runtime allows for best performance across all devices, as well as support for some features that are not supported in the `canvas` renderer runtime. To allow the `react` runtime to support some of the newer features in Rive, we needed to switch the `rive-react` backing runtime to `@rive-app/webgl`. 
+The backing `WebGL` runtime allows for best performance across all devices, as well as support for some features that are not supported in the `canvas` renderer runtime. To allow the `react` runtime to support some of the newer features in Rive, we needed to switch the `rive-react` backing runtime to `@rive-app/webgl`.
 
 One note about this switch is that some browsers may limit the number of concurrent WebGL contexts. For example, Chrome may only support up to 16 contexts concurrently. We pass a property called `useOffscreenRenderer` set to true to the backing runtime when instantiating Rive by default, which helps to manage the lifecycle of the `canvas` with a single offscreen `WebGL` context, even if there are many Rive animations on the screen (i.e 16+). If you need a single `WebGL` context per Rive animation/instance, pass in the `useOffscreenRenderer` property set to `false` in the `useRive` options, or as a prop in the default export component from this runtime. See below for an example:
 
 ```js
-const {rive, RiveComponent} = useRive({
-  src: 'foo.riv',
-}, {
-  // Default (you don't need to set this)
-  useOffscreenRenderer: true,
-  // To override and use one context per Rive instance, uncomment and use the line below
-  // useOffscreenRenderer: false,
-});
+const { rive, RiveComponent } = useRive(
+  {
+    src: 'foo.riv',
+  },
+  {
+    // Default (you don't need to set this)
+    useOffscreenRenderer: true,
+    // To override and use one context per Rive instance, uncomment and use the line below
+    // useOffscreenRenderer: false,
+  }
+);
 
 // or you can override the flag in JSX via props
-return (
-  <Rive src="foo.riv" useOffscreenRenderer={false} />
-);
+return <Rive src="foo.riv" useOffscreenRenderer={false} />;
 ```
 
 ### Migrating from version 1.x.x to 2.x.x
@@ -212,8 +226,8 @@ return (
 In most cases, you may be able to migrate safely. We are mainly enabling the React runtime to work with both backing renderers `@rive-app/webgl` and `@rive-app/canvas`, such that you can use either `@rive-app/react-canvas` or `@rive-app/react-webgl` as the dependency in your React applications. Another change that is mostly internal is that by default, `rive-react` will now use `@rive-app/canvas` (as opposed to `@rive-app/webgl`) to wrap around, as it currently yields the fastest performance across devices. Therefore, **we recommend installing `@rive-app/react-canvas` in your applicaions**. However, if you need a WebGL backing renderer, you may want to use `@rive-app/react-webgl`.
 
 #### Classes, styles, and component props
-Starting in v2.0, we introduce one breaking change where any non-style props set on the `RiveComponent` (i.e `aria-*`, `role`, etc.) will be set on the inner `<canvas>` element. Previously, all extra props would be set onto the containing `<div>` element. Both the `className` and `style` props will continue to be set on the `<div>` element that wraps the canvas, as this dictates the sizing of the Rive component.
 
+Starting in v2.0, we introduce one breaking change where any non-style props set on the `RiveComponent` (i.e `aria-*`, `role`, etc.) will be set on the inner `<canvas>` element. Previously, all extra props would be set onto the containing `<div>` element. Both the `className` and `style` props will continue to be set on the `<div>` element that wraps the canvas, as this dictates the sizing of the Rive component.
 
 ### Migrating to 3.0
 

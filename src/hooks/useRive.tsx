@@ -6,7 +6,7 @@ import React, {
   ComponentProps,
   RefCallback,
 } from 'react';
-import { Rive, EventType } from '@rive-app/canvas';
+import { Rive, EventType } from '@rive-app/webgl';
 import {
   UseRiveParameters,
   UseRiveOptions,
@@ -44,6 +44,7 @@ function RiveComponent({
 const defaultOptions = {
   useDevicePixelRatio: true,
   fitCanvasToArtboardHeight: false,
+  useOffscreenRenderer: true,
 };
 
 /**
@@ -164,7 +165,12 @@ export default function useRive(
   const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
     (canvas: HTMLCanvasElement | null) => {
       if (canvas && riveParams) {
-        const r = new Rive({ ...riveParams, canvas });
+        const {useOffscreenRenderer} = options;
+        const r = new Rive({
+          useOffscreenRenderer,
+          ...riveParams,
+          canvas,
+        });
         r.on(EventType.Load, () => setRive(r));
       } else if (canvas === null && canvasRef.current) {
         canvasRef.current.height = 0;

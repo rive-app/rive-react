@@ -23,13 +23,3 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
-      - name: Git config
-        run: |
-          git config --local user.email 'hello@rive.app'
-          git config --local user.name ${{ github.actor }}
-      - name: Authenticate with registry
-        run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        run: npm run release

@@ -1,4 +1,4 @@
-import { Layout } from '@rive-app/canvas';
+import { Layout } from '@rive-app/webgl';
 import React, { ComponentProps } from 'react';
 import useRive from '../hooks/useRive';
 
@@ -7,6 +7,7 @@ export type RiveProps = {
   artboard?: string;
   animations?: string | string[];
   layout?: Layout;
+  useOffscreenRenderer?: boolean;
 };
 
 const Rive = ({
@@ -14,6 +15,7 @@ const Rive = ({
   artboard,
   animations,
   layout,
+  useOffscreenRenderer = true,
   ...rest
 }: RiveProps & ComponentProps<'div'>) => {
   const params = {
@@ -24,7 +26,11 @@ const Rive = ({
     autoplay: true,
   };
 
-  const { RiveComponent } = useRive(params);
+  const options = {
+    useOffscreenRenderer,
+  };
+
+  const { RiveComponent } = useRive(params, options);
   return <RiveComponent {...rest} />;
 };
 

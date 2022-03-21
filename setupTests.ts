@@ -24,7 +24,7 @@ window.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 };
 
-jest.mock('@rive-app/canvas', () => ({
+jest.mock('@rive-app/webgl', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),

@@ -22,6 +22,30 @@ npm i --save rive-react
 
 _Note: This library is using React hooks so the minimum version required for both react and react-dom is 16.8.0._
 
+### Migrating from v 0.0.x to 1.x.x
+
+Starting in v 1.0.0, we've migrated from wrapping around the `@rive-app/canvas` runtime (which uses the `CanvasRendereringContext2D` renderer) to the `@rive-app/webgl` runtime (which uses the WebGL renderer). The high-level API doesn't require any change to upgrade, but there are some notes to consider about the backing renderer.
+
+The backing `WebGL` runtime allows for best performance across all devices, as well as support for some features that are not supported in the `canvas` renderer runtime. To allow the `react` runtime to support some of the newer features in Rive, we needed to switch the `rive-react` backing runtime to `@rive-app/webgl`. 
+
+One note about this switch is that some browsers may limit the number of concurrent WebGL contexts. For example, Chrome may only support up to 16 contexts concurrently. We pass a property called `useOffscreenRenderer` set to true to the backing runtime when instantiating Rive by default, which helps to manage the lifecycle of the `canvas` with a single offscreen `WebGL` context, even if there are many Rive animations on the screen (i.e 16+). If you need a single `WebGL` context per Rive animation/instance, pass in the `useOffscreenRenderer` property set to `false` in the `useRive` options, or as a prop in the default export component from this runtime. See below for an example:
+
+```js
+const {rive, RiveComponent} = useRive({
+  src: 'foo.riv',
+}, {
+  // Default (you don't need to set this)
+  useOffscreenRenderer: true,
+  // To override and use one context per Rive instance, uncomment and use the line below
+  // useOffscreenRenderer: false,
+});
+
+// or you can override the flag in JSX via props
+return (
+  <Rive src="foo.riv" useOffscreenRenderer={false} />
+);
+```
+
 ## Usage
 
 ### Component
@@ -106,6 +130,7 @@ export default Example;
 
 - `useDevicePixelRatio`: _(optional)_ If `true`, the hook will scale the resolution of the animation based the [devicePixelRatio](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio). Defaults to `true`. NOTE: Requires the `setContainerRef` ref callback to be passed to a element wrapping a canvas element. If you use the `RiveComponent`, then this will happen automatically.
 - `fitCanvasToArtboardHeight`: _(optional)_ If `true`, then the canvas will resize based on the height of the artboard. Defaults to `false`.
+- `useOffscreenRenderer`: _(optional)_ If `true`, the Rive instance will share (or create if one does not exist) an offscreen `WebGL` context. This allows you to display multiple Rive animations on one screen to work around some browser limitations regarding multiple concurrent WebGL contexts. If `false`, each Rive instance will have its own dedicated `WebGL` context, and you may need to be cautious of the browser limitations just mentioned. Defaults to `true`.
 
 ### useStateMachineInput Hook
 

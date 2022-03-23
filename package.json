@@ -14,7 +14,7 @@
     "lint": "eslint -c .eslintrc.js 'src/**/*{.ts,.tsx}'",
     "format": "prettier --write src",
     "types:check": "tsc --noEmit",
-    "release": "release-it"
+    "release": "release-it -- major"
   },
   "repository": {
     "type": "git",

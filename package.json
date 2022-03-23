@@ -14,7 +14,7 @@
     "lint": "eslint -c .eslintrc.js 'src/**/*{.ts,.tsx}'",
     "format": "prettier --write src",
     "types:check": "tsc --noEmit",
-    "release": "release-it -- major"
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "@rive-app/webgl": "1.0.27"
+    "@rive-app/webgl": "1.0.28"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0"

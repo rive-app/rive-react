@@ -165,7 +165,7 @@ export default function useRive(
   const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
     (canvas: HTMLCanvasElement | null) => {
       if (canvas && riveParams) {
-        const {useOffscreenRenderer} = options;
+        const { useOffscreenRenderer } = options;
         const r = new Rive({
           useOffscreenRenderer,
           ...riveParams,
@@ -223,6 +223,17 @@ export default function useRive(
       }
     };
   }, [rive]);
+
+  /**
+   * Listen for changes in the animations params
+   */
+  const animations = riveParams?.animations;
+  useEffect(() => {
+    if (rive && animations) {
+      rive.stop(rive.animationNames);
+      rive.play(animations);
+    }
+  }, [animations, rive]);
 
   const Component = useCallback((props: ComponentProps<'div'>): JSX.Element => {
     return (

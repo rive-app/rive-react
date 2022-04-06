@@ -1,5 +1,5 @@
-import { renderHook, act } from '@testing-library/react-hooks';
 import { mocked } from 'jest-mock';
+import { renderHook, act } from '@testing-library/react-hooks';
 
 import useRive from '../src/hooks/useRive';
 import * as rive from '@rive-app/webgl';
@@ -241,6 +241,7 @@ describe('useRive', () => {
 
     const observeMock = jest.fn();
 
+    const restore = global.IntersectionObserver;
     global.IntersectionObserver = jest.fn().mockImplementation(() => ({
       observe: observeMock,
     }));
@@ -266,5 +267,45 @@ describe('useRive', () => {
     });
 
     expect(observeMock).toBeCalledWith(canvasSpy);
+
+    global.IntersectionObserver = restore;
+  });
+
+  it('updates the playing animations when the animations param changes', async () => {
+    const params = {
+      src: 'file-src',
+      animations: 'light',
+    };
+
+    const playMock = jest.fn();
+    const stopMock = jest.fn();
+
+    const riveMock = {
+      on: (_: string, cb: () => void) => cb(),
+      stop: stopMock,
+      play: playMock,
+      animationNames: ['light'],
+    };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => riveMock);
+
+    const canvasSpy = document.createElement('canvas');
+
+    const { result, rerender } = renderHook((params) => useRive(params), {
+      initialProps: params,
+    });
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+    });
+
+    rerender({
+      src: 'file-src',
+      animations: 'dark',
+    });
+
+    expect(stopMock).toBeCalledWith(['light']);
+    expect(playMock).toBeCalledWith('dark');
   });
 });

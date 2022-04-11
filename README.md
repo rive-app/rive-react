@@ -169,7 +169,7 @@ See our [examples](examples) folder for working examples of [Boolean](examples/s
 - `rive`: A `Rive` object. This is returned by the `useRive` hook.
 - `stateMachineName`: Name of the state machine.
 - `inputName`: Name of the state machine input.
-- `initialValue`: Initial value to set on a state machine input when it's loaded in, for number or boolean inputs.
+- `initialValue`: Initial value to set on a state machine input when it's loaded in, for number or boolean inputs. **Note** that this may trigger any transitional animations between the initial state and any next states that depend on the input this `initialValue` is being set to. If this is problematic or conflicting for your case, we recommend setting the true initial value of the input on your state machine in the Rive editor. 
 
 #### Return Value
 

@@ -1,4 +1,6 @@
+import React from 'react';
 import { mocked } from 'jest-mock';
+import {render} from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
 
 import useRive from '../src/hooks/useRive';
@@ -307,5 +309,25 @@ describe('useRive', () => {
 
     expect(stopMock).toBeCalledWith(['light']);
     expect(playMock).toBeCalledWith('dark');
+  });
+
+  it('passes canvasProps down to the canvas element', () => {
+    const params = {
+      src: 'file-src',
+      animations: 'light',
+    };
+
+    const options = {
+      canvasProps: {
+        'data-testid': 'foo',
+        'aria-label': 'test label',
+      },
+    };
+
+    const { result } = renderHook(() => useRive(params, options));
+
+    const ResultComponent = result.current.RiveComponent;
+    const {getByTestId} = render(<ResultComponent />);
+    expect(getByTestId('foo')).toHaveAttribute('aria-label', 'test label');
   });
 });

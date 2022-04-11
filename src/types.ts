@@ -7,6 +7,7 @@ export type UseRiveOptions = {
   useDevicePixelRatio: boolean;
   fitCanvasToArtboardHeight: boolean;
   useOffscreenRenderer: boolean;
+  canvasProps: ComponentProps<'canvas'>;
 };
 
 export type Dimensions = {

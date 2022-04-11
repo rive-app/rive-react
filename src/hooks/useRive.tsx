@@ -18,11 +18,13 @@ import { useWindowSize } from '../utils';
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
   setCanvasRef: RefCallback<HTMLCanvasElement>;
+  canvasProps?: ComponentProps<'canvas'>,
 };
 
 function RiveComponent({
   setContainerRef,
   setCanvasRef,
+  canvasProps = {},
   ...rest
 }: RiveComponentProps & ComponentProps<'div'>) {
   const containerStyle = {
@@ -36,7 +38,7 @@ function RiveComponent({
       style={'className' in rest ? undefined : containerStyle}
       {...rest}
     >
-      <canvas ref={setCanvasRef} style={{ verticalAlign: 'top' }} />
+      <canvas {...canvasProps} ref={setCanvasRef} style={{ verticalAlign: 'top' }} />
     </div>
   );
 }
@@ -45,6 +47,7 @@ const defaultOptions = {
   useDevicePixelRatio: true,
   fitCanvasToArtboardHeight: false,
   useOffscreenRenderer: true,
+  canvasProps: {},
 };
 
 /**
@@ -240,6 +243,7 @@ export default function useRive(
       <RiveComponent
         setContainerRef={setContainerRef}
         setCanvasRef={setCanvasRef}
+        canvasProps={options.canvasProps}
         {...props}
       />
     );

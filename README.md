@@ -131,6 +131,7 @@ export default Example;
 - `useDevicePixelRatio`: _(optional)_ If `true`, the hook will scale the resolution of the animation based the [devicePixelRatio](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio). Defaults to `true`. NOTE: Requires the `setContainerRef` ref callback to be passed to a element wrapping a canvas element. If you use the `RiveComponent`, then this will happen automatically.
 - `fitCanvasToArtboardHeight`: _(optional)_ If `true`, then the canvas will resize based on the height of the artboard. Defaults to `false`.
 - `useOffscreenRenderer`: _(optional)_ If `true`, the Rive instance will share (or create if one does not exist) an offscreen `WebGL` context. This allows you to display multiple Rive animations on one screen to work around some browser limitations regarding multiple concurrent WebGL contexts. If `false`, each Rive instance will have its own dedicated `WebGL` context, and you may need to be cautious of the browser limitations just mentioned. Defaults to `true`.
+- `canvasProps`: _(optional)_ An object of props to pass to the underlying `<canvas>` element created in the `RiveComponent` returned from this hook. You can also set `canvasProps` directly on the returned `RiveComponent` as well if you prefer. Currently by default, spreading any HTML props on the `RiveComponent` goes to the `<canvas>`'s container `<div>` element, however, in a next major version, this may be restructured such that by default, spread props go onto the `canvas` element itself.
 
 ### useStateMachineInput Hook
 

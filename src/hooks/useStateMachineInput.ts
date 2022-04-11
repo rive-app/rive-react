@@ -12,7 +12,8 @@ import { Rive, StateMachineInput } from '@rive-app/webgl';
 export default function useStateMachineInput(
   rive: Rive | null,
   stateMachineName?: string,
-  inputName?: string
+  inputName?: string,
+  initialValue?: number | boolean
 ) {
   const [input, setInput] = useState<StateMachineInput | null>(null);
 
@@ -25,6 +26,9 @@ export default function useStateMachineInput(
       const inputs = rive.stateMachineInputs(stateMachineName);
       if (inputs) {
         const selectedInput = inputs.find((input) => input.name === inputName);
+        if (initialValue !== undefined && selectedInput) {
+          selectedInput.value = initialValue;
+        }
         setInput(selectedInput || null);
       }
     } else {

@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-echo Copying package.json to rive-react npm package folders
+echo "Copying package.json to rive-react npm package folders"
 
-cp package.json npm/rive-react-canvas
-cp package.json npm/rive-react-webgl
+cp package.json npm/react-canvas
+cp package.json npm/react-webgl
 
 # Bump the version number of every npm module in the npm folder.
 for dir in ./npm/*; do

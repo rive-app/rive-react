@@ -6,7 +6,7 @@ import React, {
   ComponentProps,
   RefCallback,
 } from 'react';
-import { Rive, EventType } from '@rive-app/webgl';
+import { Rive, EventType } from '@rive-app/canvas';
 import {
   UseRiveParameters,
   UseRiveOptions,

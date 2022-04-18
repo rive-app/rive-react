@@ -1,5 +1,5 @@
 import { RefCallback, ComponentProps } from 'react';
-import { Rive, RiveParameters } from '@rive-app/webgl';
+import { Rive, RiveParameters } from '@rive-app/canvas';
 
 export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
 

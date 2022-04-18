@@ -22,7 +22,7 @@ npm i --save rive-react
 
 _Note: This library is using React hooks so the minimum version required for both react and react-dom is 16.8.0._
 
-### Migrating from v 0.0.x to 1.x.x
+### Migrating from version 0.0.x to 1.x.x
 
 Starting in v 1.0.0, we've migrated from wrapping around the `@rive-app/canvas` runtime (which uses the `CanvasRendereringContext2D` renderer) to the `@rive-app/webgl` runtime (which uses the WebGL renderer). The high-level API doesn't require any change to upgrade, but there are some notes to consider about the backing renderer.
 
@@ -45,6 +45,10 @@ return (
   <Rive src="foo.riv" useOffscreenRenderer={false} />
 );
 ```
+
+### Migrating from version 1.x.x to 2.x.x
+
+In most cases, you may be able to migrate safely. We are mainly enabling `rive-react` to work with both backing renderers `@rive-app/webgl` and `@rive-app/canvas`, such that you can use either `@rive-app/react-canvas` or `@rive-app/react-webgl` as the dependency in your React applications. Another change that is mostly internal is that by default, `rive-react` will now use `@rive-app/canvas` (as opposed to `@rive-app/webgl`) to wrap around, as it currently yields the fastest performance across devices. Therefore, **we recommend installing `@rive-app/react-canvas` in your applicaions**. However, if you need a WebGL backing renderer, you may want to use `@rive-app/react-webgl`.
 
 ## Usage
 

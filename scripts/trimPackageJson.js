@@ -5,7 +5,7 @@ const renderer = npmPackageSplit[npmPackageSplit.length - 1];
 const package = require(path + '/package.json');
 
 function trimNpmPackage() {
-  package.name = `${package.name}-${renderer}`;
+  package.name = `@rive-app/react-${renderer}`;
   package.description = `React wrapper around the @rive-app/${renderer} library`;
   const webDependencyName = `@rive-app/${renderer}`;
   const canvasDep = package.dependencies[webDependencyName];

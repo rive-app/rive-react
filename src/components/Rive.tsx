@@ -1,4 +1,4 @@
-import { Layout } from '@rive-app/webgl';
+import { Layout } from '@rive-app/canvas';
 import React, { ComponentProps } from 'react';
 import useRive from '../hooks/useRive';
 

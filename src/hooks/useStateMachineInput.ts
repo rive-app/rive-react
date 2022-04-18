@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Rive, StateMachineInput } from '@rive-app/webgl';
+import { Rive, StateMachineInput } from '@rive-app/canvas';
 
 /**
  * Custom hook for fetching a stateMachine input from a rive file.

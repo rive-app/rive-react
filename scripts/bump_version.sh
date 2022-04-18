@@ -5,5 +5,5 @@
 
 set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-NPM_VERSIONS=`npm show rive-react versions`
-node $SCRIPT_DIR/nextVersion.js "$NPM_VERSIONS" `pwd`
+# RELEASE_VERSION will come from an env variable passed in from the GH action workflow
+node $SCRIPT_DIR/nextVersion.js "$RELEASE_VERSION" `pwd`

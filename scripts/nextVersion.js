@@ -1,14 +1,12 @@
 const fs = require('fs');
 const path = process.argv[3];
 const package = require(path + '/package.json');
-let versions = JSON.parse(process.argv[2].trim().replace(/\'/g, '"'));
-const current = package.version;
-// Don't work with alpha/beta/rc tags, maybe a better regex here?
-versions = versions.filter((ver) => {
-  return !/[a-zA-Z]/.test(ver);
-});
+const currentVersion = package.version;
+const nextVersion = process.argv[2].trim().replace(/\'/g, '"');
 
-const latest = versions[versions.length - 1];
+if (!nextVersion || nextVersion === currentVersion) {
+  throw new Error('Next version is not defined or is a version that already exists');
+}
 
 // Returns -1 if first is less than second, 1 if first is greater than second, otherwise 0 if equal.
 function compareVersion(first, second) {
@@ -35,10 +33,7 @@ function compareVersion(first, second) {
   return 0;
 }
 
-if (compareVersion(current, latest) <= 0) {
-  const parts = latest.split('.').map((value) => parseInt(value));
-  // TODO: Need to make this smarter, because the semver can change on rive-react
-  parts[parts.length - 1] = parts[parts.length - 1] + 1;
-  package.version = parts.join('.');
+if (compareVersion(currentVersion, nextVersion) <= 0) {
+  package.version = nextVersion;
   fs.writeFileSync(path + '/package.json', JSON.stringify(package, null, 2));
 }

@@ -2,8 +2,7 @@
 
 set -e
 
-# Run the build and copy to each react-variant build for npm release
-npm run build
+# Copy the build to each react-variant build for npm release
 cp -r ./dist ./npm/react-webgl
 cp -r ./dist ./npm/react-canvas
 

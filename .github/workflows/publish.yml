@@ -5,9 +5,31 @@ on:
     branches:
       - main
 jobs:
+  determine_version:
+    name: Determine the next build version
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.echo_version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./
+      - id: determine_version
+        name: Get Version
+        run: npm run release -- --ci --release-version | tail -n 1 > RELEASE_VERSION
+        working-directory: ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      - id: echo_version
+        run: echo "::set-output name=version::$(cat ./RELEASE_VERSION)"
+  
   merge_job:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    needs: [determine_version]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -33,4 +55,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        run: npm run release
+        run: npm run release -- --ci

@@ -2,9 +2,9 @@ import { mocked } from 'jest-mock';
 import { renderHook } from '@testing-library/react-hooks';
 
 import useStateMachineInput from '../src/hooks/useStateMachineInput';
-import {Rive, StateMachineInput} from '@rive-app/webgl';
+import {Rive, StateMachineInput} from '@rive-app/canvas';
 
-jest.mock('@rive-app/webgl', () => ({
+jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),

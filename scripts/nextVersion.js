@@ -14,22 +14,16 @@ function compareVersion(first, second) {
   const firstParts = first.split('.').map((value) => parseInt(value));
   const secondParts = second.split('.').map((value) => parseInt(value));
 
-  for (let i = 0; i < firstParts.length; i++) {
-    if (secondParts.length === i) {
-      return 1;
+  for (let i = 0; i < Math.max(firstParts.length, secondParts.length); i++) {
+    const first = i < firstParts.length ? firstParts[i] : 0;
+    const second = i < secondParts.length ? secondParts[i] : 0;
+    if (first < second) {
+        return -1;
     }
-
-    if (firstParts[i] < secondParts[i]) {
-      return -1;
-    } else if (firstParts[i] > secondParts[i]) {
-      return 1;
+    if (second < first) {
+        return 1;
     }
   }
-
-  if (firstParts.length !== secondParts.length) {
-    return -1;
-  }
-
   return 0;
 }
 

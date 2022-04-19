@@ -30,7 +30,7 @@
     "@rive-app/webgl": "1.0.39"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.13.0",

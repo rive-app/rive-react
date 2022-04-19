@@ -1,8 +1,10 @@
+import React from 'react';
 import { mocked } from 'jest-mock';
 import { renderHook, act } from '@testing-library/react-hooks';
 
 import useRive from '../src/hooks/useRive';
 import * as rive from '@rive-app/canvas';
+import { render } from '@testing-library/react';
 
 jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
@@ -307,5 +309,31 @@ describe('useRive', () => {
 
     expect(stopMock).toBeCalledWith(['light']);
     expect(playMock).toBeCalledWith('dark');
+  });
+
+  it('does not set styles if className is passed in for the canvas container', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    const riveMock = {
+      on: (_: string, cb: () => void) => cb(),
+      stop: jest.fn(),
+      stopRendering: jest.fn(),
+    };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => riveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const { result } = renderHook(() => useRive(params));
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+    });
+
+    const {RiveComponent: RiveTestComponent} = result.current;
+    const {container} = render(<RiveTestComponent className="rive-test-clas" style={{width: '50%'}} />);
+    expect(container.firstChild).not.toHaveStyle('width: 50%');
   });
 });

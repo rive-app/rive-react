@@ -23,20 +23,23 @@ type RiveComponentProps = {
 function RiveComponent({
   setContainerRef,
   setCanvasRef,
+  className = '',
+  style,
   ...rest
-}: RiveComponentProps & ComponentProps<'div'>) {
+}: RiveComponentProps & ComponentProps<'canvas'>) {
   const containerStyle = {
     width: '100%',
     height: '100%',
+    ...style,
   };
 
   return (
     <div
       ref={setContainerRef}
-      style={'className' in rest ? undefined : containerStyle}
-      {...rest}
+      className={className}
+      {...(!className && { style: containerStyle })}
     >
-      <canvas ref={setCanvasRef} style={{ verticalAlign: 'top' }} />
+      <canvas ref={setCanvasRef} style={{ verticalAlign: 'top' }} {...rest} />
     </div>
   );
 }
@@ -235,15 +238,18 @@ export default function useRive(
     }
   }, [animations, rive]);
 
-  const Component = useCallback((props: ComponentProps<'div'>): JSX.Element => {
-    return (
-      <RiveComponent
-        setContainerRef={setContainerRef}
-        setCanvasRef={setCanvasRef}
-        {...props}
-      />
-    );
-  }, []);
+  const Component = useCallback(
+    (props: ComponentProps<'canvas'>): JSX.Element => {
+      return (
+        <RiveComponent
+          setContainerRef={setContainerRef}
+          setCanvasRef={setCanvasRef}
+          {...props}
+        />
+      );
+    },
+    []
+  );
 
   return {
     canvas: canvasRef.current,

@@ -17,7 +17,7 @@ const Rive = ({
   layout,
   useOffscreenRenderer = true,
   ...rest
-}: RiveProps & ComponentProps<'div'>) => {
+}: RiveProps & ComponentProps<'canvas'>) => {
   const params = {
     src,
     artboard,

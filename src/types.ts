@@ -29,5 +29,5 @@ export type RiveState = {
   setCanvasRef: RefCallback<HTMLCanvasElement>;
   setContainerRef: RefCallback<HTMLElement>;
   rive: Rive | null;
-  RiveComponent: (props: ComponentProps<'div'>) => JSX.Element;
+  RiveComponent: (props: ComponentProps<'canvas'>) => JSX.Element;
 };

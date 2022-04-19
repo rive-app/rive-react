@@ -22,34 +22,6 @@ npm i --save rive-react
 
 _Note: This library is using React hooks so the minimum version required for both react and react-dom is 16.8.0._
 
-### Migrating from version 0.0.x to 1.x.x
-
-Starting in v 1.0.0, we've migrated from wrapping around the `@rive-app/canvas` runtime (which uses the `CanvasRendereringContext2D` renderer) to the `@rive-app/webgl` runtime (which uses the WebGL renderer). The high-level API doesn't require any change to upgrade, but there are some notes to consider about the backing renderer.
-
-The backing `WebGL` runtime allows for best performance across all devices, as well as support for some features that are not supported in the `canvas` renderer runtime. To allow the `react` runtime to support some of the newer features in Rive, we needed to switch the `rive-react` backing runtime to `@rive-app/webgl`. 
-
-One note about this switch is that some browsers may limit the number of concurrent WebGL contexts. For example, Chrome may only support up to 16 contexts concurrently. We pass a property called `useOffscreenRenderer` set to true to the backing runtime when instantiating Rive by default, which helps to manage the lifecycle of the `canvas` with a single offscreen `WebGL` context, even if there are many Rive animations on the screen (i.e 16+). If you need a single `WebGL` context per Rive animation/instance, pass in the `useOffscreenRenderer` property set to `false` in the `useRive` options, or as a prop in the default export component from this runtime. See below for an example:
-
-```js
-const {rive, RiveComponent} = useRive({
-  src: 'foo.riv',
-}, {
-  // Default (you don't need to set this)
-  useOffscreenRenderer: true,
-  // To override and use one context per Rive instance, uncomment and use the line below
-  // useOffscreenRenderer: false,
-});
-
-// or you can override the flag in JSX via props
-return (
-  <Rive src="foo.riv" useOffscreenRenderer={false} />
-);
-```
-
-### Migrating from version 1.x.x to 2.x.x
-
-In most cases, you may be able to migrate safely. We are mainly enabling `rive-react` to work with both backing renderers `@rive-app/webgl` and `@rive-app/canvas`, such that you can use either `@rive-app/react-canvas` or `@rive-app/react-webgl` as the dependency in your React applications. Another change that is mostly internal is that by default, `rive-react` will now use `@rive-app/canvas` (as opposed to `@rive-app/webgl`) to wrap around, as it currently yields the fastest performance across devices. Therefore, **we recommend installing `@rive-app/react-canvas` in your applicaions**. However, if you need a WebGL backing renderer, you may want to use `@rive-app/react-webgl`.
-
 ## Usage
 
 ### Component
@@ -72,7 +44,17 @@ export default Example;
 - `artboard`: _(optional)_ Name to display.
 - `animations`: _(optional)_ Name or list of names of animtions to play.
 - `layout`: _(optional)_ Layout object to define how animations are displayed on the canvas. See [Rive.js](https://github.com/rive-app/rive-wasm#layout) for more details.
-- _All attributes and eventHandlers that can be passed to a `div` element can also be passed to the `Rive` component and used in the same manner._
+- _All attributes and eventHandlers that can be passed to a `canvas` element can also be passed to the `Rive` component and used in the same manner._
+
+#### Styles and Classes
+
+When rendering out a Rive component, in the DOM, it will show as a `<div>` element that contains the `<canvas>` element that powers the Rive animations. The purpose of the `<div>` element is to help control the sizing of the component. By default, the container has the following styles set on the `style` attribute:
+```css
+width: 100%;
+height: 100%;
+```
+
+If you decide to pass in a `className` to the Rive component, you will override these attributes, and you will need to either set these style attributes in your CSS associated with that `className`, or set your own sizing preferences. 
 
 ### useRive Hook
 
@@ -106,7 +88,7 @@ export default Example;
 
 #### Return Values
 
-- `RiveComponent`: A Component that can be used to display your .riv file. This component accepts the same attributes and event handlers as a `div` element.
+- `RiveComponent`: A Component that can be used to display your .riv file. This component accepts the same attributes and event handlers as a `canvas` element.
 - `rive`: A Rive.js `Rive` object. This will return as null until the .riv file has fully loaded.
 - `canvas`: HTMLCanvasElement object, on which the .riv file is rendering.
 - `setCanvasRef`: A callback ref that can be passed to your own canvas element, if you wish to have control over the rendering of the Canvas element.
@@ -182,3 +164,39 @@ A Rive.js `stateMachineInput` object.
 ## Examples
 
 The [examples](examples) shows a number of different ways to use Rive React. See the instructions for each example to run locally.
+
+
+## Migration notes
+
+### Migrating from version 0.0.x to 1.x.x
+
+Starting in v 1.0.0, we've migrated from wrapping around the `@rive-app/canvas` runtime (which uses the `CanvasRendereringContext2D` renderer) to the `@rive-app/webgl` runtime (which uses the WebGL renderer). The high-level API doesn't require any change to upgrade, but there are some notes to consider about the backing renderer.
+
+The backing `WebGL` runtime allows for best performance across all devices, as well as support for some features that are not supported in the `canvas` renderer runtime. To allow the `react` runtime to support some of the newer features in Rive, we needed to switch the `rive-react` backing runtime to `@rive-app/webgl`. 
+
+One note about this switch is that some browsers may limit the number of concurrent WebGL contexts. For example, Chrome may only support up to 16 contexts concurrently. We pass a property called `useOffscreenRenderer` set to true to the backing runtime when instantiating Rive by default, which helps to manage the lifecycle of the `canvas` with a single offscreen `WebGL` context, even if there are many Rive animations on the screen (i.e 16+). If you need a single `WebGL` context per Rive animation/instance, pass in the `useOffscreenRenderer` property set to `false` in the `useRive` options, or as a prop in the default export component from this runtime. See below for an example:
+
+```js
+const {rive, RiveComponent} = useRive({
+  src: 'foo.riv',
+}, {
+  // Default (you don't need to set this)
+  useOffscreenRenderer: true,
+  // To override and use one context per Rive instance, uncomment and use the line below
+  // useOffscreenRenderer: false,
+});
+
+// or you can override the flag in JSX via props
+return (
+  <Rive src="foo.riv" useOffscreenRenderer={false} />
+);
+```
+
+### Migrating from version 1.x.x to 2.x.x
+
+#### Package split
+
+In most cases, you may be able to migrate safely. We are mainly enabling the React runtime to work with both backing renderers `@rive-app/webgl` and `@rive-app/canvas`, such that you can use either `@rive-app/react-canvas` or `@rive-app/react-webgl` as the dependency in your React applications. Another change that is mostly internal is that by default, `rive-react` will now use `@rive-app/canvas` (as opposed to `@rive-app/webgl`) to wrap around, as it currently yields the fastest performance across devices. Therefore, **we recommend installing `@rive-app/react-canvas` in your applicaions**. However, if you need a WebGL backing renderer, you may want to use `@rive-app/react-webgl`.
+
+#### Classes, styles, and component props
+Starting in v2.0, we introduce one breaking change where any non-style props set on the `RiveComponent` (i.e `aria-*`, `role`, etc.) will be set on the inner `<canvas>` element. Previously, all extra props would be set onto the containing `<div>` element. Both the `className` and `style` props will continue to be set on the `<div>` element that wraps the canvas, as this dictates the sizing of the Rive component.

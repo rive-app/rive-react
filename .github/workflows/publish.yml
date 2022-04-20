@@ -44,15 +44,30 @@ jobs:
         run: npm run lint
       - name: Run Tests
         run: npm test
-      - name: Build
+      - name: Build main dist
         run: npm run build
+      - name: Copy separated builds
+        run: ./scripts/build.sh
+      - name: Copy package jsons to separate react outputs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: ./scripts/setup_all_packages.sh
+      - name: Bump Versions of react outputs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_VERSION: ${{ needs.determine_version.outputs.version }}
+        run: ./scripts/bump_all_versions.sh
       - name: Git config
         run: |
           git config --local user.email 'hello@rive.app'
           git config --local user.name ${{ github.actor }}
       - name: Authenticate with registry
         run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-      - name: Release
+      - name: Release rive-react
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: npm run release -- --ci
+      - name: Release @rive-app/react-* variants
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        run: ./scripts/publish_all.sh

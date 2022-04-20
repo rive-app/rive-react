@@ -7,3 +7,6 @@ set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # RELEASE_VERSION will come from an env variable passed in from the GH action workflow
 node $SCRIPT_DIR/nextVersion.js "$RELEASE_VERSION" `pwd`
+
+# Replace the dist package json with the newly trimmed one
+cp -f ./package.json ./dist/package.json

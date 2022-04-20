@@ -2,7 +2,7 @@ import React from 'react';
 import RiveComponent from '../src/components/Rive';
 import {render} from '@testing-library/react'
 
-jest.mock('@rive-app/webgl', () => ({
+jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),

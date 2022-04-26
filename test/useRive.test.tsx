@@ -287,6 +287,7 @@ describe('useRive', () => {
       stop: stopMock,
       play: playMock,
       animationNames: ['light'],
+      isPlaying: true,
     };
 
     // @ts-ignore
@@ -311,6 +312,49 @@ describe('useRive', () => {
     expect(playMock).toBeCalledWith('dark');
   });
 
+  it('updates the paused animation when the animations param changes if the animation is paused', async () => {
+    const params = {
+      src: 'file-src',
+      animations: 'light',
+    };
+
+    const playMock = jest.fn();
+    const pauseMock = jest.fn();
+    const stopMock = jest.fn();
+
+    const riveMock = {
+      on: (_: string, cb: () => void) => cb(),
+      stop: stopMock,
+      play: playMock,
+      pause: pauseMock,
+      animationNames: ['light'],
+      isPlaying: false,
+      isPaused: true,
+    };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => riveMock);
+
+    const canvasSpy = document.createElement('canvas');
+
+    const { result, rerender } = renderHook((params) => useRive(params), {
+      initialProps: params,
+    });
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+    });
+
+    rerender({
+      src: 'file-src',
+      animations: 'dark',
+    });
+
+    expect(stopMock).toBeCalledWith(['light']);
+    expect(pauseMock).toBeCalledWith('dark');
+    expect(playMock).not.toBeCalled();
+  });
+
   it('does not set styles if className is passed in for the canvas container', async () => {
     const params = {
       src: 'file-src',
@@ -332,8 +376,10 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
 
-    const {RiveComponent: RiveTestComponent} = result.current;
-    const {container} = render(<RiveTestComponent className="rive-test-clas" style={{width: '50%'}} />);
+    const { RiveComponent: RiveTestComponent } = result.current;
+    const { container } = render(
+      <RiveTestComponent className="rive-test-clas" style={{ width: '50%' }} />
+    );
     expect(container.firstChild).not.toHaveStyle('width: 50%');
   });
 });

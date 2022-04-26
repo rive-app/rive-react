@@ -25,7 +25,7 @@ jobs:
         run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
       - id: determine_version
         name: Get Version
-        run: npm run release -- major --ci --release-version | tail -n 1 > RELEASE_VERSION
+        run: npm run release -- --ci --release-version | tail -n 1 > RELEASE_VERSION
         working-directory: ./
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -72,7 +72,7 @@ jobs:
       - name: Release rive-react
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        run: npm run release -- major --ci
+        run: npm run release -- --ci
       - name: Release @rive-app/react-* variants
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}

@@ -200,3 +200,8 @@ In most cases, you may be able to migrate safely. We are mainly enabling the Rea
 
 #### Classes, styles, and component props
 Starting in v2.0, we introduce one breaking change where any non-style props set on the `RiveComponent` (i.e `aria-*`, `role`, etc.) will be set on the inner `<canvas>` element. Previously, all extra props would be set onto the containing `<div>` element. Both the `className` and `style` props will continue to be set on the `<div>` element that wraps the canvas, as this dictates the sizing of the Rive component.
+
+
+### Migrating to 3.0
+
+There are no breaking changes here. If you have migrated to v2.x.x, you can safely migrate to 3.0.

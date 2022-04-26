@@ -233,8 +233,13 @@ export default function useRive(
   const animations = riveParams?.animations;
   useEffect(() => {
     if (rive && animations) {
-      rive.stop(rive.animationNames);
-      rive.play(animations);
+      if (rive.isPlaying) {
+        rive.stop(rive.animationNames);
+        rive.play(animations);
+      } else if (rive.isPaused) {
+        rive.stop(rive.animationNames);
+        rive.pause(animations);
+      }
     }
   }, [animations, rive]);
 

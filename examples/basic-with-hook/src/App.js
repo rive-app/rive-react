@@ -6,13 +6,23 @@ function App() {
     autoplay: true,
   };
 
-  const { RiveComponent } = useRive(params);
+  const { RiveComponent: RiveComponentBasic } = useRive(params);
+
+  const { RiveComponent: RiveComponentTouch } = useRive({
+    src: 'magic-ball.riv',
+    autoplay: true,
+    stateMachines: "Main State Machine",
+  });
 
   return (
-    // The animation will fit to the parent element.
-    <div style={{ height: '500px', width: '500px' }}>
-      <RiveComponent />
-    </div>
+    <>
+      <div style={{ height: '500px', width: '500px' }}>
+        <RiveComponentBasic />
+      </div>
+      <div style={{ height: '300px', width: '300px' }}>
+        <RiveComponentTouch />
+      </div>
+    </>
   );
 }
 

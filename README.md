@@ -26,7 +26,7 @@ _Note: This library is using React hooks so the minimum version required for bot
 
 ### Component
 
-Rive React provides a basic component as it's default import for displaying simple animations.
+Rive React provides a basic component as it's default import for displaying simple animations. Note that any animations or state machines instantiated through this component will autoplay.
 
 ```js
 import Rive from 'rive-react';
@@ -43,6 +43,7 @@ export default Example;
 - `src`: File path or URL to the .riv file to display.
 - `artboard`: _(optional)_ Name to display.
 - `animations`: _(optional)_ Name or list of names of animtions to play.
+- `stateMachines`: _(optional)_ Name of state machine to play.
 - `layout`: _(optional)_ Layout object to define how animations are displayed on the canvas. See [Rive.js](https://github.com/rive-app/rive-wasm#layout) for more details.
 - _All attributes and eventHandlers that can be passed to a `canvas` element can also be passed to the `Rive` component and used in the same manner._
 

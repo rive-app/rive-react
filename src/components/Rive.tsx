@@ -6,6 +6,7 @@ export type RiveProps = {
   src: string;
   artboard?: string;
   animations?: string | string[];
+  stateMachines?: string | string[];
   layout?: Layout;
   useOffscreenRenderer?: boolean;
 };
@@ -14,6 +15,7 @@ const Rive = ({
   src,
   artboard,
   animations,
+  stateMachines,
   layout,
   useOffscreenRenderer = true,
   ...rest
@@ -23,6 +25,7 @@ const Rive = ({
     artboard,
     animations,
     layout,
+    stateMachines,
     autoplay: true,
   };
 

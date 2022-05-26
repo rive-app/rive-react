@@ -44,7 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
     "auto-changelog": "^2.3.0",
-    "bunchee": "^1.7.3",
+    "bunchee": "1.8.3",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",

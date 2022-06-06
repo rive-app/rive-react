@@ -1,0 +1,157 @@
+<!-- RiveTestHook.stories.mdx -->
+
+import { useState } from 'react';
+
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+
+import RiveComponent, {useRive, useStateMachineInput} from '../../src';
+import {Button} from './components/Button';
+import './rive-overview.css';
+
+<Meta title="React Runtime/State Machines" />
+
+# State Machine Usage
+
+Not familiar with Rive State Machines? Check out our [help docs](https://help.rive.app/editor/state-machine) on what these are first!
+
+The `useStateMachineInput` hook is a helper that makes grabbing references to state machine inputs easier to setup. This hook should be used along with the `useRive` hook, as you need to pass in the `rive` instance returned from `useRive`. See each of the examples below to see usage of the hook creating instance of three types of inputs:
+- Booleans
+- Numbers
+- Triggers
+
+## Boolean inputs
+
+Once you grab a reference to the state machine input, you can get/set the value of the input via the `.value` property.
+
+**Note:** The input instance value itself is not a stateful React variable, therefore, any logic in the component dependent on an input value changing will not trigger a re-render like a React stateful variable change would. You can achieve this effect by keeping reference to the state machine input value inside a React state variable. See the example below for this pattern.
+
+<Canvas withSource="open">
+  <Story name="Boolean input">
+    {() => {
+      const STATE_MACHINE_NAME = 'State Machine 1';
+      const ON_HOVER_INPUT_NAME = 'Hover';
+      const ON_PRESSED_INPUT_NAME = 'Pressed';
+      const { rive, RiveComponent: RiveComponentTouch } = useRive({
+        src: 'like.riv',
+        stateMachines: STATE_MACHINE_NAME,
+        artboard: 'New Artboard',
+        autoplay: true,
+      });
+      const [isHovered, setIsHovered] = useState(false);
+      // Both onHoverInput and onPressedInput are boolean inputs. To transition
+      // states we need to set the value property to true or false.
+      const onPressedInput = useStateMachineInput(
+        rive,
+        STATE_MACHINE_NAME,
+        ON_PRESSED_INPUT_NAME
+      );
+      const onHoverInput = useStateMachineInput(
+        rive,
+        STATE_MACHINE_NAME,
+        ON_HOVER_INPUT_NAME
+      );
+      function onMouseDown() {
+        onPressedInput.value = true;
+      }
+      function onMouseUp() {
+        onPressedInput.value = false;
+      }
+      function onMouseEnter() {
+        onHoverInput.value = true;
+        setIsHovered(true);
+      }
+      function onMouseLeave() {
+        onHoverInput.value = false;
+        setIsHovered(false);
+      }
+      return (
+        <>
+          <div className="center">
+            <RiveComponentTouch
+              className="base-canvas-size"
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
+              onMouseDown={onMouseDown}
+              onMouseUp={onMouseUp}
+            />
+            <p>Hover and click on the canvas</p>
+            <p>Is cursor hovering? {isHovered ? 'Yes' : 'No'}</p>
+          </div>
+        </>
+      );
+    }}
+  </Story>
+</Canvas>
+
+## Number inputs
+
+Once you grab a reference to the state machine input, you can get/set the value of the input via the `.value` property.
+
+<Canvas withSource="open">
+  <Story name="Number input">
+    {() => {
+      const STATE_MACHINE_NAME = 'State Machine ';
+      const INPUT_NAME = 'Level';
+      const { rive, RiveComponent: RiveComponentTouch } = useRive({
+        src: 'skills.riv',
+        stateMachines: STATE_MACHINE_NAME,
+        artboard: 'New Artboard',
+        autoplay: true,
+      });
+      // levelInput is a number state machine input. To transition the state machine,
+      // we need to set the value to a number. For this state machine input, we need
+      // to set to 0, 1 or 2 for a state transition to occur.
+      const levelInput = useStateMachineInput(rive, STATE_MACHINE_NAME, INPUT_NAME);
+      return (
+        // The animation will fit to the parent element, so we set a large height
+        // and width for this example.
+        <div className="center">
+          <RiveComponentTouch className="large-canvas-size" />
+          <div className="btn-group">
+            Choose a level:
+            <Button onClick={() => (levelInput.value = 0)}>0</Button>
+            <Button onClick={() => (levelInput.value = 1)}>1</Button>
+            <Button onClick={() => (levelInput.value = 2)}>2</Button>
+          </div>
+        </div>
+      );
+    }}
+  </Story>
+</Canvas>
+
+## Trigger inputs
+
+Unlike the boolean and number inputs, you invoke the `.fire()` method on a trigger input.
+
+<Canvas withSource="open">
+  <Story name="Trigger input">
+    {() => {
+      const STATE_MACHINE_NAME = 'State Machine 1';
+      const INPUT_NAME = 'Pressed';
+      const { rive, RiveComponent: RiveComponentTouch } = useRive({
+        src: 'piggy-bank.riv',
+        stateMachines: STATE_MACHINE_NAME,
+        artboard: 'New Artboard',
+        autoplay: true,
+      });
+      // pressedInput in a trigger state machine input. To transition the state
+      // we need to call the `fire()` method on the input.
+      const pressedInput = useStateMachineInput(
+        rive,
+        STATE_MACHINE_NAME,
+        INPUT_NAME
+      );
+      // The animation will fit to the parent element, so we set a large height
+      // and width for this example.
+      return (
+        <div className="center">
+          <RiveComponentTouch
+            className="base-canvas-size"
+            onClick={() => pressedInput.fire()}
+          />
+          <p>Click on the canvas</p>
+        </div>
+      );
+    }}
+  </Story>
+</Canvas>

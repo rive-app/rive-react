@@ -1,0 +1,36 @@
+.center {
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.base-canvas-size {
+  height: 300px;
+  width: 300px;
+}
+
+.large-canvas-size {
+  height: 600px;
+  width: 600px;
+}
+
+.btn {
+  text-decoration: none;
+  border: none;
+  background: #0069ed;
+  border-radius: 2px;
+  height: 32px;
+  margin-top: 16px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.btn-group .btn {
+  margin-left: 8px;
+}
+
+.rive-logo {
+  display: flex;
+  margin: 16px auto;
+}

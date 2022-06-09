@@ -95,5 +95,5 @@ While user interaction is a common way to control animation playback for Rives, 
 
 ### API-driven playback
 
-Another common way to control animation playback is through API responses. As long as you hold a reference to the `rive` instance returned from the `useRive` hook, you can invoke control methods on that instance in places such as callbacks from API responses. 
+Another common way to control animation playback is through API responses. Imagine an API that you poll for loading progress of a task. Based on that progress response, you may play or stop a given animation. As long as you hold a reference to the `rive` instance returned from the `useRive` hook, you can invoke control methods on that instance in places such as callbacks from API responses. 
 

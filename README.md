@@ -164,8 +164,8 @@ A Rive.js `stateMachineInput` object.
 
 ## Examples
 
-The [examples](examples) shows a number of different ways to use Rive React. See the instructions for each example to run locally.
-
+This project uses [Storybook](https://storybook.js.org/) to build examples and API documentation. Check it out at:
+https://rive-app.github.io/rive-react. To run locally, simply run `npm run storybook`.
 
 ## Migration notes
 

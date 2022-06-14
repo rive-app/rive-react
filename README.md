@@ -16,9 +16,21 @@ Detailed runtime documentation can be found in [Rive's help center](https://help
 
 ## Installation
 
+There are two main variants of the React runtime:
+
+1. **Recommended** Using [Canvas2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
+
 ```
-npm i --save rive-react
+npm i --save @rive-app/react-canvas
 ```
+
+2. Using [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
+
+```
+npm i --save @rive-app/react-webgl
+```
+
+Read more in our [web runtime docs](https://github.com/rive-app/rive-wasm/blob/master/WEB_RUNTIMES.md) around the differences. For most cases and smallest bundle size, we recommend using the `react-canvas` package.
 
 _Note: This library is using React hooks so the minimum version required for both react and react-dom is 16.8.0._
 
@@ -29,7 +41,7 @@ _Note: This library is using React hooks so the minimum version required for bot
 Rive React provides a basic component as it's default import for displaying simple animations. Note that any animations or state machines instantiated through this component will autoplay.
 
 ```js
-import Rive from 'rive-react';
+import Rive from '@rive-app/react-canvas';
 
 function Example() {
   return <Rive src="loader.riv" />;
@@ -62,7 +74,7 @@ If you decide to pass in a `className` to the Rive component, you will override 
 For more advanced usage, the `useRive` hook is provided. The hook will return a component and a [Rive.js](https://github.com/rive-app/rive-wasm) `Rive` object which gives you control of the current rive file.
 
 ```js
-import { useRive } from 'rive-react';
+import { useRive } from '@rive-app/react-canvas';
 
 function Example() {
   const params = {
@@ -124,7 +136,7 @@ export default Example;
 The `useStateMachineInput` hook is provided to make it easier to interact with state machine inputs on a rive file.
 
 ```js
-import { useRive, useStateMachineInput } from 'rive-react';
+import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
 
 function Example() {
   const STATE_MACHINE_NAME = 'button';

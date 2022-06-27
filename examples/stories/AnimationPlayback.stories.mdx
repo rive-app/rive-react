@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
@@ -48,6 +48,44 @@ The example below shows how to start with a Rive instance that does not autoplay
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
           />
+        </div>
+      );
+    }}
+  </Story>
+</Canvas>
+
+<Canvas withSource="open">
+  <Story name="Play/pause with intersection observer">
+    {() => {
+      const ref = useRef(null);
+      const { rive, RiveComponent } = useRive({
+        src: 'baseball.riv',
+        autoplay: false,
+        animations: "Hover"
+      });
+      useEffect(() => {
+        const observer = new IntersectionObserver(
+          ([things]) => {
+            if (rive) {
+              if (things.isIntersecting) {
+                rive.play("Hover");
+              } else {
+                rive.pause("Hover");
+              }
+            }
+          },
+          {
+            rootMargin: '0px',
+            threshold: 0.1,
+          }
+        )
+        if (ref && ref.current) {
+          observer.observe(ref.current)
+        }
+      }, [rive]);
+      return (
+        <div ref={ref} className="center">
+          <RiveComponent className="base-canvas-size" />
         </div>
       );
     }}

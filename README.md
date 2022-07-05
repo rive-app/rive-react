@@ -47,7 +47,10 @@ This library supports React versions `^16.8.0` through `^18.0.0`.
 
 Check out our Storybook instance that shows how to use the library in small examples, along with code snippets! This includes examples using the basic component, as well as the convenient hooks exported to take advantage of state machines.
 
-[Example page](https://rive-app.github.io/rive-react)
+- [Example page](https://rive-app.github.io/rive-react)
+- [Login screen w/ input tracking](https://rive-app.github.io/rive-use-cases/?path=/story/example-loginformcomponent--primary)
+- [Mouse tracking](https://codesandbox.io/s/rive-mouse-track-test-t0y965?file=/src/App.js)
+- [Accessibility concerns](https://blog.rive.app/accessible-web-animations-aria-live-regions/)
 
 ## Migration Guides
 

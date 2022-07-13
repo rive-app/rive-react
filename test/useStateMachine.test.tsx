@@ -2,7 +2,7 @@ import { mocked } from 'jest-mock';
 import { renderHook } from '@testing-library/react-hooks';
 
 import useStateMachineInput from '../src/hooks/useStateMachineInput';
-import {Rive, StateMachineInput} from '@rive-app/canvas';
+import { Rive, StateMachineInput } from '@rive-app/canvas';
 
 jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
@@ -36,7 +36,9 @@ describe('useStateMachineInput', () => {
     const riveMock = {};
     mocked(Rive).mockImplementation(() => riveMock as Rive);
 
-    const { result } = renderHook(() => useStateMachineInput(riveMock as Rive, '', 'testInput'));
+    const { result } = renderHook(() =>
+      useStateMachineInput(riveMock as Rive, '', 'testInput')
+    );
     expect(result.current).toBeNull();
   });
 
@@ -44,7 +46,9 @@ describe('useStateMachineInput', () => {
     const riveMock = {};
     mocked(Rive).mockImplementation(() => riveMock as Rive);
 
-    const { result } = renderHook(() => useStateMachineInput(riveMock as Rive, 'smName', ''));
+    const { result } = renderHook(() =>
+      useStateMachineInput(riveMock as Rive, 'smName', '')
+    );
     expect(result.current).toBeNull();
   });
 
@@ -55,7 +59,9 @@ describe('useStateMachineInput', () => {
     };
     mocked(Rive).mockImplementation(() => riveMock as Rive);
 
-    const { result } = renderHook(() => useStateMachineInput(riveMock as Rive, 'smName', ''));
+    const { result } = renderHook(() =>
+      useStateMachineInput(riveMock as Rive, 'smName', '')
+    );
     expect(result.current).toBeNull();
   });
 
@@ -69,7 +75,9 @@ describe('useStateMachineInput', () => {
     };
     mocked(Rive).mockImplementation(() => riveMock as Rive);
 
-    const { result } = renderHook(() => useStateMachineInput(riveMock as Rive, 'smName', 'numInput'));
+    const { result } = renderHook(() =>
+      useStateMachineInput(riveMock as Rive, 'smName', 'numInput')
+    );
     expect(result.current).toBeNull();
   });
 
@@ -83,7 +91,9 @@ describe('useStateMachineInput', () => {
     };
     mocked(Rive).mockImplementation(() => riveMock as Rive);
 
-    const { result } = renderHook(() => useStateMachineInput(riveMock as Rive, 'smName', 'boolInput'));
+    const { result } = renderHook(() =>
+      useStateMachineInput(riveMock as Rive, 'smName', 'boolInput')
+    );
     expect(result.current).toBe(smInput);
   });
 
@@ -98,7 +108,9 @@ describe('useStateMachineInput', () => {
     };
     mocked(Rive).mockImplementation(() => riveMock as Rive);
 
-    const { result } = renderHook(() => useStateMachineInput(riveMock as Rive, 'smName', 'boolInput', true));
+    const { result } = renderHook(() =>
+      useStateMachineInput(riveMock as Rive, 'smName', 'boolInput', true)
+    );
     expect(result.current).toStrictEqual({
       ...smInput,
       value: true,

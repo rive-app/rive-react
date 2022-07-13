@@ -13,7 +13,7 @@ import {
   RiveState,
   Dimensions,
 } from '../types';
-import { useWindowSize } from '../utils';
+import { isIE, useWindowSize } from '../utils';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -80,6 +80,7 @@ export default function useRive(
 ): RiveState {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
+
   const [rive, setRive] = useState<Rive | null>(null);
   const [dimensions, setDimensions] = useState<Dimensions>({
     height: 0,
@@ -89,6 +90,12 @@ export default function useRive(
   // Listen to changes in the window sizes and update the bounds when changes
   // occur.
   const windowSize = useWindowSize();
+
+  // when the container dimensions change, we need to re evaluate our dimensions.
+  const [containerDimensions, setContainerDimensions] = useState<Dimensions>({
+    height: 0,
+    width: 0,
+  });
 
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
@@ -155,12 +162,38 @@ export default function useRive(
   /**
    * Listen to changes on the windowSize and the rive file being loaded
    * and update the canvas bounds as needed.
+   *
+   * ie does not support ResizeObservers, so we fallback to the window listener there
    */
-  useEffect(() => {
-    if (rive) {
-      updateBounds();
-    }
-  }, [rive, windowSize]);
+  if (isIE()) {
+    useEffect(() => {
+      if (rive) {
+        updateBounds();
+      }
+    }, [rive, windowSize]);
+  } else {
+    const observer = React.useRef(
+      new ResizeObserver((entries) => {
+        setContainerDimensions(entries[entries.length - 1].contentRect);
+      })
+    );
+    useEffect(() => {
+      if (rive) {
+        console.log('updating');
+        updateBounds();
+      }
+    }, [rive, containerDimensions]);
+
+    useEffect(() => {
+      if (containerRef.current) {
+        observer.current.observe(containerRef.current);
+      }
+
+      return () => {
+        observer.current.disconnect();
+      };
+    }, [containerRef.current, observer]);
+  }
 
   /**
    * Ref callback called when the canvas element mounts and unmounts.
@@ -184,7 +217,6 @@ export default function useRive(
     },
     [isParamsLoaded]
   );
-
   /**
    * Ref callback called when the container element mounts
    */

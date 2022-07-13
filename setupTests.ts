@@ -1,4 +1,7 @@
 import '@testing-library/jest-dom';
+import ResizeObserver from 'resize-observer-polyfill';
+
+global.ResizeObserver = ResizeObserver;
 
 window.IntersectionObserver = class IntersectionObserver {
   readonly root: Element | null;

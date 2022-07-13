@@ -1,6 +1,6 @@
 import React from 'react';
 import RiveComponent from '../src/components/Rive';
-import {render} from '@testing-library/react'
+import { render } from '@testing-library/react';
 
 jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
@@ -26,7 +26,13 @@ jest.mock('@rive-app/canvas', () => ({
 
 describe('Rive Component', () => {
   it('renders the component as a canvas and a div wrapper', () => {
-    const {container, getByLabelText} = render(<RiveComponent src="foo.riv" className="container-styles" aria-label="Foo label" />);
+    const { container, getByLabelText } = render(
+      <RiveComponent
+        src="foo.riv"
+        className="container-styles"
+        aria-label="Foo label"
+      />
+    );
     expect(container.firstChild).toHaveClass('container-styles');
     expect(getByLabelText('Foo label').tagName).toEqual('CANVAS');
   });

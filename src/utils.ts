@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions } from './types';
-import ResizeObserver from 'resize-observer-polyfill';
+
+// There are polyfills for this, but they add hundreds of lines of code
+class FakeResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+const MyResizeObserver = globalThis.ResizeObserver || FakeResizeObserver;
+const hasResizeObserver = globalThis.ResizeObserver !== undefined;
 
 export function useSize(
   containerRef: React.MutableRefObject<HTMLElement | null>
@@ -20,8 +29,8 @@ export function useSize(
         });
       };
 
-      if (isIE()) {
-        // only listen to window when its IE, as ResizeObserver will be polyfilled.
+      if (!hasResizeObserver) {
+        // only pay attention to window size changes when we do not have the resizeObserver (IE only)
         window.addEventListener('resize', handleResize);
         handleResize();
       }
@@ -30,7 +39,7 @@ export function useSize(
   }, []);
 
   const observer = useRef(
-    new ResizeObserver((entries) => {
+    new MyResizeObserver((entries) => {
       setSize({
         width: entries[entries.length - 1].contentRect.width,
         height: entries[entries.length - 1].contentRect.height,
@@ -50,36 +59,4 @@ export function useSize(
   }, [containerRef, observer]);
 
   return size;
-}
-
-// grabbed from: https://stackoverflow.com/questions/19999388/check-if-user-is-using-ie
-// There is a shorter version, but that one ran into type issues with typescript.
-export function isIE() {
-  /**
-   * detect IEEdge
-   * returns version of IE/Edge or false, if browser is not a Microsoft browser
-   */
-  const ua = window.navigator.userAgent;
-
-  const msie = ua.indexOf('MSIE ');
-  if (msie > 0) {
-    // IE 10 or older => return version number
-    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-  }
-
-  const trident = ua.indexOf('Trident/');
-  if (trident > 0) {
-    // IE 11 => return version number
-    const rv = ua.indexOf('rv:');
-    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-  }
-
-  const edge = ua.indexOf('Edge/');
-  if (edge > 0) {
-    // Edge => return version number
-    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-  }
-
-  // other browser
-  return false;
 }

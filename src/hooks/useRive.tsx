@@ -165,35 +165,33 @@ export default function useRive(
    *
    * ie does not support ResizeObservers, so we fallback to the window listener there
    */
-  if (isIE()) {
-    useEffect(() => {
-      if (rive) {
-        updateBounds();
-      }
-    }, [rive, windowSize]);
-  } else {
-    const observer = React.useRef(
-      new ResizeObserver((entries) => {
-        setContainerDimensions(entries[entries.length - 1].contentRect);
-      })
-    );
-    useEffect(() => {
-      if (rive) {
-        console.log('updating');
-        updateBounds();
-      }
-    }, [rive, containerDimensions]);
+  useEffect(() => {
+    if (isIE() && rive) {
+      updateBounds();
+    }
+  }, [rive, windowSize]);
 
-    useEffect(() => {
-      if (containerRef.current) {
-        observer.current.observe(containerRef.current);
-      }
+  const observer = useRef(
+    new ResizeObserver((entries) => {
+      setContainerDimensions(entries[entries.length - 1].contentRect);
+    })
+  );
 
-      return () => {
-        observer.current.disconnect();
-      };
-    }, [containerRef.current, observer]);
-  }
+  useEffect(() => {
+    if (!isIE() && rive) {
+      updateBounds();
+    }
+  }, [rive, containerDimensions]);
+
+  useEffect(() => {
+    if (!isIE() && containerRef.current) {
+      observer.current.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.current.disconnect();
+    };
+  }, [containerRef.current, observer]);
 
   /**
    * Ref callback called when the canvas element mounts and unmounts.

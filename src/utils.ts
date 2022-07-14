@@ -1,26 +1,55 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions } from './types';
+import ResizeObserver from 'resize-observer-polyfill';
 
-export function useWindowSize() {
-  const [windowSize, setWindowSize] = useState<Dimensions>({
+export function useSize(
+  containerRef: React.MutableRefObject<HTMLElement | null>
+) {
+  const [size, setSize] = useState<Dimensions>({
     width: 0,
     height: 0,
   });
 
+  // internet explorer does not support ResizeObservers.
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handleResize = () => {
-        setWindowSize({
+        setSize({
           width: window.innerWidth,
           height: window.innerHeight,
         });
       };
-      window.addEventListener('resize', handleResize);
-      handleResize();
+
+      if (isIE()) {
+        // only listen to window when its IE, as ResizeObserver will be polyfilled.
+        window.addEventListener('resize', handleResize);
+        handleResize();
+      }
       return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
-  return windowSize;
+
+  const observer = useRef(
+    new ResizeObserver((entries) => {
+      setSize({
+        width: entries[entries.length - 1].contentRect.width,
+        height: entries[entries.length - 1].contentRect.height,
+      });
+    })
+  );
+
+  useEffect(() => {
+    const current = observer.current;
+    if (containerRef.current) {
+      current.observe(containerRef.current);
+    }
+
+    return () => {
+      current.disconnect();
+    };
+  }, [containerRef, observer]);
+
+  return size;
 }
 
 // grabbed from: https://stackoverflow.com/questions/19999388/check-if-user-is-using-ie

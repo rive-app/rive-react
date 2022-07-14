@@ -13,7 +13,7 @@ import {
   RiveState,
   Dimensions,
 } from '../types';
-import { isIE, useWindowSize } from '../utils';
+import { useSize } from '../utils';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -89,13 +89,7 @@ export default function useRive(
 
   // Listen to changes in the window sizes and update the bounds when changes
   // occur.
-  const windowSize = useWindowSize();
-
-  // when the container dimensions change, we need to re evaluate our dimensions.
-  const [containerDimensions, setContainerDimensions] = useState<Dimensions>({
-    height: 0,
-    width: 0,
-  });
+  const size = useSize(containerRef);
 
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
@@ -166,39 +160,17 @@ export default function useRive(
    * ie does not support ResizeObservers, so we fallback to the window listener there
    */
   useEffect(() => {
-    if (isIE() && rive) {
+    if (rive) {
       updateBounds();
     }
-  }, [rive, windowSize]);
-
-  const observer = useRef(
-    new ResizeObserver((entries) => {
-      setContainerDimensions(entries[entries.length - 1].contentRect);
-    })
-  );
-
-  useEffect(() => {
-    if (!isIE() && rive) {
-      updateBounds();
-    }
-  }, [rive, containerDimensions]);
-
-  useEffect(() => {
-    if (!isIE() && containerRef.current) {
-      observer.current.observe(containerRef.current);
-    }
-
-    return () => {
-      observer.current.disconnect();
-    };
-  }, [containerRef.current, observer]);
+  }, [rive, size]);
 
   /**
    * Ref callback called when the canvas element mounts and unmounts.
    */
   const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
     (canvas: HTMLCanvasElement | null) => {
-      if (canvas && riveParams) {
+      if (canvas && riveParams && isParamsLoaded) {
         const { useOffscreenRenderer } = options;
         const r = new Rive({
           useOffscreenRenderer,

@@ -104,8 +104,12 @@ export default function useRive(
    * @returns Dimensions object.
    */
   function getCanvasDimensions() {
-    const { width, height } =
-      containerRef.current?.getBoundingClientRect() ?? new DOMRect(0, 0, 0, 0);
+    // getBoundingClientRect returns the scaled width and height
+    // this will result in double scaling
+    // https://developer.mozilla.org/en-US/docs/Web/API/CSS_Object_Model/Determining_the_dimensions_of_elements
+
+    const width = containerRef.current?.clientWidth ?? 0;
+    const height = containerRef.current?.clientHeight ?? 0;
 
     if (rive && options.fitCanvasToArtboardHeight) {
       const { maxY, maxX } = rive.bounds;

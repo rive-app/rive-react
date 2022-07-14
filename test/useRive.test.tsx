@@ -136,10 +136,8 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    containerSpy.getBoundingClientRect = jest.fn().mockImplementation(() => ({
-      width: 100,
-      height: 100,
-    }));
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
 
     const { result } = renderHook(() => useRive(params));
 
@@ -176,10 +174,8 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    containerSpy.getBoundingClientRect = jest.fn().mockImplementation(() => ({
-      width: 100,
-      height: 100,
-    }));
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
 
     const { result } = renderHook(() => useRive(params, opts));
 
@@ -216,10 +212,8 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    containerSpy.getBoundingClientRect = jest.fn().mockImplementation(() => ({
-      width: 100,
-      height: 100,
-    }));
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
 
     const { result } = renderHook(() => useRive(params, opts));
 

@@ -1,10 +1,12 @@
 name: Deploy Storybook
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
-    paths: ['src', 'examples/stories/**'] # Trigger the action only when files change in the folders defined here
+  # Testing to see if this job is causing the race condition
+  workflow_dispatch:
+  # pull_request:
+  #   types: [closed]
+  #   branches:
+  #     - main
+  #   paths: ['src', 'examples/stories/**'] # Trigger the action only when files change in the folders defined here
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

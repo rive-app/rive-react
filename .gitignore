@@ -1,8 +1,10 @@
 node_modules
-dist
+dist/types
+package.json
 .DS_Store
 .env
 .idea
 .vscode
 examples/**/package-lock.json
 package-lock.json
+npm

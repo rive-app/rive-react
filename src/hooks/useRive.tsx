@@ -181,7 +181,13 @@ export default function useRive(
           ...riveParams,
           canvas,
         });
-        r.on(EventType.Load, () => setRive(r));
+        r.on(EventType.Load, () => {
+          // Check if the component/canvas is mounted before setting state to avoid setState
+          // on an unmounted component in some rare cases
+          if (canvasRef.current) {
+            setRive(r);
+          }
+        });
       } else if (canvas === null && canvasRef.current) {
         canvasRef.current.height = 0;
         canvasRef.current.width = 0;

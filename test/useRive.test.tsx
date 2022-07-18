@@ -29,6 +29,23 @@ jest.mock('@rive-app/canvas', () => ({
 }));
 
 describe('useRive', () => {
+  let controlledRiveloadCb: () => void;
+  let baseRiveMock: Partial<rive.Rive>;
+
+  beforeEach(() => {
+    baseRiveMock = {
+      on: (_: rive.EventType, cb: rive.EventCallback) =>
+        ((controlledRiveloadCb as rive.EventCallback) = cb),
+      stop: jest.fn(),
+      stopRendering: jest.fn(),
+      startRendering: jest.fn(),
+    };
+  });
+
+  afterEach(() => {
+    controlledRiveloadCb = () => {};
+  });
+
   it('returns rive as null if no params are passed', () => {
     const { result } = renderHook(() => useRive());
     expect(result.current.rive).toBe(null);
@@ -40,23 +57,17 @@ describe('useRive', () => {
       src: 'file-src',
     };
 
-    const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
-      stopRendering: jest.fn(),
-    };
-
     // @ts-ignore
-    mocked(rive.Rive).mockImplementation(() => riveMock);
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
 
     const canvasSpy = document.createElement('canvas');
     const { result } = renderHook(() => useRive(params));
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
-
-    expect(result.current.rive).toBe(riveMock);
+    expect(result.current.rive).toBe(baseRiveMock);
     expect(result.current.canvas).toBe(canvasSpy);
   });
 
@@ -68,9 +79,7 @@ describe('useRive', () => {
     const resizeToCanvasMock = jest.fn();
 
     const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
-      stopRendering: jest.fn(),
+      ...baseRiveMock,
       resizeToCanvas: resizeToCanvasMock,
     };
 
@@ -84,6 +93,7 @@ describe('useRive', () => {
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
     });
 
     expect(result.current.rive).toBe(riveMock);
@@ -100,7 +110,7 @@ describe('useRive', () => {
     const stopMock = jest.fn();
 
     const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
+      ...baseRiveMock,
       stop: stopMock,
     };
 
@@ -112,6 +122,7 @@ describe('useRive', () => {
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
 
     unmount();
@@ -126,13 +137,8 @@ describe('useRive', () => {
 
     global.devicePixelRatio = 2;
 
-    const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
-    };
-
     // @ts-ignore
-    mocked(rive.Rive).mockImplementation(() => riveMock);
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
@@ -144,6 +150,7 @@ describe('useRive', () => {
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
     });
 
     // Height and width should be 2* the width and height returned from containers
@@ -164,13 +171,8 @@ describe('useRive', () => {
       useDevicePixelRatio: false,
     };
 
-    const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
-    };
-
     // @ts-ignore
-    mocked(rive.Rive).mockImplementation(() => riveMock);
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
@@ -182,6 +184,7 @@ describe('useRive', () => {
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
     });
 
     // Height and width should be same as containers bounding rect
@@ -199,8 +202,7 @@ describe('useRive', () => {
     };
 
     const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
+      ...baseRiveMock,
       bounds: {
         maxX: 100,
         maxY: 50,
@@ -220,6 +222,7 @@ describe('useRive', () => {
     await act(async () => {
       result.current.setContainerRef(containerSpy);
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
 
     // Height and width should be same as containers bounding rect
@@ -243,8 +246,7 @@ describe('useRive', () => {
     }));
 
     const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
+      ...baseRiveMock,
       bounds: {
         maxX: 100,
         maxY: 50,
@@ -260,6 +262,7 @@ describe('useRive', () => {
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
 
     expect(observeMock).toBeCalledWith(canvasSpy);
@@ -277,7 +280,7 @@ describe('useRive', () => {
     const stopMock = jest.fn();
 
     const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
+      ...baseRiveMock,
       stop: stopMock,
       play: playMock,
       animationNames: ['light'],
@@ -295,6 +298,7 @@ describe('useRive', () => {
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
 
     rerender({
@@ -317,7 +321,7 @@ describe('useRive', () => {
     const stopMock = jest.fn();
 
     const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
+      ...baseRiveMock,
       stop: stopMock,
       play: playMock,
       pause: pauseMock,
@@ -337,6 +341,7 @@ describe('useRive', () => {
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
 
     rerender({
@@ -354,20 +359,15 @@ describe('useRive', () => {
       src: 'file-src',
     };
 
-    const riveMock = {
-      on: (_: string, cb: () => void) => cb(),
-      stop: jest.fn(),
-      stopRendering: jest.fn(),
-    };
-
     // @ts-ignore
-    mocked(rive.Rive).mockImplementation(() => riveMock);
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
 
     const canvasSpy = document.createElement('canvas');
     const { result } = renderHook(() => useRive(params));
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
     });
 
     const { RiveComponent: RiveTestComponent } = result.current;

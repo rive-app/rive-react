@@ -8,8 +8,20 @@ class FakeResizeObserver {
   disconnect() {}
 }
 
+function throttle(f: Function, delay: number) {
+  let timer = 0;
+  return function (this: Function, ...args: any) {
+    clearTimeout(timer);
+    timer = setTimeout(() => f.apply(this, args), delay) as unknown as number;
+  };
+}
+
 const MyResizeObserver = globalThis.ResizeObserver || FakeResizeObserver;
 const hasResizeObserver = globalThis.ResizeObserver !== undefined;
+const preferResizeObserver = true;
+const throttleResizeObserver = true;
+const useResizeObserver = hasResizeObserver && preferResizeObserver;
+const useWindowListener = !useResizeObserver;
 
 export function useSize(
   containerRef: React.MutableRefObject<HTMLElement | null>
@@ -29,22 +41,35 @@ export function useSize(
         });
       };
 
-      if (!hasResizeObserver) {
+      if (useWindowListener) {
         // only pay attention to window size changes when we do not have the resizeObserver (IE only)
-        window.addEventListener('resize', handleResize);
         handleResize();
+        window.addEventListener('resize', handleResize);
       }
+
       return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
-
   const observer = useRef(
-    new MyResizeObserver((entries) => {
-      setSize({
-        width: entries[entries.length - 1].contentRect.width,
-        height: entries[entries.length - 1].contentRect.height,
-      });
-    })
+    new MyResizeObserver(
+      throttleResizeObserver
+        ? throttle((entries: any) => {
+            if (hasResizeObserver) {
+              setSize({
+                width: entries[entries.length - 1].contentRect.width,
+                height: entries[entries.length - 1].contentRect.height,
+              });
+            }
+          }, 16)
+        : (entries: any) => {
+            if (hasResizeObserver) {
+              setSize({
+                width: entries[entries.length - 1].contentRect.width,
+                height: entries[entries.length - 1].contentRect.height,
+              });
+            }
+          }
+    )
   );
 
   useEffect(() => {
@@ -55,6 +80,9 @@ export function useSize(
 
     return () => {
       current.disconnect();
+      if (containerRef.current) {
+        current.unobserve(containerRef.current);
+      }
     };
   }, [containerRef, observer]);
 

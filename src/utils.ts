@@ -12,15 +12,14 @@ function throttle(f: Function, delay: number) {
   let timer = 0;
   return function (this: Function, ...args: any) {
     clearTimeout(timer);
-    timer = setTimeout(() => f.apply(this, args), delay) as unknown as number;
+    timer = window.setTimeout(() => f.apply(this, args), delay);
   };
 }
 
 const MyResizeObserver = globalThis.ResizeObserver || FakeResizeObserver;
 const hasResizeObserver = globalThis.ResizeObserver !== undefined;
-const preferResizeObserver = true;
-const throttleResizeObserver = true;
-const useResizeObserver = hasResizeObserver && preferResizeObserver;
+
+const useResizeObserver = hasResizeObserver;
 const useWindowListener = !useResizeObserver;
 
 export function useSize(
@@ -52,23 +51,14 @@ export function useSize(
   }, []);
   const observer = useRef(
     new MyResizeObserver(
-      throttleResizeObserver
-        ? throttle((entries: any) => {
-            if (useResizeObserver) {
-              setSize({
-                width: entries[entries.length - 1].contentRect.width,
-                height: entries[entries.length - 1].contentRect.height,
-              });
-            }
-          }, 16)
-        : (entries: any) => {
-            if (useResizeObserver) {
-              setSize({
-                width: entries[entries.length - 1].contentRect.width,
-                height: entries[entries.length - 1].contentRect.height,
-              });
-            }
-          }
+      throttle((entries: any) => {
+        if (useResizeObserver) {
+          setSize({
+            width: entries[entries.length - 1].contentRect.width,
+            height: entries[entries.length - 1].contentRect.height,
+          });
+        }
+      }, 16)
     )
   );
 

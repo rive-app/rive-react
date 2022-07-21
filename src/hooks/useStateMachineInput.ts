@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Rive, StateMachineInput } from '@rive-app/canvas';
+import { EventType, Rive, StateMachineInput } from '@rive-app/canvas';
 
 /**
  * Custom hook for fetching a stateMachine input from a rive file.
@@ -18,21 +18,33 @@ export default function useStateMachineInput(
   const [input, setInput] = useState<StateMachineInput | null>(null);
 
   useEffect(() => {
-    if (!rive || !stateMachineName || !inputName) {
-      setInput(null);
-    }
-
-    if (rive && stateMachineName && inputName) {
-      const inputs = rive.stateMachineInputs(stateMachineName);
-      if (inputs) {
-        const selectedInput = inputs.find((input) => input.name === inputName);
-        if (initialValue !== undefined && selectedInput) {
-          selectedInput.value = initialValue;
-        }
-        setInput(selectedInput || null);
+    function setStateMachineInput() {
+      if (!rive || !stateMachineName || !inputName) {
+        setInput(null);
       }
-    } else {
-      setInput(null);
+
+      if (rive && stateMachineName && inputName) {
+        const inputs = rive.stateMachineInputs(stateMachineName);
+        if (inputs) {
+          const selectedInput = inputs.find(
+            (input) => input.name === inputName
+          );
+          if (initialValue !== undefined && selectedInput) {
+            selectedInput.value = initialValue;
+          }
+          setInput(selectedInput || null);
+        }
+      } else {
+        setInput(null);
+      }
+    }
+    setStateMachineInput();
+    if (rive) {
+      rive.on(EventType.Play, () => {
+        // Check if the component/canvas is mounted before setting state to avoid setState
+        // on an unmounted component in some rare cases
+        setStateMachineInput();
+      });
     }
   }, [rive]);
 

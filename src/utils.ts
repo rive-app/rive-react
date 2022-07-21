@@ -54,7 +54,7 @@ export function useSize(
     new MyResizeObserver(
       throttleResizeObserver
         ? throttle((entries: any) => {
-            if (hasResizeObserver) {
+            if (useResizeObserver) {
               setSize({
                 width: entries[entries.length - 1].contentRect.width,
                 height: entries[entries.length - 1].contentRect.height,
@@ -62,7 +62,7 @@ export function useSize(
             }
           }, 16)
         : (entries: any) => {
-            if (hasResizeObserver) {
+            if (useResizeObserver) {
               setSize({
                 width: entries[entries.length - 1].contentRect.width,
                 height: entries[entries.length - 1].contentRect.height,
@@ -74,13 +74,13 @@ export function useSize(
 
   useEffect(() => {
     const current = observer.current;
-    if (containerRef.current) {
+    if (containerRef.current && useResizeObserver) {
       current.observe(containerRef.current);
     }
 
     return () => {
       current.disconnect();
-      if (containerRef.current) {
+      if (containerRef.current && useResizeObserver) {
         current.unobserve(containerRef.current);
       }
     };

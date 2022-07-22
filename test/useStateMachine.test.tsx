@@ -8,6 +8,7 @@ jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),
+    stateMachineInputs: jest.fn(),
   })),
   Layout: jest.fn(),
   Fit: {
@@ -26,6 +27,21 @@ jest.mock('@rive-app/canvas', () => ({
   },
 }));
 
+function getRiveMock({
+  smiInputs,
+}: {
+  smiInputs?: null | StateMachineInput[];
+} = {}) {
+  const riveMock = new Rive({
+    canvas: undefined as unknown as HTMLCanvasElement,
+  });
+  if (smiInputs) {
+    riveMock.stateMachineInputs = jest.fn().mockReturnValue(smiInputs);
+  }
+
+  return riveMock;
+}
+
 describe('useStateMachineInput', () => {
   it('returns null if there is null rive object passed', () => {
     const { result } = renderHook(() => useStateMachineInput(null));
@@ -33,31 +49,29 @@ describe('useStateMachineInput', () => {
   });
 
   it('returns null if there is no state machine name', () => {
-    const riveMock = {};
-    mocked(Rive).mockImplementation(() => riveMock as Rive);
+    const riveMock = getRiveMock();
+
+    mocked(Rive).mockImplementation(() => riveMock);
 
     const { result } = renderHook(() =>
-      useStateMachineInput(riveMock as Rive, '', 'testInput')
+      useStateMachineInput(riveMock, '', 'testInput')
     );
     expect(result.current).toBeNull();
   });
 
   it('returns null if there is no state machine input name', () => {
-    const riveMock = {};
-    mocked(Rive).mockImplementation(() => riveMock as Rive);
+    const riveMock = getRiveMock();
 
     const { result } = renderHook(() =>
-      useStateMachineInput(riveMock as Rive, 'smName', '')
+      useStateMachineInput(riveMock, 'smName', '')
     );
     expect(result.current).toBeNull();
   });
 
   it('returns null if there are no inputs for the state machine', () => {
-    const riveMock = {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      stateMachineInputs: (_: string) => [] as StateMachineInput[],
-    };
-    mocked(Rive).mockImplementation(() => riveMock as Rive);
+    const riveMock = getRiveMock({ smiInputs: [] });
+
+    mocked(Rive).mockImplementation(() => riveMock);
 
     const { result } = renderHook(() =>
       useStateMachineInput(riveMock as Rive, 'smName', '')
@@ -69,14 +83,12 @@ describe('useStateMachineInput', () => {
     const smInput = {
       name: 'boolInput',
     } as StateMachineInput;
-    const riveMock = {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      stateMachineInputs: (_: string) => [smInput] as StateMachineInput[],
-    };
-    mocked(Rive).mockImplementation(() => riveMock as Rive);
+    const riveMock = getRiveMock({ smiInputs: [smInput] });
+
+    mocked(Rive).mockImplementation(() => riveMock);
 
     const { result } = renderHook(() =>
-      useStateMachineInput(riveMock as Rive, 'smName', 'numInput')
+      useStateMachineInput(riveMock, 'smName', 'numInput')
     );
     expect(result.current).toBeNull();
   });
@@ -85,14 +97,12 @@ describe('useStateMachineInput', () => {
     const smInput = {
       name: 'boolInput',
     } as StateMachineInput;
-    const riveMock = {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      stateMachineInputs: (_: string) => [smInput] as StateMachineInput[],
-    };
-    mocked(Rive).mockImplementation(() => riveMock as Rive);
+    const riveMock = getRiveMock({ smiInputs: [smInput] });
+
+    mocked(Rive).mockImplementation(() => riveMock);
 
     const { result } = renderHook(() =>
-      useStateMachineInput(riveMock as Rive, 'smName', 'boolInput')
+      useStateMachineInput(riveMock, 'smName', 'boolInput')
     );
     expect(result.current).toBe(smInput);
   });
@@ -102,14 +112,11 @@ describe('useStateMachineInput', () => {
       name: 'boolInput',
       value: false,
     } as StateMachineInput;
-    const riveMock = {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      stateMachineInputs: (_: string) => [smInput] as StateMachineInput[],
-    };
-    mocked(Rive).mockImplementation(() => riveMock as Rive);
+    const riveMock = getRiveMock({ smiInputs: [smInput] });
+    mocked(Rive).mockImplementation(() => riveMock);
 
     const { result } = renderHook(() =>
-      useStateMachineInput(riveMock as Rive, 'smName', 'boolInput', true)
+      useStateMachineInput(riveMock, 'smName', 'boolInput', true)
     );
     expect(result.current).toStrictEqual({
       ...smInput,

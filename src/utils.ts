@@ -58,7 +58,7 @@ export function useSize(
             height: entries[entries.length - 1].contentRect.height,
           });
         }
-      }, 16)
+      }, 0)
     )
   );
 

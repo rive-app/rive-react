@@ -25,6 +25,8 @@ function RiveComponent({
   setCanvasRef,
   className = '',
   style,
+  width,
+  height,
   ...rest
 }: RiveComponentProps & ComponentProps<'canvas'>) {
   const containerStyle = {
@@ -39,7 +41,12 @@ function RiveComponent({
       className={className}
       {...(!className && { style: containerStyle })}
     >
-      <canvas ref={setCanvasRef} style={{ verticalAlign: 'top' }} {...rest} />
+      <canvas
+        ref={setCanvasRef}
+        style={{ verticalAlign: 'top' }}
+        {...(width !== undefined && {width, 'data-rive-width-prop': width})}
+        {...(height !== undefined && {height, 'data-c': height})}
+        {...rest} />
     </div>
   );
 }
@@ -82,6 +89,7 @@ export default function useRive(
   const containerRef = useRef<HTMLElement | null>(null);
 
   const [rive, setRive] = useState<Rive | null>(null);
+  const riveRef = useRef<Rive | null>(null);
   const [dimensions, setDimensions] = useState<Dimensions>({
     height: 0,
     width: 0,
@@ -92,6 +100,9 @@ export default function useRive(
   const size = useSize(containerRef);
 
   const isParamsLoaded = Boolean(riveParams);
+
+  const artboardParam = riveParams?.artboard;
+
   const options = getOptions(opts);
 
   /**
@@ -133,15 +144,25 @@ export default function useRive(
       if (options.fitCanvasToArtboardHeight) {
         containerRef.current.style.height = height + 'px';
       }
+      const widthProp = canvasRef.current.dataset['rive-width-prop'];
+      const heightProp = canvasRef.current.dataset['rive-height-prop'];
       if (options.useDevicePixelRatio) {
         const dpr = window.devicePixelRatio || 1;
-        canvasRef.current.width = dpr * width;
-        canvasRef.current.height = dpr * height;
+        if (!widthProp) {
+          canvasRef.current.width = dpr * width;
+        }
+        if (!heightProp) {
+          canvasRef.current.height = dpr * height;
+        }
         canvasRef.current.style.width = width + 'px';
         canvasRef.current.style.height = height + 'px';
       } else {
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
+        if (!widthProp) {
+          canvasRef.current.width = width;
+        }
+        if (!heightProp) {
+          canvasRef.current.height = height;
+        }
       }
       setDimensions({ width, height });
 
@@ -186,6 +207,9 @@ export default function useRive(
           // on an unmounted component in some rare cases
           if (canvasRef.current) {
             setRive(r);
+            // Setting a ref in addition to state so that we can get a reference to the Rive
+            // instance on component unmount
+            riveRef.current = r;
           }
         });
       } else if (canvas === null && canvasRef.current) {
@@ -214,8 +238,8 @@ export default function useRive(
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       entry.isIntersecting
-        ? rive && rive.startRendering()
-        : rive && rive.stopRendering();
+        ? rive && riveRef.current && rive.startRendering()
+        : rive && riveRef.current && rive.stopRendering();
     });
 
     if (canvasRef.current) {
@@ -228,16 +252,45 @@ export default function useRive(
   }, [rive]);
 
   /**
+   * Reset Rive when the artboard, animations, or state machines change
+   */
+  useEffect(() => {
+    // Ensure at least the artboard is set before resetting Rive
+    if (artboardParam && rive) {
+      rive.stopRendering();
+      rive.stop();
+      rive.cleanup();
+
+      const { useOffscreenRenderer } = options;
+      const r = new Rive({
+        useOffscreenRenderer,
+        ...riveParams,
+        canvas: canvasRef.current as HTMLCanvasElement,
+      });
+      r.on(EventType.Load, () => {
+        if (canvasRef.current) {
+          setRive(r);
+            // Setting a ref in addition to state so that we can get a reference to the Rive
+            // instance on component unmount
+          riveRef.current = r;
+        }
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artboardParam]);
+
+  /**
    * On unmount, stop rive from rendering.
    */
   useEffect(() => {
     return () => {
-      if (rive) {
-        rive.stop();
-        setRive(null);
+      if (riveRef.current) {
+        riveRef.current.stopRendering();
+        riveRef.current.stop();
+        riveRef.current.cleanup();
       }
     };
-  }, [rive]);
+  }, []);
 
   /**
    * Listen for changes in the animations params
@@ -265,7 +318,7 @@ export default function useRive(
         />
       );
     },
-    []
+    [setCanvasRef, setContainerRef],
   );
 
   return {

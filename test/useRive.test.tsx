@@ -377,7 +377,7 @@ describe('useRive', () => {
     expect(container.firstChild).not.toHaveStyle('width: 50%');
   });
 
-  it('sets does not override user-provided canvas resolutions', async () => {
+  it('container bounds do not override user-provided canvas resolutions', async () => {
     const params = {
       src: 'file-src',
     };

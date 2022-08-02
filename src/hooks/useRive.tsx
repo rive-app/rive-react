@@ -25,6 +25,8 @@ function RiveComponent({
   setCanvasRef,
   className = '',
   style,
+  width,
+  height,
   ...rest
 }: RiveComponentProps & ComponentProps<'canvas'>) {
   const containerStyle = {
@@ -39,7 +41,13 @@ function RiveComponent({
       className={className}
       {...(!className && { style: containerStyle })}
     >
-      <canvas ref={setCanvasRef} style={{ verticalAlign: 'top' }} {...rest} />
+      <canvas
+        ref={setCanvasRef}
+        style={{ verticalAlign: 'top' }}
+        {...(width !== undefined && {width, 'data-rive-width-prop': width})}
+        {...(height !== undefined && {height, 'data-rive-height-prop': height})}
+        {...rest}
+      />
     </div>
   );
 }
@@ -130,18 +138,28 @@ export default function useRive(
     const boundsChanged =
       width !== dimensions.width || height !== dimensions.height;
     if (canvasRef.current && rive && boundsChanged) {
+      const widthProp = canvasRef.current.getAttribute('data-rive-width-prop');
+      const heightProp = canvasRef.current.getAttribute('data-rive-height-prop');
       if (options.fitCanvasToArtboardHeight) {
         containerRef.current.style.height = height + 'px';
       }
       if (options.useDevicePixelRatio) {
         const dpr = window.devicePixelRatio || 1;
-        canvasRef.current.width = dpr * width;
-        canvasRef.current.height = dpr * height;
+        if (!widthProp) {
+          canvasRef.current.width = dpr * width;
+        }
+        if (!heightProp) {
+          canvasRef.current.height = dpr * height;
+        }
         canvasRef.current.style.width = width + 'px';
         canvasRef.current.style.height = height + 'px';
       } else {
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
+        if (!widthProp) {
+          canvasRef.current.width = width;
+        }
+        if (!heightProp) {
+          canvasRef.current.height = height;
+        }
       }
       setDimensions({ width, height });
 

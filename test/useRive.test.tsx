@@ -376,4 +376,35 @@ describe('useRive', () => {
     );
     expect(container.firstChild).not.toHaveStyle('width: 50%');
   });
+
+  it('sets does not override user-provided canvas resolutions', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    global.devicePixelRatio = 2;
+
+    const riveMock = {
+      ...baseRiveMock,
+      resizeToCanvas: jest.fn(),
+    };
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => riveMock);
+
+    const containerSpy = document.createElement('div');
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(600);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    const { result } = renderHook(() => useRive(params));
+
+    const { RiveComponent: RiveTestComponent } = result.current;
+     render(
+      <RiveTestComponent width={300} height={300} />
+    );
+    await act(async () => {
+      result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
+    });
+
+    expect(result.current.canvas).toHaveAttribute('width', '300');
+  });
 });

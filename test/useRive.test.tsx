@@ -376,4 +376,52 @@ describe('useRive', () => {
     );
     expect(container.firstChild).not.toHaveStyle('width: 50%');
   });
+
+  it('has a canvas size of 0 by default', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const { result } = renderHook(() => useRive(params));
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
+    });
+
+    const { RiveComponent: RiveTestComponent } = result.current;
+    const { container } = render(<RiveTestComponent />);
+    expect(container.querySelector('canvas')).toHaveStyle('width: 0');
+  });
+
+  it('sets the canvas width and height after calculating the container size', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    global.devicePixelRatio = 2;
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const containerSpy = document.createElement('div');
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+
+    const { result } = renderHook(() => useRive(params));
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
+    });
+
+    expect(canvasSpy).toHaveStyle('height: 100px');
+    expect(canvasSpy).toHaveStyle('width: 100px');
+  });
 });

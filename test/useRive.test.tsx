@@ -424,4 +424,31 @@ describe('useRive', () => {
     expect(canvasSpy).toHaveStyle('height: 100px');
     expect(canvasSpy).toHaveStyle('width: 100px');
   });
+
+  it('updates the canvas dimensions and size if there is a new canvas size calculation', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    window.devicePixelRatio = 2;
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const containerSpy = document.createElement('div');
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+
+    const { result } = renderHook(() => useRive(params));
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
+    });
+
+    expect(canvasSpy).toHaveAttribute('width', '200');
+    expect(canvasSpy).toHaveAttribute('height', '200');
+  });
 });

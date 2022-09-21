@@ -13,7 +13,7 @@ import {
   RiveState,
   Dimensions,
 } from '../types';
-import { useSize } from '../utils';
+import { useSize, useDevicePixelRatio } from '../utils';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -86,7 +86,12 @@ export default function useRive(
   const containerRef = useRef<HTMLElement | null>(null);
 
   const [rive, setRive] = useState<Rive | null>(null);
-  const [dimensions, setDimensions] = useState<Dimensions>({
+  const [lastContainerDimensions, setLastContainerDimensions] =
+    useState<Dimensions>({
+      height: 0,
+      width: 0,
+    });
+  const [lastCanvasSize, setLastCanvasSize] = useState<Dimensions>({
     height: 0,
     width: 0,
   });
@@ -94,6 +99,7 @@ export default function useRive(
   // Listen to changes in the window sizes and update the bounds when changes
   // occur.
   const size = useSize(containerRef);
+  const currentDevicePixelRatio = useDevicePixelRatio();
 
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
@@ -131,23 +137,42 @@ export default function useRive(
     }
 
     const { width, height } = getCanvasDimensions();
-    const boundsChanged =
-      width !== dimensions.width || height !== dimensions.height;
-    if (canvasRef.current && rive && boundsChanged) {
-      if (options.fitCanvasToArtboardHeight) {
+    if (canvasRef.current && rive) {
+      // Check if the canvas parent container bounds have changed and set
+      // new values accordingly
+      const boundsChanged =
+        width !== lastContainerDimensions.width ||
+        height !== lastContainerDimensions.height;
+      if (options.fitCanvasToArtboardHeight && boundsChanged) {
         containerRef.current.style.height = height + 'px';
       }
       if (options.useDevicePixelRatio) {
-        const dpr = window.devicePixelRatio || 1;
-        canvasRef.current.width = dpr * width;
-        canvasRef.current.height = dpr * height;
-        canvasRef.current.style.width = width + 'px';
-        canvasRef.current.style.height = height + 'px';
-      } else {
+        // Check if devicePixelRatio may have changed and get new canvas
+        // width/height values to set the size
+        const canvasSizeChanged =
+          width * currentDevicePixelRatio !== lastCanvasSize.width ||
+          height * currentDevicePixelRatio !== lastCanvasSize.height;
+        if (boundsChanged || canvasSizeChanged) {
+          const newCanvasWidthProp = currentDevicePixelRatio * width;
+          const newCanvasHeightProp = currentDevicePixelRatio * height;
+          canvasRef.current.width = newCanvasWidthProp;
+          canvasRef.current.height = newCanvasHeightProp;
+          canvasRef.current.style.width = width + 'px';
+          canvasRef.current.style.height = height + 'px';
+          setLastCanvasSize({
+            width: newCanvasWidthProp,
+            height: newCanvasHeightProp,
+          });
+        }
+      } else if (boundsChanged) {
         canvasRef.current.width = width;
         canvasRef.current.height = height;
+        setLastCanvasSize({
+          width: width,
+          height: height,
+        });
       }
-      setDimensions({ width, height });
+      setLastContainerDimensions({ width, height });
 
       // Updating the canvas width or height will clear the canvas, so call
       // startRendering() to redraw the current frame as the animation might
@@ -171,7 +196,7 @@ export default function useRive(
     if (rive) {
       updateBounds();
     }
-  }, [rive, size]);
+  }, [rive, size, currentDevicePixelRatio]);
 
   /**
    * Ref callback called when the canvas element mounts and unmounts.

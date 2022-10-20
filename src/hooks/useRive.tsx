@@ -215,6 +215,9 @@ export default function useRive(
           // on an unmounted component in some rare cases
           if (canvasRef.current) {
             setRive(r);
+          } else {
+            // If unmounted, cleanup the rive object immediately
+            r.cleanup();
           }
         });
       } else if (canvas === null && canvasRef.current) {
@@ -257,12 +260,13 @@ export default function useRive(
   }, [rive]);
 
   /**
-   * On unmount, stop rive from rendering.
+   * On unmount, call cleanup to cleanup any WASM generated objects that need
+   * to be manually destroyed.
    */
   useEffect(() => {
     return () => {
       if (rive) {
-        rive.stop();
+        rive.cleanup();
         setRive(null);
       }
     };

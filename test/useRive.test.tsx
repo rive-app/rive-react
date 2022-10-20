@@ -102,16 +102,16 @@ describe('useRive', () => {
     expect(resizeToCanvasMock).toBeCalled();
   });
 
-  it('stops the rive object on unmount', async () => {
+  it('calls cleanup on the rive object on unmount', async () => {
     const params = {
       src: 'file-src',
     };
 
-    const stopMock = jest.fn();
+    const cleanupMock = jest.fn();
 
     const riveMock = {
       ...baseRiveMock,
-      stop: stopMock,
+      cleanup: cleanupMock,
     };
 
     // @ts-ignore
@@ -127,7 +127,7 @@ describe('useRive', () => {
 
     unmount();
 
-    expect(stopMock).toBeCalled();
+    expect(cleanupMock).toBeCalled();
   });
 
   it('sets the a bounds with the devicePixelRatio by default', async () => {

@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
-import RiveComponent, {useRive, useStateMachineInput} from '../../src';
-import {Button} from './components/Button';
+import RiveComponent, { useRive, useStateMachineInput } from '../../src';
+import { Button } from './components/Button';
 import './rive-overview.css';
 
 <Meta title="React Runtime/State Machines" />
@@ -15,6 +15,7 @@ import './rive-overview.css';
 Not familiar with Rive State Machines? Check out our [help docs](https://help.rive.app/editor/state-machine) on what these are first!
 
 The `useStateMachineInput` hook is a helper that makes grabbing references to state machine inputs easier to setup. This hook should be used along with the `useRive` hook, as you need to pass in the `rive` instance returned from `useRive`. See each of the examples below to see usage of the hook creating instance of three types of inputs:
+
 - Booleans
 - Numbers
 - Triggers
@@ -90,8 +91,8 @@ Once you grab a reference to the state machine input, you can get/set the value 
 <Canvas withSource="open">
   <Story name="Number input">
     {() => {
-      const STATE_MACHINE_NAME = 'State Machine ';
-      const INPUT_NAME = 'Level';
+      const STATE_MACHINE_NAME = 'skill-controller';
+      const INPUT_NAME = 'level';
       const { rive, RiveComponent: RiveComponentTouch } = useRive({
         src: 'skills.riv',
         stateMachines: STATE_MACHINE_NAME,
@@ -101,7 +102,11 @@ Once you grab a reference to the state machine input, you can get/set the value 
       // levelInput is a number state machine input. To transition the state machine,
       // we need to set the value to a number. For this state machine input, we need
       // to set to 0, 1 or 2 for a state transition to occur.
-      const levelInput = useStateMachineInput(rive, STATE_MACHINE_NAME, INPUT_NAME);
+      const levelInput = useStateMachineInput(
+        rive,
+        STATE_MACHINE_NAME,
+        INPUT_NAME
+      );
       return (
         // The animation will fit to the parent element, so we set a large height
         // and width for this example.

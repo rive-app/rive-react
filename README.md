@@ -50,7 +50,7 @@ Check out our Storybook instance that shows how to use the library in small exam
 - [Example page](https://rive-app.github.io/rive-react)
 - [Login screen w/ input tracking](https://rive-app.github.io/rive-use-cases/?path=/story/example-loginformcomponent--primary)
 - [Mouse tracking](https://codesandbox.io/s/rive-mouse-track-test-t0y965?file=/src/App.js)
-- [Accessibility concerns](https://blog.rive.app/accessible-web-animations-aria-live-regions/)
+- [Accessibility concerns](https://rive.app/blog/accesible-web-animations-aria-live-regions)
 
 ## Migration Guides
 

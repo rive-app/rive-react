@@ -3,9 +3,9 @@ import { Dimensions } from './types';
 
 // There are polyfills for this, but they add hundreds of lines of code
 class FakeResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
 }
 
 function throttle(f: Function, delay: number) {
@@ -106,10 +106,14 @@ export function useDevicePixelRatio() {
     const mediaMatcher = window.matchMedia(
       `screen and (resolution: ${currentDpr}dppx)`
     );
-    mediaMatcher.addEventListener('change', updateDpr);
+    mediaMatcher.hasOwnProperty('addEventListener')
+      ? mediaMatcher.addEventListener('change', updateDpr)
+      : mediaMatcher.addListener(updateDpr);
 
     return () => {
-      mediaMatcher.removeEventListener('change', updateDpr);
+      mediaMatcher.hasOwnProperty('removeEventListener')
+        ? mediaMatcher.removeEventListener('change', updateDpr)
+        : mediaMatcher.removeListener(updateDpr);
     };
   }, [currentDpr]);
 

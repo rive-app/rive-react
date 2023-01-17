@@ -29,8 +29,8 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "@rive-app/canvas": "1.0.97",
-    "@rive-app/webgl": "1.0.93"
+    "@rive-app/canvas": "1.0.98",
+    "@rive-app/webgl": "1.0.94"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

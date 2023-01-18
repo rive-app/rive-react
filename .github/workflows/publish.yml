@@ -1,13 +1,9 @@
 name: Publish to NPM
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
+  workflow_dispatch:
 jobs:
   determine_version:
     name: Determine the next build version
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.echo_version.outputs.version }}
@@ -31,9 +27,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       - id: echo_version
         run: echo "::set-output name=version::$(cat ./RELEASE_VERSION)"
-  
+
   merge_job:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: [determine_version]
     steps:

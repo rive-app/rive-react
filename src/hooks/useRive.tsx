@@ -1,3 +1,6 @@
+// @refresh reset
+// Need the comment above to hard-refresh state in NextJS apps otherwise
+// HMR will try to preserve the stale Rive instance
 import React, {
   useCallback,
   useEffect,

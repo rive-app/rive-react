@@ -13,7 +13,11 @@ import {
   RiveState,
   Dimensions,
 } from '../types';
-import { useSize, useDevicePixelRatio } from '../utils';
+import {
+  useSize,
+  useDevicePixelRatio,
+  usePrefersReducedMotion,
+} from '../utils';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -52,6 +56,7 @@ const defaultOptions = {
   useDevicePixelRatio: true,
   fitCanvasToArtboardHeight: false,
   useOffscreenRenderer: true,
+  usePrefersReducedMotion: false,
 };
 
 /**
@@ -100,6 +105,7 @@ export default function useRive(
   // occur.
   const size = useSize(containerRef);
   const currentDevicePixelRatio = useDevicePixelRatio();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
@@ -198,6 +204,20 @@ export default function useRive(
     }
   }, [rive, size, currentDevicePixelRatio]);
 
+  const animations = riveParams?.animations;
+  /**
+   * Listen to changes on the for the prefersReducedMotion accessibilty setting
+   */
+  useEffect(() => {
+    if (rive && options.usePrefersReducedMotion) {
+      if (prefersReducedMotion && rive.isPlaying) {
+        rive.pause();
+      } else if (!prefersReducedMotion && rive.isPaused) {
+        rive.play();
+      }
+    }
+  }, [rive, prefersReducedMotion]);
+
   /**
    * Ref callback called when the canvas element mounts and unmounts.
    */
@@ -275,7 +295,6 @@ export default function useRive(
   /**
    * Listen for changes in the animations params
    */
-  const animations = riveParams?.animations;
   useEffect(() => {
     if (rive && animations) {
       if (rive.isPlaying) {

@@ -15,7 +15,7 @@
     "format": "prettier --write src",
     "types:check": "tsc --noEmit",
     "release": "release-it",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs-build"
   },
   "repository": {

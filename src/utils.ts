@@ -3,9 +3,9 @@ import { Dimensions } from './types';
 
 // There are polyfills for this, but they add hundreds of lines of code
 class FakeResizeObserver {
-  observe() { }
-  unobserve() { }
-  disconnect() { }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
 }
 
 function throttle(f: Function, delay: number) {
@@ -126,4 +126,27 @@ export function getDevicePixelRatio(): number {
     typeof window.devicePixelRatio === 'number';
   const dpr = hasDprProp ? window.devicePixelRatio : 1;
   return Math.min(Math.max(1, dpr), 3);
+}
+
+export function usePrefersReducedMotion(): boolean {
+  const [prefersReducedMotion, setPrefersReducedMotion] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    const canListen = typeof window !== 'undefined' && 'matchMedia' in window;
+    if (!canListen) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function updatePrefersReducedMotion() {
+      setPrefersReducedMotion(() => mediaQuery.matches);
+    }
+    mediaQuery.addEventListener('change', updatePrefersReducedMotion);
+    updatePrefersReducedMotion();
+    return () =>
+      mediaQuery.removeEventListener('change', updatePrefersReducedMotion);
+  }, []);
+
+  return prefersReducedMotion;
 }

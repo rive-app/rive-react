@@ -14,6 +14,13 @@ jobs:
         with:
           project-url: https://github.com/orgs/rive-app/projects/12/views/1
           github-token: ${{ secrets.ADD_TO_PROJECT_ACTION }}
-          # repo-token: '${{ secrets.ADD_TO_PROJECT_ACTION }}'
-          # labeled: bug, needs-triage
-          # label-operator: NOT
+          
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["triage"]
+            })

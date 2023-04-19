@@ -28,7 +28,11 @@ export interface RiveProps {
    * For `@rive-app/react-webgl`, sets this property to maintain a single WebGL context for multiple canvases. **We recommend to keep the default value** when rendering multiple Rive instances on a page.
    */
   useOffscreenRenderer?: boolean;
-};
+  /**
+   * If true, the runtime will respect the users "prefers-reduced-motion" accessibilty option and start the animation paused. Defaults to false.
+   */
+  usePrefersReducedMotion?: boolean;
+}
 
 const Rive = ({
   src,
@@ -37,6 +41,7 @@ const Rive = ({
   stateMachines,
   layout,
   useOffscreenRenderer = true,
+  usePrefersReducedMotion = false,
   ...rest
 }: RiveProps & ComponentProps<'canvas'>) => {
   const params = {
@@ -50,6 +55,7 @@ const Rive = ({
 
   const options = {
     useOffscreenRenderer,
+    usePrefersReducedMotion,
   };
 
   const { RiveComponent } = useRive(params, options);

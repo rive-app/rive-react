@@ -451,4 +451,92 @@ describe('useRive', () => {
     expect(canvasSpy).toHaveAttribute('width', '200');
     expect(canvasSpy).toHaveAttribute('height', '200');
   });
+
+  it('pauses the animation if usePrefersReducedMotion is passed as true and media query returns true', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+
+    const playMock = jest.fn();
+    const pauseMock = jest.fn();
+    const stopMock = jest.fn();
+
+    const riveMock = {
+      ...baseRiveMock,
+      stop: stopMock,
+      play: playMock,
+      pause: pauseMock,
+      animationNames: ['light'],
+      isPlaying: true,
+      isPaused: false,
+    };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => riveMock);
+    const canvasSpy = document.createElement('canvas');
+
+    const { result } = renderHook(() =>
+      useRive(params, { usePrefersReducedMotion: true })
+    );
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
+    });
+
+    expect(pauseMock).toBeCalled();
+  });
+
+  it('does not pause the animation if usePrefersReducedMotion is passed as false and media query returns true', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+
+    const playMock = jest.fn();
+    const pauseMock = jest.fn();
+    const stopMock = jest.fn();
+
+    const riveMock = {
+      ...baseRiveMock,
+      stop: stopMock,
+      play: playMock,
+      pause: pauseMock,
+      animationNames: ['light'],
+      isPlaying: true,
+      isPaused: false,
+    };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => riveMock);
+    const canvasSpy = document.createElement('canvas');
+
+    const { result } = renderHook(() =>
+      useRive(params, { usePrefersReducedMotion: false })
+    );
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      controlledRiveloadCb();
+    });
+
+    expect(pauseMock).not.toBeCalled();
+  });
 });

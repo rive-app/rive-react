@@ -24,6 +24,15 @@ window.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 };
 
+window.matchMedia = jest.fn().mockImplementation((query) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  dispatchEvent: jest.fn(),
+}));
+
 jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),

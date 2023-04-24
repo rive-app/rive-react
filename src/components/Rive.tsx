@@ -28,7 +28,11 @@ export interface RiveProps {
    * For `@rive-app/react-webgl`, sets this property to maintain a single WebGL context for multiple canvases. **We recommend to keep the default value** when rendering multiple Rive instances on a page.
    */
   useOffscreenRenderer?: boolean;
-};
+  /**
+   * Specify whether to disable Rive listeners on the canvas, thus preventing any event listeners to be attached to the canvas element
+   */
+  shouldDisableRiveListeners?: boolean;
+}
 
 const Rive = ({
   src,
@@ -37,6 +41,7 @@ const Rive = ({
   stateMachines,
   layout,
   useOffscreenRenderer = true,
+  shouldDisableRiveListeners = false,
   ...rest
 }: RiveProps & ComponentProps<'canvas'>) => {
   const params = {
@@ -46,6 +51,7 @@ const Rive = ({
     layout,
     stateMachines,
     autoplay: true,
+    shouldDisableRiveListeners,
   };
 
   const options = {

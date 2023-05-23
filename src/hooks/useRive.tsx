@@ -7,13 +7,9 @@ import React, {
   RefCallback,
 } from 'react';
 import { Rive, EventType } from '@rive-app/canvas';
-import {
-  UseRiveParameters,
-  UseRiveOptions,
-  RiveState,
-  Dimensions,
-} from '../types';
-import { useSize, useDevicePixelRatio } from '../utils';
+import { UseRiveParameters, UseRiveOptions, RiveState } from '../types';
+import useResizeCanvas from './useResizeCanvas';
+import { getOptions } from '../utils';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -51,22 +47,6 @@ function RiveComponent({
   );
 }
 
-const defaultOptions = {
-  useDevicePixelRatio: true,
-  fitCanvasToArtboardHeight: false,
-  useOffscreenRenderer: true,
-};
-
-/**
- * Returns options, with defaults set.
- *
- * @param opts
- * @returns
- */
-function getOptions(opts: Partial<UseRiveOptions>) {
-  return Object.assign({}, defaultOptions, opts);
-}
-
 /**
  * Custom Hook for loading a Rive file.
  *
@@ -89,117 +69,30 @@ export default function useRive(
   const containerRef = useRef<HTMLElement | null>(null);
 
   const [rive, setRive] = useState<Rive | null>(null);
-  const [lastContainerDimensions, setLastContainerDimensions] =
-    useState<Dimensions>({
-      height: 0,
-      width: 0,
-    });
-  const [lastCanvasSize, setLastCanvasSize] = useState<Dimensions>({
-    height: 0,
-    width: 0,
-  });
-
-  // Listen to changes in the window sizes and update the bounds when changes
-  // occur.
-  const size = useSize(containerRef);
-  const currentDevicePixelRatio = useDevicePixelRatio();
 
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
 
   /**
-   * Gets the intended dimensions of the canvas element.
-   *
-   * The intended dimensions are those of the container element, unless the
-   * option `fitCanvasToArtboardHeight` is true, then they are adjusted to
-   * the height of the artboard.
-   *
-   * @returns Dimensions object.
+   * When the canvas/parent container resize, reset the Rive layout to match the
+   * new (0, 0, canvas.width, canvas.height) bounds in the render loop
    */
-  function getCanvasDimensions() {
-    // getBoundingClientRect returns the scaled width and height
-    // this will result in double scaling
-    // https://developer.mozilla.org/en-US/docs/Web/API/CSS_Object_Model/Determining_the_dimensions_of_elements
-
-    const width = containerRef.current?.clientWidth ?? 0;
-    const height = containerRef.current?.clientHeight ?? 0;
-
-    if (rive && options.fitCanvasToArtboardHeight) {
-      const { maxY, maxX } = rive.bounds;
-      return { width, height: width * (maxY / maxX) };
-    }
-    return { width, height };
-  }
-
-  /**
-   * Updates the width and height of the canvas.
-   */
-  function updateBounds() {
-    if (!containerRef.current) {
-      return;
-    }
-
-    const { width, height } = getCanvasDimensions();
-    if (canvasRef.current && rive) {
-      // Check if the canvas parent container bounds have changed and set
-      // new values accordingly
-      const boundsChanged =
-        width !== lastContainerDimensions.width ||
-        height !== lastContainerDimensions.height;
-      if (options.fitCanvasToArtboardHeight && boundsChanged) {
-        containerRef.current.style.height = height + 'px';
-      }
-      if (options.useDevicePixelRatio) {
-        // Check if devicePixelRatio may have changed and get new canvas
-        // width/height values to set the size
-        const canvasSizeChanged =
-          width * currentDevicePixelRatio !== lastCanvasSize.width ||
-          height * currentDevicePixelRatio !== lastCanvasSize.height;
-        if (boundsChanged || canvasSizeChanged) {
-          const newCanvasWidthProp = currentDevicePixelRatio * width;
-          const newCanvasHeightProp = currentDevicePixelRatio * height;
-          canvasRef.current.width = newCanvasWidthProp;
-          canvasRef.current.height = newCanvasHeightProp;
-          canvasRef.current.style.width = width + 'px';
-          canvasRef.current.style.height = height + 'px';
-          setLastCanvasSize({
-            width: newCanvasWidthProp,
-            height: newCanvasHeightProp,
-          });
-        }
-      } else if (boundsChanged) {
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
-        setLastCanvasSize({
-          width: width,
-          height: height,
-        });
-      }
-      setLastContainerDimensions({ width, height });
-
-      // Updating the canvas width or height will clear the canvas, so call
-      // startRendering() to redraw the current frame as the animation might
-      // be paused and not advancing.
-      rive.startRendering();
-    }
-
-    // Always resize to Canvas
+  const onCanvasHasResized = useCallback(() => {
     if (rive) {
+      rive.startRendering();
       rive.resizeToCanvas();
     }
-  }
+  }, [rive]);
 
-  /**
-   * Listen to changes on the windowSize and the rive file being loaded
-   * and update the canvas bounds as needed.
-   *
-   * ie does not support ResizeObservers, so we fallback to the window listener there
-   */
-  useEffect(() => {
-    if (rive) {
-      updateBounds();
-    }
-  }, [rive, size, currentDevicePixelRatio]);
+  // Watch the canvas parent container resize and size the canvas to match
+  useResizeCanvas({
+    riveLoaded: !!rive,
+    canvasRef,
+    containerRef,
+    options,
+    onCanvasHasResized,
+    artboardBounds: rive?.bounds,
+  });
 
   /**
    * Ref callback called when the canvas element mounts and unmounts.
@@ -301,7 +194,7 @@ export default function useRive(
         />
       );
     },
-    []
+    [setCanvasRef, setContainerRef]
   );
 
   return {

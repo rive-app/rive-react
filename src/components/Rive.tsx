@@ -32,6 +32,10 @@ export interface RiveProps {
    * Specify whether to disable Rive listeners on the canvas, thus preventing any event listeners to be attached to the canvas element
    */
   shouldDisableRiveListeners?: boolean;
+  /**
+   * Specify whether to resize the canvas to its container automatically
+   */
+  shouldResizeCanvasToContainer?: boolean;
 }
 
 const Rive = ({
@@ -42,6 +46,7 @@ const Rive = ({
   layout,
   useOffscreenRenderer = true,
   shouldDisableRiveListeners = false,
+  shouldResizeCanvasToContainer = true,
   children,
   ...rest
 }: RiveProps & ComponentProps<'canvas'>) => {
@@ -57,6 +62,7 @@ const Rive = ({
 
   const options = {
     useOffscreenRenderer,
+    shouldResizeCanvasToContainer,
   };
 
   const { RiveComponent } = useRive(params, options);

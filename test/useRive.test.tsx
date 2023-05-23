@@ -94,6 +94,9 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
       controlledRiveloadCb();
+      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(500);
+      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(500);
+      containerSpy.dispatchEvent(new Event('resize'));
     });
 
     expect(result.current.rive).toBe(riveMock);
@@ -192,7 +195,7 @@ describe('useRive', () => {
     expect(canvasSpy).toHaveAttribute('width', '100');
   });
 
-  it('uses artbound height to set bounds if fitCanvasToArtboardHeight is true', async () => {
+  it('uses artboard height to set bounds if fitCanvasToArtboardHeight is true', async () => {
     const params = {
       src: 'file-src',
     };
@@ -446,9 +449,45 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
       controlledRiveloadCb();
+      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(200);
+      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(200);
+      containerSpy.dispatchEvent(new Event('resize'));
     });
 
-    expect(canvasSpy).toHaveAttribute('width', '200');
-    expect(canvasSpy).toHaveAttribute('height', '200');
+    expect(canvasSpy).toHaveAttribute('width', '400');
+    expect(canvasSpy).toHaveAttribute('height', '400');
+  });
+
+  it('prevents resizing if shouldResizeCanvasToContainer option is false', async () => {
+    const params = {
+      src: 'file-src',
+    };
+    const options = {
+      shouldResizeCanvasToContainer: false,
+    };
+
+    window.devicePixelRatio = 2;
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    canvasSpy.width = 200;
+    canvasSpy.height = 200;
+    const containerSpy = document.createElement('div');
+
+    const { result } = renderHook(() => useRive(params, options));
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
+      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(500);
+      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(500);
+      containerSpy.dispatchEvent(new Event('resize'));
+    });
+
+    expect(canvasSpy.width).toBe(200);
+    expect(canvasSpy.height).toBe(200);
   });
 });

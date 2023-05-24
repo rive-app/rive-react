@@ -25,6 +25,7 @@ function RiveComponent({
   setCanvasRef,
   className = '',
   style,
+  children,
   ...rest
 }: RiveComponentProps & ComponentProps<'canvas'>) {
   const containerStyle = {
@@ -43,7 +44,9 @@ function RiveComponent({
         ref={setCanvasRef}
         style={{ verticalAlign: 'top', width: 0, height: 0 }}
         {...rest}
-      />
+      >
+        {children}
+      </canvas>
     </div>
   );
 }

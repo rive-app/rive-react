@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
-import RiveComponent, {useRive, useStateMachineInput} from '../../src';
-import {Button} from './components/Button';
+import RiveComponent, { useRive, useStateMachineInput } from '../../src';
+import { Button } from './components/Button';
 import './rive-overview.css';
 
 <Meta title="React Runtime/Overview" />
@@ -31,6 +31,7 @@ There's multiple ways to render Rive using the React runtime. See the associated
 ```tsx
 import RiveComponent from '@rive-app/react-canvas';
 ```
+
 The React runtime exports a default React component you can insert as JSX. Under the hood, it renders a `<canvas>` element that runs the animation, and a wrapping `<div>` element that handles sizing of the canvas based on the parent that wraps the component.
 
 **When to use this**: Use this for simple rendering cases where you don't need to control playback or setup state machine inputs to advance state machines. It will simply autoplay the first animation it finds in the `.riv`, the animation name you provide it, or the state machine name if you provide one.
@@ -56,12 +57,13 @@ In addition to the props laid out below, the component accepts other props that 
 ### useRive Hook
 
 ```tsx
-import {useRive} from '@rive-app/react-canvas';
+import { useRive } from '@rive-app/react-canvas';
 ```
 
 The runtime also exports a named `useRive` hook that allows for more control at Rive instantiation, since it passes back a `rive` object you can use to manipulate state machines, control playback, and more.
 
 **When to use this:** When you need to control your Rive animation in any aspect, such as controlling playback, using state machine inputs to advance state machines, add adding callbacks on certain Rive-specific events such as `onStateChange`, `onPause`, etc.
+
 <Canvas withSource="open">
   <Story name="useRive Hook">
     {() => {
@@ -69,7 +71,7 @@ The runtime also exports a named `useRive` hook that allows for more control at 
       const [animationText, setAnimationText] = useState('');
       const { rive, RiveComponent: RiveComponentPlayback } = useRive({
         src: 'truck.riv',
-        stateMachines: "drive",
+        stateMachines: 'drive',
         artboard: 'Truck',
         autoplay: true,
         onPause: () => {
@@ -88,15 +90,19 @@ The runtime also exports a named `useRive` hook that allows for more control at 
           setIsPlaying(true);
         }
       };
-      return ((
+      return (
         <>
           <div className="center">
-            <RiveComponentPlayback className="base-canvas-size" />
+            <RiveComponentPlayback className="base-canvas-size">
+              <p>Animation that can be paused and played by clicking on it</p>
+            </RiveComponentPlayback>
             <p>{animationText}</p>
-            <Button onClick={togglePlaying}>{isPlaying ? 'Pause' : 'Play'}</Button>
+            <Button onClick={togglePlaying}>
+              {isPlaying ? 'Pause' : 'Play'}
+            </Button>
           </div>
         </>
-      ));
+      );
     }}
   </Story>
 </Canvas>

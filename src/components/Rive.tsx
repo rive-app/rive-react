@@ -42,6 +42,7 @@ const Rive = ({
   layout,
   useOffscreenRenderer = true,
   shouldDisableRiveListeners = false,
+  children,
   ...rest
 }: RiveProps & ComponentProps<'canvas'>) => {
   const params = {
@@ -59,7 +60,7 @@ const Rive = ({
   };
 
   const { RiveComponent } = useRive(params, options);
-  return <RiveComponent {...rest} />;
+  return <RiveComponent {...rest}>{children}</RiveComponent>;
 };
 
 export default Rive;

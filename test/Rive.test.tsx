@@ -36,4 +36,19 @@ describe('Rive Component', () => {
     expect(container.firstChild).toHaveClass('container-styles');
     expect(getByLabelText('Foo label').tagName).toEqual('CANVAS');
   });
+
+  it('allows children to render in the canvas body', () => {
+    const accessibleFallbackText = 'An animated test';
+    const { getByText } = render(
+      <RiveComponent
+        src="foo.riv"
+        className="container-styles"
+        aria-label="Foo label"
+      >
+        <p>{accessibleFallbackText}</p>
+      </RiveComponent>
+    );
+
+    expect(getByText(accessibleFallbackText)).not.toBeNull();
+  });
 });

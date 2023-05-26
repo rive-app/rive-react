@@ -6,11 +6,40 @@ import useContainerSize from './useContainerSize';
 import { getOptions } from '../utils';
 
 interface UseResizeCanvasProps {
+  /**
+   * Whether or not Rive is loaded and renderer is associated with the canvas
+   */
   riveLoaded: boolean;
+  /**
+   * Ref to the canvas element
+   */
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+  /**
+   * Ref to the container element of the canvas
+   */
   containerRef: MutableRefObject<HTMLElement | null>;
+  /**
+   * (Optional) Callback to be invoked after the canvas has been resized due to a resize
+   * of its parent container. This is where you would want to reset the layout
+   * dimensions for the Rive renderer to dictate the new min/max bounds of the
+   * canvas.
+   *
+   * Using the high-level JS runtime, this might be a simple call to `rive.resizeToCanvas()`
+   * Using the low-level JSruntime, this might be invoking the renderer's `.align()` method
+   * with the Layout and min/max X/Y values of the canvas.
+   *
+   * @returns void
+   */
   onCanvasHasResized?: () => void;
+  /**
+   * (Optional) Options passed to the useRive hook, including the shouldResizeCanvasToContainer option
+   * which prevents the canvas element from resizing to its parent container
+   */
   options?: Partial<UseRiveOptions>;
+  /**
+   * (Optional) AABB bounds of the artboard. If provided, the canvas will be sized to the artboard
+   * height if the fitCanvasToArtboardHeight option is true.
+   */
   artboardBounds?: Bounds;
 }
 
@@ -22,7 +51,7 @@ interface UseResizeCanvasProps {
  * This hook is useful if you are not intending to use the `useRive` hook yourself, but still
  * want to use the auto-sizing logic on the canvas/container.
  *
- * @param props - Object to supply necessary
+ * @param props - Object to supply necessary props to the hook
  */
 export default function useResizeCanvas({
   riveLoaded = false,
@@ -64,7 +93,7 @@ export default function useResizeCanvas({
 
   const { maxX, maxY } = artboardBounds ?? {};
 
-  const getCanvasDimensions = useCallback(() => {
+  const getContainerDimensions = useCallback(() => {
     const width = containerRef.current?.clientWidth ?? 0;
     const height = containerRef.current?.clientHeight ?? 0;
     if (fitCanvasToArtboardHeight && artboardBounds) {
@@ -78,6 +107,8 @@ export default function useResizeCanvas({
   }, [containerRef, fitCanvasToArtboardHeight, maxX, maxY]);
 
   useEffect(() => {
+    // If Rive is not ready, the container is not ready, or the user supplies a flag
+    // to not resize the canvas to the container, then return early
     if (
       !shouldResizeCanvasToContainer ||
       !containerRef.current ||
@@ -86,7 +117,7 @@ export default function useResizeCanvas({
       return;
     }
 
-    const { width, height } = getCanvasDimensions();
+    const { width, height } = getContainerDimensions();
     let hasResized = false;
     if (canvasRef.current) {
       // Check if the canvas parent container bounds have changed and set
@@ -139,7 +170,7 @@ export default function useResizeCanvas({
     containerRef,
     containerSize,
     currentDevicePixelRatio,
-    getCanvasDimensions,
+    getContainerDimensions,
     isFirstSizing,
     setIsFirstSizing,
     lastCanvasHeight,

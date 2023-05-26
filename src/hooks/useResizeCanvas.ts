@@ -62,6 +62,8 @@ export default function useResizeCanvas({
   );
   const currentDevicePixelRatio = useDevicePixelRatio();
 
+  const { maxX, maxY } = artboardBounds ?? {};
+
   const getCanvasDimensions = useCallback(() => {
     const width = containerRef.current?.clientWidth ?? 0;
     const height = containerRef.current?.clientHeight ?? 0;
@@ -73,7 +75,7 @@ export default function useResizeCanvas({
       width,
       height,
     };
-  }, [containerRef, fitCanvasToArtboardHeight, artboardBounds]);
+  }, [containerRef, fitCanvasToArtboardHeight, maxX, maxY]);
 
   useEffect(() => {
     if (
@@ -131,7 +133,7 @@ export default function useResizeCanvas({
     if (onCanvasHasResized && (isFirstSizing || hasResized)) {
       onCanvasHasResized && onCanvasHasResized();
     }
-    setIsFirstSizing(false);
+    isFirstSizing && setIsFirstSizing(false);
   }, [
     canvasRef,
     containerRef,

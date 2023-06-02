@@ -199,6 +199,7 @@ export default function useRive(
 
   return {
     canvas: canvasRef.current,
+    container: containerRef.current,
     setCanvasRef,
     setContainerRef,
     rive,

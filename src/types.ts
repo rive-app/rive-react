@@ -18,6 +18,7 @@ export type Dimensions = {
 /**
  * @typedef RiveState
  * @property canvas - Canvas element the Rive Animation is attached to.
+ * @property container - Container element of the canvas.
  * @property setCanvasRef - Ref callback to be passed to the canvas element.
  * @property setContainerRef - Ref callback to be passed to the container element
  *   of the canvas. This is optional, however if not used then the hook will
@@ -27,6 +28,7 @@ export type Dimensions = {
  */
 export type RiveState = {
   canvas: HTMLCanvasElement | null;
+  container: HTMLElement | null;
   setCanvasRef: RefCallback<HTMLCanvasElement>;
   setContainerRef: RefCallback<HTMLElement>;
   rive: Rive | null;

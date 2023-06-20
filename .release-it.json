@@ -1,5 +1,7 @@
 {
   "git": {
+    "addUntrackedFiles": true,
+    "requireCleanWorkingDir": false,
     "commitMessage": "chore: release ${version}",
     "tagName": "v${version}",
     "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
@@ -12,6 +14,12 @@
     "releaseName": "${version}"
   },
   "hooks": {
-    "after:bump": ["npx auto-changelog -p", "git add ./CHANGELOG.md"]
+    "after:version:bump": [
+      "npm run build",
+      "npm run setup-builds",
+      "npm run setup-packages",
+      "npx auto-changelog -p",
+      "npm run publish:all"
+    ]
   }
 }

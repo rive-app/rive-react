@@ -1,43 +1,28 @@
 name: Publish to NPM
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      major:
+        description: 'Major'
+        type: boolean
+        default: false
+      minor:
+        description: 'Minor'
+        type: boolean
+        default: false
 jobs:
-  determine_version:
-    name: Determine the next build version
-    if: github.event.pull_request.merged == true
+  publish_job:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.echo_version.outputs.version }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./
-      - name: Git config
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Git config
         run: |
           git config --local user.email 'hello@rive.app'
           git config --local user.name ${{ github.actor }}
       - name: Authenticate with registry
         run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-      - id: determine_version
-        name: Get Version
-        run: npm run release -- --ci --release-version | tail -n 1 > RELEASE_VERSION
-        working-directory: ./
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-      - id: echo_version
-        run: echo "::set-output name=version::$(cat ./RELEASE_VERSION)"
-  
-  merge_job:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    needs: [determine_version]
-    steps:
-      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '16.x'
@@ -50,30 +35,24 @@ jobs:
         run: npm run lint
       - name: Run Tests
         run: npm test
-      - name: Build main dist
-        run: npm run build
-      - name: Copy separated builds
-        run: ./scripts/build.sh
-      - name: Copy package jsons to separate react outputs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: ./scripts/setup_all_packages.sh
-      - name: Bump Versions of react outputs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          RELEASE_VERSION: ${{ needs.determine_version.outputs.version }}
-        run: ./scripts/bump_all_versions.sh
-      - name: Git config
-        run: |
-          git config --local user.email 'hello@rive.app'
-          git config --local user.name ${{ github.actor }}
-      - name: Authenticate with registry
-        run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-      - name: Release rive-react
+      - if: ${{ inputs.major == true }}
+        name: Major Release - Bump version number, update changelog, push and tag
+        run: npm run release:major
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        run: npm run release -- --ci
-      - name: Release @rive-app/react-* variants
+          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - if: ${{inputs.major == false && inputs.minor == true}}
+        name: Minor release - Bump version number, update changelog, push and tag
+        run: npm run release:minor
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        run: ./scripts/publish_all.sh
+          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - if: ${{inputs.major == false && inputs.minor == false}}
+        name: Patch release - Bump version number, update changelog, push and tag
+        run: npm run release:patch
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

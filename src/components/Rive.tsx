@@ -36,6 +36,18 @@ export interface RiveProps {
    * Specify whether to resize the canvas to its container automatically
    */
   shouldResizeCanvasToContainer?: boolean;
+  /**
+   * Enable Rive Events to be handled by the runtime. This means any special Rive Event may have
+   * functionality that can be invoked implicitly when detected.
+   *
+   * For example, if during the render loop an OpenUrlEvent is detected, the
+   * browser may try to open the specified URL in the payload.
+   *
+   * This flag is false by default to prevent any unwanted behaviors from taking place.
+   * This means any special Rive Event will have to be handled manually by subscribing to
+   * EventType.RiveEvent
+   */
+  automaticallyHandleEvents?: boolean;
 }
 
 const Rive = ({
@@ -47,6 +59,7 @@ const Rive = ({
   useOffscreenRenderer = true,
   shouldDisableRiveListeners = false,
   shouldResizeCanvasToContainer = true,
+  automaticallyHandleEvents = false,
   children,
   ...rest
 }: RiveProps & ComponentProps<'canvas'>) => {
@@ -58,6 +71,7 @@ const Rive = ({
     stateMachines,
     autoplay: true,
     shouldDisableRiveListeners,
+    automaticallyHandleEvents,
   };
 
   const options = {

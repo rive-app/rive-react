@@ -8,6 +8,8 @@ import RiveComponent, {
   EventType,
   useRive,
   useStateMachineInput,
+  decodeImage,
+  decodeFont,
 } from '../../src';
 import { Button } from './components/Button';
 import './rive-overview.css';
@@ -191,6 +193,93 @@ To listen for Rive Events reported during state machine play, use the `on` API t
         <div className="center">
           <RiveComponent className="base-canvas-size" />
           <p>Click on the 5 star!</p>
+        </div>
+      );
+    }}
+  </Story>
+</Canvas>
+
+## Out of Bound Asset Loading
+
+Loading out of band assets for images and fonts will involve passing an `assetLoader` prop to the `useRive` params object.
+
+Use the `decodeImage` and `decodeAsset` functions, which are named exports on the package, to create appropriate RenderImage
+and Rive Font objects to set on the individual Rive Asset. You can set these objects with `.setRenderImage` and `.setFont` APIs
+on the Asset respectively.
+
+<Canvas withSource="open">
+  <Story name="Out of Bound Asset Loading">
+    {() => {
+      const randomImageAsset = (asset, rive) => {
+        fetch('https://picsum.photos/1000/1500').then(async (res) => {
+          const image = await decodeImage(
+            new Uint8Array(await res.arrayBuffer())
+          );
+          asset.setRenderImage(image);
+        });
+      };
+      const randomFontAsset = (asset, rive) => {
+        const urls = [
+          'https://cdn.rive.app/runtime/flutter/IndieFlower-Regular.ttf',
+          'https://cdn.rive.app/runtime/flutter/comic-neue.ttf',
+          'https://cdn.rive.app/runtime/flutter/inter.ttf',
+          'https://cdn.rive.app/runtime/flutter/inter-tight.ttf',
+          'https://cdn.rive.app/runtime/flutter/josefin-sans.ttf',
+          'https://cdn.rive.app/runtime/flutter/send-flowers.ttf',
+        ];
+        fetch(urls[(fontIndex + 1) % urls.length]).then(async (res) => {
+          const font = await decodeFont(
+            new Uint8Array(await res.arrayBuffer())
+          );
+          asset.setFont(font);
+        });
+        setFontIndex(fontIndex + 1);
+      };
+      const [imageAsset, setImageAsset] = useState(null);
+      const [fontAsset, setFontAsset] = useState(null);
+      const [fontIndex, setFontIndex] = useState(0);
+      const { rive, RiveComponent } = useRive({
+        src: 'asset_load_check.riv',
+        autoplay: true,
+        automaticallyHandleEvents: true,
+        loadCDNAssets: false,
+        assetLoader: (asset, bytes) => {
+          console.log(
+            'Tell our asset importer if we are going to load the asset contents',
+            {
+              name: asset.name,
+              fileExtension: asset.fileExtension,
+              cdnUuid: asset.cdnUuid,
+              isFont: asset.isFont,
+              isImage: asset.isImage,
+              bytes,
+            }
+          );
+          if (asset.cdnUuid.length > 0 || bytes.length > 0) {
+            return false;
+          }
+          if (asset.isImage) {
+            setImageAsset(asset);
+            randomImageAsset(asset, rive);
+            return true;
+          } else if (asset.isFont) {
+            setFontAsset(asset);
+            randomFontAsset(asset, rive);
+            return true;
+          }
+          return false;
+        },
+      });
+      return (
+        <div className="center">
+          <RiveComponent
+            className="large-canvas-size"
+            onClick={() => {
+              randomImageAsset(imageAsset);
+              randomFontAsset(fontAsset);
+            }}
+          />
+          <p>Click on the canvas to load new assets!</p>
         </div>
       );
     }}

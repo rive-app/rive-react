@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = process.argv[2];
 const npmPackageSplit = process.argv[3].split('-');
-const renderer = npmPackageSplit[npmPackageSplit.length - 1];
+// extracts "webgl" or "canvas-lite" from the npm package name
+const renderer = npmPackageSplit.slice(1).join('-');
 const package = require(path + '/package.json');
 
 function trimNpmPackage() {

@@ -165,6 +165,29 @@ Unlike the boolean and number inputs, you invoke the `.fire()` method on a trigg
   </Story>
 </Canvas>
 
+## Rive Text
+
+To listen for Rive Events reported during state machine play, use the `on` API to add an event listener.
+
+<Canvas withSource="open">
+  <Story name="Rive Text">
+    {() => {
+      const STATE_MACHINE_NAME = 'State Machine 1';
+      const { rive, RiveComponent } = useRive({
+        src: 'text_test.riv',
+        stateMachines: STATE_MACHINE_NAME,
+        autoplay: true,
+        automaticallyHandleEvents: true,
+      });
+      return (
+        <div className="center">
+          <RiveComponent className="base-canvas-size" />
+        </div>
+      );
+    }}
+  </Story>
+</Canvas>
+
 ## Rive Events
 
 To listen for Rive Events reported during state machine play, use the `on` API to add an event listener.

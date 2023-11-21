@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-webgl",
-  "version": "4.5.3",
+  "version": "4.5.4",
   "description": "React wrapper around the @rive-app/webgl library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "@rive-app/webgl": "2.7.3"
+    "@rive-app/webgl": "2.7.4"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

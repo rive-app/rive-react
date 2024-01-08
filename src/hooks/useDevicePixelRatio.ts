@@ -7,10 +7,12 @@ import { useEffect, useState } from 'react';
  *
  * Source: https://github.com/rexxars/use-device-pixel-ratio/blob/main/index.ts
  *
+ * @param customDevicePixelRatio - Number to force a dpr to abide by, rather than using the window's
+ *
  * @returns dpr: Number - Device pixel ratio; ratio of physical px to resolution in CSS pixels for current device
  */
-export default function useDevicePixelRatio() {
-  const dpr = getDevicePixelRatio();
+export default function useDevicePixelRatio(customDevicePixelRatio?: number) {
+  const dpr = customDevicePixelRatio || getDevicePixelRatio();
   const [currentDpr, setCurrentDpr] = useState(dpr);
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function useDevicePixelRatio() {
     }
 
     const updateDpr = () => {
-      const newDpr = getDevicePixelRatio();
+      const newDpr = customDevicePixelRatio || getDevicePixelRatio();
       setCurrentDpr(newDpr);
     };
     const mediaMatcher = window.matchMedia(
@@ -35,7 +37,7 @@ export default function useDevicePixelRatio() {
         ? mediaMatcher.removeEventListener('change', updateDpr)
         : mediaMatcher.removeListener(updateDpr);
     };
-  }, [currentDpr]);
+  }, [currentDpr, customDevicePixelRatio]);
 
   return currentDpr;
 }

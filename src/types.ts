@@ -5,6 +5,7 @@ export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
 
 export type UseRiveOptions = {
   useDevicePixelRatio: boolean;
+  customDevicePixelRatio: number;
   fitCanvasToArtboardHeight: boolean;
   useOffscreenRenderer: boolean;
   shouldResizeCanvasToContainer: boolean;

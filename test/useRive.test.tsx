@@ -133,7 +133,7 @@ describe('useRive', () => {
     expect(cleanupMock).toBeCalled();
   });
 
-  it('sets the a bounds with the devicePixelRatio by default', async () => {
+  it('sets the bounds with the devicePixelRatio by default', async () => {
     const params = {
       src: 'file-src',
     };
@@ -160,6 +160,41 @@ describe('useRive', () => {
     // bounding rect
     expect(canvasSpy).toHaveAttribute('height', '200');
     expect(canvasSpy).toHaveAttribute('width', '200');
+
+    // Style height and width should be the same as returned from containers
+    // bounding rect
+    expect(canvasSpy).toHaveAttribute('style', 'width: 100px; height: 100px;');
+  });
+
+  it('sets the bounds with a specified customDevicePixelRatio if one is set', async () => {
+    const params = {
+      src: 'file-src',
+    };
+
+    global.devicePixelRatio = 2;
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const containerSpy = document.createElement('div');
+    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+
+    const { result } = renderHook(() =>
+      useRive(params, { customDevicePixelRatio: 1 })
+    );
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+      result.current.setContainerRef(containerSpy);
+      controlledRiveloadCb();
+    });
+
+    // Height and width should be 2* the width and height returned from containers
+    // bounding rect
+    expect(canvasSpy).toHaveAttribute('height', '100');
+    expect(canvasSpy).toHaveAttribute('width', '100');
 
     // Style height and width should be the same as returned from containers
     // bounding rect

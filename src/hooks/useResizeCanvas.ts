@@ -83,13 +83,14 @@ export default function useResizeCanvas({
     fitCanvasToArtboardHeight,
     shouldResizeCanvasToContainer,
     useDevicePixelRatio: shouldUseDevicePixelRatio,
+    customDevicePixelRatio,
   } = presetOptions;
 
   const containerSize = useContainerSize(
     containerRef,
     shouldResizeCanvasToContainer
   );
-  const currentDevicePixelRatio = useDevicePixelRatio();
+  const currentDevicePixelRatio = useDevicePixelRatio(customDevicePixelRatio);
 
   const { maxX, maxY } = artboardBounds ?? {};
 

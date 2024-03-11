@@ -5,7 +5,7 @@
 
 # Rive React
 
-![Rive hero image](https://rive-app.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fff44ed5f-1eea-4154-81ef-84547e61c3fd%2Frive_notion.png?table=block&id=f198cab2-c0bc-4ce8-970c-42220379bcf3&spaceId=9c949665-9ad9-445f-b9c4-5ee204f8b60c&width=2000&userId=&cache=v2)
+![Rive hero image](https://cdn.rive.app/rive_logo_dark_bg.png)
 
 A React runtime library for [Rive](https://rive.app).
 
@@ -21,7 +21,7 @@ This library is a wrapper around the [JS/Wasm runtime](https://github.com/rive-a
 - 👨‍💻 [Contributing](#contributing)
 - :question: [Issues](#issues)
 
-## Rive Overview
+## Rive overview
 
 [Rive](https://rive.app) is a real-time interactive design and animation tool that helps teams create and run interactive animations anywhere. Designers and developers use our collaborative editor to create motion graphics that respond to different states and user inputs. Our lightweight open-source runtime libraries allow them to load their animations into apps, games, and websites.
 
@@ -31,7 +31,7 @@ This library is a wrapper around the [JS/Wasm runtime](https://github.com/rive-a
 
 🛠 [Resources for building in Rive](https://rive.app/resources/)
 
-## Getting Started
+## Getting started
 
 Follow along with the link below for a quick start in getting Rive React integrated into your React apps.
 
@@ -39,7 +39,7 @@ Follow along with the link below for a quick start in getting Rive React integra
 
 [API documentation](https://help.rive.app/runtimes/overview/react/parameters-and-return-values)
 
-## Supported Versions
+## Supported versions
 
 This library supports React versions `^16.8.0` through `^18.0.0`.
 
@@ -56,7 +56,7 @@ Check out our Storybook instance that shows how to use the library in small exam
 
 For even more examples and resources on using Rive at runtime or in other tools, checkout the [awesome-rive](https://github.com/rive-app/awesome-rive) repo.
 
-## Migration Guides
+## Migration guides
 
 Using an older version of the runtime and need to learn how to upgrade to the latest version? Check out the migration guides below in our help center that help guide you through version bumps; breaking changes and all!
 

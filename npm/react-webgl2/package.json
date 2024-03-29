@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-webgl2",
-  "version": "4.8.3",
+  "version": "4.8.4",
   "description": "React wrapper around the @rive-app/webgl2 library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -17,9 +17,7 @@
     "url": "https://github.com/rive-app/rive-react/issues"
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
-  "dependencies": {
-    "@rive-app/webgl2": "2.10.3"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   }

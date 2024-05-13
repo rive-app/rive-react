@@ -65,7 +65,7 @@ export default function useRive(
   riveParams?: UseRiveParameters,
   opts: Partial<UseRiveOptions> = {}
 ): RiveState {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [canvasElem, setCanvasElem] = useState<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
   const [rive, setRive] = useState<Rive | null>(null);
@@ -87,7 +87,7 @@ export default function useRive(
   // Watch the canvas parent container resize and size the canvas to match
   useResizeCanvas({
     riveLoaded: !!rive,
-    canvasRef,
+    canvasElem,
     containerRef,
     options,
     onCanvasHasResized,
@@ -99,32 +99,40 @@ export default function useRive(
    */
   const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
     (canvas: HTMLCanvasElement | null) => {
-      if (canvas && riveParams && isParamsLoaded) {
-        const { useOffscreenRenderer } = options;
-        const r = new Rive({
-          useOffscreenRenderer,
-          ...riveParams,
-          canvas,
-        });
-        r.on(EventType.Load, () => {
-          // Check if the component/canvas is mounted before setting state to avoid setState
-          // on an unmounted component in some rare cases
-          if (canvasRef.current) {
-            setRive(r);
-          } else {
-            // If unmounted, cleanup the rive object immediately
-            r.cleanup();
-          }
-        });
-      } else if (canvas === null && canvasRef.current) {
-        canvasRef.current.height = 0;
-        canvasRef.current.width = 0;
+
+      if (canvas === null && canvasElem) {
+        canvasElem.height = 0;
+        canvasElem.width = 0;
       }
 
-      canvasRef.current = canvas;
+      setCanvasElem(canvas);
     },
-    [isParamsLoaded]
+    []
   );
+
+  useEffect(() => {
+    if(!canvasElem || !riveParams) {
+      return;
+    }
+    if (rive == null) {
+      const { useOffscreenRenderer } = options;
+      const r = new Rive({
+        useOffscreenRenderer,
+        ...riveParams,
+        canvas: canvasElem,
+      });
+      r.on(EventType.Load, () => {
+        // Check if the component/canvas is mounted before setting state to avoid setState
+        // on an unmounted component in some rare cases
+        if (canvasElem) {
+          setRive(r);
+        } else {
+          // If unmounted, cleanup the rive object immediately
+          r.cleanup();
+        }
+      });
+    }
+  },[canvasElem, isParamsLoaded, rive]);
   /**
    * Ref callback called when the container element mounts
    */
@@ -146,14 +154,14 @@ export default function useRive(
         : rive && rive.stopRendering();
     });
 
-    if (canvasRef.current) {
-      observer.observe(canvasRef.current);
+    if (canvasElem) {
+      observer.observe(canvasElem);
     }
 
     return () => {
       observer.disconnect();
     };
-  }, [rive]);
+  }, [rive, canvasElem]);
 
   /**
    * On unmount, call cleanup to cleanup any WASM generated objects that need
@@ -166,7 +174,7 @@ export default function useRive(
         setRive(null);
       }
     };
-  }, [rive]);
+  }, [rive, canvasElem]);
 
   /**
    * Listen for changes in the animations params
@@ -198,7 +206,7 @@ export default function useRive(
   );
 
   return {
-    canvas: canvasRef.current,
+    canvas: canvasElem,
     container: containerRef.current,
     setCanvasRef,
     setContainerRef,

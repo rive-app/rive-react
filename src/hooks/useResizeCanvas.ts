@@ -13,7 +13,7 @@ interface UseResizeCanvasProps {
   /**
    * Ref to the canvas element
    */
-  canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+  canvasElem: HTMLCanvasElement | null;
   /**
    * Ref to the container element of the canvas
    */
@@ -55,7 +55,7 @@ interface UseResizeCanvasProps {
  */
 export default function useResizeCanvas({
   riveLoaded = false,
-  canvasRef,
+  canvasElem,
   containerRef,
   options = {},
   onCanvasHasResized,
@@ -120,7 +120,7 @@ export default function useResizeCanvas({
 
     const { width, height } = getContainerDimensions();
     let hasResized = false;
-    if (canvasRef.current) {
+    if (canvasElem) {
       // Check if the canvas parent container bounds have changed and set
       // new values accordingly
       const boundsChanged =
@@ -138,10 +138,10 @@ export default function useResizeCanvas({
         if (boundsChanged || canvasSizeChanged) {
           const newCanvasWidthProp = currentDevicePixelRatio * width;
           const newCanvasHeightProp = currentDevicePixelRatio * height;
-          canvasRef.current.width = newCanvasWidthProp;
-          canvasRef.current.height = newCanvasHeightProp;
-          canvasRef.current.style.width = width + 'px';
-          canvasRef.current.style.height = height + 'px';
+          canvasElem.width = newCanvasWidthProp;
+          canvasElem.height = newCanvasHeightProp;
+          canvasElem.style.width = width + 'px';
+          canvasElem.style.height = height + 'px';
           setLastCanvasSize({
             width: newCanvasWidthProp,
             height: newCanvasHeightProp,
@@ -149,8 +149,8 @@ export default function useResizeCanvas({
           hasResized = true;
         }
       } else if (boundsChanged) {
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
+        canvasElem.width = width;
+        canvasElem.height = height;
         setLastCanvasSize({
           width: width,
           height: height,
@@ -167,7 +167,7 @@ export default function useResizeCanvas({
     }
     isFirstSizing && setIsFirstSizing(false);
   }, [
-    canvasRef,
+    canvasElem,
     containerRef,
     containerSize,
     currentDevicePixelRatio,
@@ -184,4 +184,12 @@ export default function useResizeCanvas({
     shouldUseDevicePixelRatio,
     riveLoaded,
   ]);
+
+  // Reset width and height values when the canvas changes
+  useEffect(() => {
+    setLastCanvasSize({
+      width: 0,
+      height: 0,
+    });
+  }, [canvasElem]);
 }

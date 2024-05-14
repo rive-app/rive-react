@@ -67,8 +67,11 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
-    })
+    });
     expect(result.current.rive).toBe(baseRiveMock);
     expect(result.current.canvas).toBe(canvasSpy);
   });
@@ -97,8 +100,11 @@ describe('useRive', () => {
       result.current.setContainerRef(containerSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
-    })
+    });
     await act(async () => {
       jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(500);
       jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(500);
@@ -133,8 +139,11 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
-    })
+    });
 
     unmount();
 
@@ -163,6 +172,9 @@ describe('useRive', () => {
       result.current.setContainerRef(containerSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -200,6 +212,9 @@ describe('useRive', () => {
       result.current.setContainerRef(containerSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -236,6 +251,9 @@ describe('useRive', () => {
       result.current.setContainerRef(containerSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -276,6 +294,9 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -297,6 +318,7 @@ describe('useRive', () => {
     const restore = global.IntersectionObserver;
     global.IntersectionObserver = jest.fn().mockImplementation(() => ({
       observe: observeMock,
+      disconnect: ()=>{}
     }));
 
     const riveMock = {
@@ -318,7 +340,13 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
+    });
+    await waitFor(() => {
+      expect(result.current.rive).toBe(riveMock);
     });
 
     expect(observeMock).toBeCalledWith(canvasSpy);
@@ -356,6 +384,9 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -401,6 +432,9 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -427,6 +461,11 @@ describe('useRive', () => {
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
+    });
+    await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -452,6 +491,9 @@ describe('useRive', () => {
       result.current.setCanvasRef(canvasSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -482,6 +524,9 @@ describe('useRive', () => {
       result.current.setContainerRef(containerSpy);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -513,6 +558,9 @@ describe('useRive', () => {
       jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(200);
     });
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 
@@ -550,6 +598,9 @@ describe('useRive', () => {
     });
 
     await waitFor(() => {
+      expect(result.current.canvas).toBe(canvasSpy);
+    });
+    await act(async () => {
       controlledRiveloadCb();
     });
 

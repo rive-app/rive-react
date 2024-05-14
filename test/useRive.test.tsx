@@ -489,7 +489,7 @@ describe('useRive', () => {
     expect(canvasSpy).toHaveStyle('width: 100px');
   });
 
-  it.only('updates the canvas dimensions and size if there is a new canvas size calculation', async () => {
+  it('updates the canvas dimensions and size if there is a new canvas size calculation', async () => {
     const params = {
       src: 'file-src',
     };
@@ -509,20 +509,17 @@ describe('useRive', () => {
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
+      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(200);
+      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(200);
     });
     await waitFor(() => {
       controlledRiveloadCb();
     });
 
     await act(async () => {
-      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(200);
-      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(200);
-      console.log('PRE DISPATCHED');
       containerSpy.dispatchEvent(new Event('resize'));
-      console.log('DISPATCHED');
     });
 
-    console.log('EXPECTING');
     expect(canvasSpy).toHaveAttribute('width', '400');
     expect(canvasSpy).toHaveAttribute('height', '400');
   });

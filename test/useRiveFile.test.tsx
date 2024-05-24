@@ -7,7 +7,12 @@ import { RiveFile } from '@rive-app/canvas';
 jest.mock('@rive-app/canvas', () => ({
   RiveFile: jest.fn().mockImplementation(() => ({
     cleanup: jest.fn(),
+    on: jest.fn(),
   })),
+  EventType: {
+    Load: 'load',
+    loadError: 'loadError',
+  },
 }));
 
 

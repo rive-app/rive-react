@@ -42,7 +42,9 @@ export type RiveState = {
   RiveComponent: (props: ComponentProps<'canvas'>) => JSX.Element;
 };
 
-export type UseRiveFileParameters = RiveFileParameters;
+export type UseRiveFileParameters = Partial<
+  Omit<RiveFileParameters, 'onLoad' | 'onLoadError'>
+>;
 
 export type FileStatus = 'idle' | 'loading' | 'failed' | 'success';
 

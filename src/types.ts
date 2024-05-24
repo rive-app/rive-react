@@ -1,5 +1,5 @@
 import { RefCallback, ComponentProps } from 'react';
-import { Rive, RiveParameters } from '@rive-app/canvas';
+import { Rive, RiveParameters, RiveFileParameters } from '@rive-app/canvas';
 
 export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
 
@@ -35,3 +35,6 @@ export type RiveState = {
   rive: Rive | null;
   RiveComponent: (props: ComponentProps<'canvas'>) => JSX.Element;
 };
+
+
+export type UseRiveFileParameters = RiveFileParameters;

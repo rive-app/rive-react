@@ -44,10 +44,23 @@ describe('useRiveFile', () => {
     expect(riveInstance?.cleanup).toHaveBeenCalled();
   });
 
-  it('does not reinitialize RiveFile if params do not change', async () => {
+  it('does not reinitialize RiveFile if src has not changed', async () => {
     const params = {
       src: 'file-src',
       enableRiveAssetCDN: false 
+    };
+
+    const { rerender } = renderHook(() => useRiveFile(params));
+
+    rerender();
+
+    expect(RiveFile).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not reinitialize RiveFile if buffer has not changed', async () => { 
+    const params = {
+      buffer: new ArrayBuffer(10),
+      enableRiveAssetCDN: false
     };
 
     const { rerender } = renderHook(() => useRiveFile(params));

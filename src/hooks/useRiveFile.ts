@@ -25,7 +25,11 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
     const loadRiveFile = async () => {
       setStatus('loading');
       file = new RiveFile(params);
+      file.init();
       file.on(EventType.Load, () => {
+        // We request an instance to add +1  to the referencesCount so it doesn't get destroyed
+        // while this hook is active
+        file?.getInstance();
         setRiveFile(file);
         setStatus('success');
       });
@@ -38,9 +42,7 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
     loadRiveFile();
 
     return () => {
-      if (file) {
-        file.cleanup();
-      }
+        file?.cleanup();
     };
   }, [params.src, params.buffer]);
 

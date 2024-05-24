@@ -1,5 +1,10 @@
-import { RefCallback, ComponentProps } from 'react';
-import { Rive, RiveParameters, RiveFileParameters } from '@rive-app/canvas';
+import {
+  Rive,
+  RiveFile,
+  RiveFileParameters,
+  RiveParameters,
+} from '@rive-app/canvas';
+import { ComponentProps, RefCallback } from 'react';
 
 export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
 
@@ -22,9 +27,9 @@ export type Dimensions = {
  * @property canvas - Canvas element the Rive Animation is attached to.
  * @property container - Container element of the canvas.
  * @property setCanvasRef - Ref callback to be passed to the canvas element.
- * @property setContainerRef - Ref callback to be passed to the container element
- *   of the canvas. This is optional, however if not used then the hook will
- *   not take care of automatically resizing the canvas to it's outer
+ * @property setContainerRef - Ref callback to be passed to the container
+ * element of the canvas. This is optional, however if not used then the hook
+ * will not take care of automatically resizing the canvas to it's outer
  *   container if the window resizes.
  * @property rive - The loaded Rive Animation
  */
@@ -37,5 +42,16 @@ export type RiveState = {
   RiveComponent: (props: ComponentProps<'canvas'>) => JSX.Element;
 };
 
-
 export type UseRiveFileParameters = RiveFileParameters;
+
+export type FileStatus = 'idle' | 'loading' | 'failed' | 'success';
+
+/**
+ * @typedef RiveFileState
+ * @property data - The RiveFile instance
+ * @property status - The status of the file
+ */
+export type RiveFileState = {
+  riveFile: RiveFile | null;
+  status: FileStatus;
+};

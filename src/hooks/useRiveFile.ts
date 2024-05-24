@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
-import type { UseRiveFileParameters } from '../types';
-import { RiveFile } from '@rive-app/canvas';
+import type {
+  UseRiveFileParameters,
+  RiveFileState,
+  FileStatus,
+} from '../types';
+import { EventType, RiveFile } from '@rive-app/canvas';
 
 /**
  * Custom hook for initializing and managing a RiveFile instance within a component.
@@ -11,14 +15,23 @@ import { RiveFile } from '@rive-app/canvas';
  *
  * @returns {RiveFile} Contains the active RiveFile instance (`riveFile`).
  */
-function useRiveFile(params: UseRiveFileParameters) {
+function useRiveFile(params: UseRiveFileParameters): RiveFileState {
   const [riveFile, setRiveFile] = useState<RiveFile | null>(null);
+  const [status, setStatus] = useState<FileStatus>('idle');
 
   useEffect(() => {
     let file: RiveFile | null = null;
 
     const loadRiveFile = async () => {
+      setStatus('loading');
       file = new RiveFile(params);
+      file.on(EventType.Load, () => {
+        setRiveFile(file);
+        setStatus('success');
+      });
+      file.on(EventType.LoadError, () => {
+        setStatus('failed');
+      });
       setRiveFile(file);
     };
 
@@ -31,8 +44,7 @@ function useRiveFile(params: UseRiveFileParameters) {
     };
   }, [params.src, params.buffer]);
 
-
-  return { riveFile };
+  return { riveFile, status };
 }
 
 export default useRiveFile;

@@ -9,6 +9,7 @@ export type UseRiveOptions = {
   fitCanvasToArtboardHeight: boolean;
   useOffscreenRenderer: boolean;
   shouldResizeCanvasToContainer: boolean;
+  shouldUseIntersectionObserver?: boolean;
 };
 
 export type Dimensions = {

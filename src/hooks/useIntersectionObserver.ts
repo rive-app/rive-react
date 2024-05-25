@@ -10,12 +10,9 @@ const getObserver = () => {
 }
 
 /**
- * Hook to listen for a ref element's resize events being triggered. When resized,
- * it sets state to an object of {width: number, height: number} indicating the contentRect
- * size of the element at the new resize.
+ * Hook to observe elements when they are intersecting with the viewport
  *
- * @param containerRef - Ref element to listen for resize events on
- * @returns - Size object with width and height attributes
+ * @returns - API to observer and unobserve elements
  */
 export default function useIntersectionObserver() {
   const observe = useCallback((element: Element, callback: Function) => {

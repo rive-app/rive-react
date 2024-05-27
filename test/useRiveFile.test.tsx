@@ -8,6 +8,8 @@ jest.mock('@rive-app/canvas', () => ({
   RiveFile: jest.fn().mockImplementation(() => ({
     cleanup: jest.fn(),
     on: jest.fn(),
+    init: jest.fn(),
+    getInstance: jest.fn(),
   })),
   EventType: {
     Load: 'load',

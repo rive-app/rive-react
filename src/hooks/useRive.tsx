@@ -188,7 +188,7 @@ export default function useRive(
         timeoutId = setTimeout(retestIntersection, 10);
       }
     };
-    if (canvasElem && options.shouldUseIntersectionObserver) {
+    if (canvasElem && options.shouldUseIntersectionObserver !== false) {
       observe(canvasElem, onChange);
     }
     return () => {

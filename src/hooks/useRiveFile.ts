@@ -11,9 +11,9 @@ import { EventType, RiveFile } from '@rive-app/canvas';
  * It sets up a RiveFile based on provided source parameters (URL or ArrayBuffer) and ensures
  * proper cleanup to avoid memory leaks when the component unmounts or inputs change.
  *
- * @param params - Object containing parameters accepted by the Rive file in the rive-js runtime,
+ * @param params - Object containing parameters accepted by the Rive file in the @rive-app/canvas runtime,
  *
- * @returns {RiveFile} Contains the active RiveFile instance (`riveFile`).
+ * @returns {RiveFileState} Contains the active RiveFile instance (`riveFile`) and the loading status.
  */
 function useRiveFile(params: UseRiveFileParameters): RiveFileState {
   const [riveFile, setRiveFile] = useState<RiveFile | null>(null);
@@ -42,7 +42,7 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
     loadRiveFile();
 
     return () => {
-        file?.cleanup();
+      file?.cleanup();
     };
   }, [params.src, params.buffer]);
 

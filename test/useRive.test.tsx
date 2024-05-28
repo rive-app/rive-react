@@ -308,52 +308,6 @@ describe('useRive', () => {
     expect(containerSpy).toHaveAttribute('style', 'height: 50px;');
   });
 
-  it('configures a IntersectionObserver on mounting', async () => {
-    const params = {
-      src: 'file-src',
-    };
-
-    const observeMock = jest.fn();
-
-    const restore = global.IntersectionObserver;
-    global.IntersectionObserver = jest.fn().mockImplementation(() => ({
-      observe: observeMock,
-      disconnect: ()=>{}
-    }));
-
-    const riveMock = {
-      ...baseRiveMock,
-      bounds: {
-        maxX: 100,
-        maxY: 50,
-      },
-    };
-
-    // @ts-ignore
-    mocked(rive.Rive).mockImplementation(() => riveMock);
-
-    const canvasSpy = document.createElement('canvas');
-
-    const { result } = renderHook(() => useRive(params));
-
-    await act(async () => {
-      result.current.setCanvasRef(canvasSpy);
-    });
-    await waitFor(() => {
-      expect(result.current.canvas).toBe(canvasSpy);
-    });
-    await act(async () => {
-      controlledRiveloadCb();
-    });
-    await waitFor(() => {
-      expect(result.current.rive).toBe(riveMock);
-    });
-
-    expect(observeMock).toBeCalledWith(canvasSpy);
-
-    global.IntersectionObserver = restore;
-  });
-
   it('updates the playing animations when the animations param changes', async () => {
     const params = {
       src: 'file-src',

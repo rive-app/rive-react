@@ -10,6 +10,7 @@ import { Rive, EventType } from '@rive-app/canvas';
 import { UseRiveParameters, UseRiveOptions, RiveState } from '../types';
 import useResizeCanvas from './useResizeCanvas';
 import { getOptions } from '../utils';
+import useIntersectionObserver from './useIntersectionObserver';
 
 type RiveComponentProps = {
   setContainerRef: RefCallback<HTMLElement>;
@@ -99,7 +100,6 @@ export default function useRive(
    */
   const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
     (canvas: HTMLCanvasElement | null) => {
-
       if (canvas === null && canvasElem) {
         canvasElem.height = 0;
         canvasElem.width = 0;
@@ -111,7 +111,7 @@ export default function useRive(
   );
 
   useEffect(() => {
-    if(!canvasElem || !riveParams) {
+    if (!canvasElem || !riveParams) {
       return;
     }
     if (rive == null) {
@@ -132,7 +132,7 @@ export default function useRive(
         }
       });
     }
-  },[canvasElem, isParamsLoaded, rive]);
+  }, [canvasElem, isParamsLoaded, rive]);
   /**
    * Ref callback called when the container element mounts
    */
@@ -147,21 +147,62 @@ export default function useRive(
    * Set up IntersectionObserver to stop rendering if the animation is not in
    * view.
    */
+  const { observe, unobserve } = useIntersectionObserver();
+
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let isPaused = false;
+    // This is a workaround to retest whether an element is offscreen or not.
+    // There seems to be a bug in Chrome that triggers an intersection change when an element
+    // is moved within the DOM using insertBefore.
+    // For some reason, when this is called whithin the context of a React application, the
+    // intersection callback is called only once reporting isIntersecting as false but never
+    // triggered back with isIntersecting as true.
+    // For this reason we retest after 10 millisecond whether the element is actually off the
+    // viewport or not.
+    const retestIntersection = () => {
+      if (canvasElem && isPaused) {
+        const size = canvasElem.getBoundingClientRect();
+        const isIntersecting =
+          size.width > 0 &&
+          size.height > 0 &&
+          size.top <
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          size.bottom > 0 &&
+          size.left <
+            (window.innerWidth || document.documentElement.clientWidth) &&
+          size.right > 0;
+        if (isIntersecting) {
+          rive?.startRendering();
+          isPaused = false;
+        }
+      }
+    };
+    const onChange = (entry: IntersectionObserverEntry) => {
       entry.isIntersecting
         ? rive && rive.startRendering()
         : rive && rive.stopRendering();
-    });
-
-    if (canvasElem) {
-      observer.observe(canvasElem);
-    }
-
-    return () => {
-      observer.disconnect();
+      isPaused = !entry.isIntersecting;
+      clearTimeout(timeoutId);
+      if (!entry.isIntersecting && entry.boundingClientRect.width === 0) {
+        timeoutId = setTimeout(retestIntersection, 10);
+      }
     };
-  }, [rive, canvasElem]);
+    if (canvasElem && options.shouldUseIntersectionObserver !== false) {
+      observe(canvasElem, onChange);
+    }
+    return () => {
+      if (canvasElem) {
+        unobserve(canvasElem);
+      }
+    };
+  }, [
+    observe,
+    unobserve,
+    rive,
+    canvasElem,
+    options.shouldUseIntersectionObserver,
+  ]);
 
   /**
    * On unmount, call cleanup to cleanup any WASM generated objects that need

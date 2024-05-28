@@ -31,6 +31,17 @@ jest.mock('@rive-app/canvas', () => ({
 describe('useRive', () => {
   let controlledRiveloadCb: () => void;
   let baseRiveMock: Partial<rive.Rive>;
+  const mockBoundingBox = {
+    width: 100,
+    height: 100,
+    x: 0,
+    top: 0,
+    y: 0,
+    bottom: 100,
+    left: 0,
+    right: 100,
+    toJSON: () => '',
+  };
 
   beforeEach(() => {
     baseRiveMock = {
@@ -162,8 +173,9 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
-    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    jest
+      .spyOn(containerSpy, 'getBoundingClientRect')
+      .mockReturnValue(mockBoundingBox);
 
     const { result } = renderHook(() => useRive(params));
 
@@ -200,8 +212,9 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
-    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    jest
+      .spyOn(containerSpy, 'getBoundingClientRect')
+      .mockReturnValue(mockBoundingBox);
 
     const { result } = renderHook(() =>
       useRive(params, { customDevicePixelRatio: 1 })
@@ -241,8 +254,9 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
-    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    jest
+      .spyOn(containerSpy, 'getBoundingClientRect')
+      .mockReturnValue(mockBoundingBox);
 
     const { result } = renderHook(() => useRive(params, opts));
 
@@ -284,8 +298,9 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
-    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    jest
+      .spyOn(containerSpy, 'getBoundingClientRect')
+      .mockReturnValue(mockBoundingBox);
 
     const { result } = renderHook(() => useRive(params, opts));
 
@@ -468,8 +483,9 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
-    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    jest
+      .spyOn(containerSpy, 'getBoundingClientRect')
+      .mockReturnValue(mockBoundingBox);
 
     const { result } = renderHook(() => useRive(params));
 
@@ -500,16 +516,18 @@ describe('useRive', () => {
 
     const canvasSpy = document.createElement('canvas');
     const containerSpy = document.createElement('div');
-    jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(100);
-    jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(100);
+    jest
+      .spyOn(containerSpy, 'getBoundingClientRect')
+      .mockReturnValue(mockBoundingBox);
 
     const { result } = renderHook(() => useRive(params));
 
     await act(async () => {
       result.current.setCanvasRef(canvasSpy);
       result.current.setContainerRef(containerSpy);
-      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(200);
-      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(200);
+      jest
+        .spyOn(containerSpy, 'getBoundingClientRect')
+        .mockReturnValue({...mockBoundingBox, width: 200, height: 200});
     });
     await waitFor(() => {
       expect(result.current.canvas).toBe(canvasSpy);
@@ -559,8 +577,9 @@ describe('useRive', () => {
     });
 
     await act(async () => {
-      jest.spyOn(containerSpy, 'clientWidth', 'get').mockReturnValue(500);
-      jest.spyOn(containerSpy, 'clientHeight', 'get').mockReturnValue(500);
+      jest
+        .spyOn(containerSpy, 'getBoundingClientRect')
+        .mockReturnValue({...mockBoundingBox, width: 500, height: 500});
       containerSpy.dispatchEvent(new Event('resize'));
     });
 

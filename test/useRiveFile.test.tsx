@@ -23,6 +23,8 @@ describe('useRiveFile', () => {
     mocked(RiveFile).mockClear();
   });
 
+
+
   it('initializes RiveFile with provided parameters', async () => {
     const params = {
       src: 'file-src',
@@ -38,7 +40,7 @@ describe('useRiveFile', () => {
   it('cleans up RiveFile on unmount', async () => {
     const params = {
       src: 'file-src',
-      enableRiveAssetCDN: false 
+      enableRiveAssetCDN: false
     };
 
     const { result, unmount } = renderHook(() => useRiveFile(params));
@@ -54,7 +56,7 @@ describe('useRiveFile', () => {
   it('does not reinitialize RiveFile if src has not changed', async () => {
     const params = {
       src: 'file-src',
-      enableRiveAssetCDN: false 
+      enableRiveAssetCDN: false
     };
 
     const { rerender } = renderHook(() => useRiveFile(params));
@@ -64,7 +66,7 @@ describe('useRiveFile', () => {
     expect(RiveFile).toHaveBeenCalledTimes(1);
   });
 
-  it('does not reinitialize RiveFile if buffer has not changed', async () => { 
+  it('does not reinitialize RiveFile if buffer has not changed', async () => {
     const params = {
       buffer: new ArrayBuffer(10),
       enableRiveAssetCDN: false
@@ -111,5 +113,30 @@ describe('useRiveFile', () => {
     rerender();
 
     expect(RiveFile).toHaveBeenCalledTimes(2);
+  });
+
+  it('handles RiveFile initialization failure gracefully', async () => {
+
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+    const error = new Error("Initialization failed");
+
+    mocked(RiveFile).mockImplementation(() => {
+      throw error;
+    });
+
+    const params = {
+      src: 'file-src',
+      enableRiveAssetCDN: false,
+    };
+
+    const { result, rerender } = renderHook(() => useRiveFile(params));
+
+    rerender();
+
+    expect(result.current.status).toBe('failed');
+    expect(result.current.riveFile).toBeNull();
+    expect(consoleSpy).toHaveBeenCalledWith(error);
+
+    consoleSpy.mockRestore();
   });
 });

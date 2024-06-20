@@ -23,20 +23,25 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
     let file: RiveFile | null = null;
 
     const loadRiveFile = async () => {
-      setStatus('loading');
-      file = new RiveFile(params);
-      file.init();
-      file.on(EventType.Load, () => {
-        // We request an instance to add +1  to the referencesCount so it doesn't get destroyed
-        // while this hook is active
-        file?.getInstance();
+      try {
+        setStatus('loading');
+        file = new RiveFile(params);
+        file.init();
+        file.on(EventType.Load, () => {
+          // We request an instance to add +1 to the referencesCount so it doesn't get destroyed
+          // while this hook is active
+          file?.getInstance();
+          setRiveFile(file);
+          setStatus('success');
+        });
+        file.on(EventType.LoadError, () => {
+          setStatus('failed');
+        });
         setRiveFile(file);
-        setStatus('success');
-      });
-      file.on(EventType.LoadError, () => {
+      } catch (error) {
+        console.error(error);
         setStatus('failed');
-      });
-      setRiveFile(file);
+      }
     };
 
     loadRiveFile();

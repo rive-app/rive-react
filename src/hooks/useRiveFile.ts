@@ -26,7 +26,6 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
       try {
         setStatus('loading');
         file = new RiveFile(params);
-        await file.init();
         file.on(EventType.Load, () => {
           // We request an instance to add +1 to the referencesCount so it doesn't get destroyed
           // while this hook is active
@@ -37,6 +36,7 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
         file.on(EventType.LoadError, () => {
           setStatus('failed');
         });
+        await file.init();
         setRiveFile(file);
       } catch (error) {
         console.error(error);

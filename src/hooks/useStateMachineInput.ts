@@ -40,7 +40,7 @@ export default function useStateMachineInput(
     }
     setStateMachineInput();
     if (rive) {
-      rive.on(EventType.Play, () => {
+      rive.on(EventType.Load, () => {
         // Check if the component/canvas is mounted before setting state to avoid setState
         // on an unmounted component in some rare cases
         setStateMachineInput();

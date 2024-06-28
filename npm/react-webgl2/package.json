@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-webgl2",
-  "version": "4.12.1",
+  "version": "4.13.0",
   "description": "React wrapper around the @rive-app/webgl2 library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",

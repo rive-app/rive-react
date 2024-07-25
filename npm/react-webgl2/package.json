@@ -17,7 +17,9 @@
     "url": "https://github.com/rive-app/rive-react/issues"
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@rive-app/webgl2": "2.19.4"
+  },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   }

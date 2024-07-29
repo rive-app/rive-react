@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-canvas-lite",
-  "version": "4.13.4",
+  "version": "4.13.5",
   "description": "React wrapper around the @rive-app/canvas-lite library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",

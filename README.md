@@ -27,17 +27,25 @@ This library is a wrapper around the [JS/Wasm runtime](https://github.com/rive-a
 
 :house_with_garden: [Homepage](https://rive.app/)
 
-:blue_book: [General help docs](https://help.rive.app/)
+:blue_book: [General help docs](https://rive.app/community/doc/)
 
-🛠 [Resources for building in Rive](https://rive.app/resources/)
+🛠 [Rive Forums](https://rive.app/community/forums/home)
 
 ## Getting started
 
 Follow along with the link below for a quick start in getting Rive React integrated into your React apps.
 
-[Getting Started with Rive in React](https://help.rive.app/runtimes/overview/react)
+- [Getting Started with Rive in React](https://rive.app/community/doc/react/docRfaSQ0eaE)
+- [API documentation](https://rive.app/community/doc/parameters-and-return-values/docJlDMNulDh)
 
-[API documentation](https://help.rive.app/runtimes/overview/react/parameters-and-return-values)
+For more information, see the Runtime sections of the Rive help documentation:
+
+- [Animation Playback](https://rive.app/community/doc/animation-playback/docDKKxsr7ko)
+- [Layout](https://rive.app/community/doc/layout/docBl81zd1GB)
+- [State Machines](https://rive.app/community/doc/state-machines/docxeznG7iiK)
+- [Rive Text](https://rive.app/community/doc/text/docn2E6y1lXo)
+- [Rive Events](https://rive.app/community/doc/rive-events/docbOnaeffgr)
+- [Loading Assets](https://rive.app/community/doc/loading-assets/doct4wVHGPgC)
 
 ## Supported versions
 
@@ -60,7 +68,7 @@ For even more examples and resources on using Rive at runtime or in other tools,
 
 Using an older version of the runtime and need to learn how to upgrade to the latest version? Check out the migration guides below in our help center that help guide you through version bumps; breaking changes and all!
 
-[Migration guides](https://help.rive.app/runtimes/overview/react/migrating-from-1.x.x-to-3.x.x)
+[Migration guides](https://rive.app/community/doc/migrating-from-v3-to-v4/dociIPXVHKFF)
 
 ## Contributing
 

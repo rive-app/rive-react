@@ -21,7 +21,7 @@ export interface RiveProps {
    */
   stateMachines?: string | string[];
   /**
-   * Specify a starting Layout object to set Fill and Alignment for the drawing surface. See docs at https://help.rive.app/runtimes/layout for more on layout configuration.
+   * Specify a starting Layout object to set Fill and Alignment for the drawing surface. See docs at https://rive.app/community/doc/layout/docBl81zd1GB for more on layout configuration.
    */
   layout?: Layout;
   /**

@@ -6,9 +6,10 @@ import React, {
   ComponentProps,
   RefCallback,
 } from 'react';
-import { Rive, EventType } from '@rive-app/canvas';
+import { Rive, EventType, Fit } from '@rive-app/canvas';
 import { UseRiveParameters, UseRiveOptions, RiveState } from '../types';
 import useResizeCanvas from './useResizeCanvas';
+import useDevicePixelRatio from './useDevicePixelRatio';
 import { getOptions } from '../utils';
 import useIntersectionObserver from './useIntersectionObserver';
 
@@ -74,16 +75,27 @@ export default function useRive(
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
 
+  const devicePixelRatio = useDevicePixelRatio();
+
   /**
    * When the canvas/parent container resize, reset the Rive layout to match the
    * new (0, 0, canvas.width, canvas.height) bounds in the render loop
    */
   const onCanvasHasResized = useCallback(() => {
     if (rive) {
+      if (rive.layout.fit === Fit.Layout) {
+        if (canvasElem) {
+          // TODO (Gordon): expose these are properties on JS runtime
+          (rive as any)._devicePixelRatioUsed = devicePixelRatio;
+          (rive as any).artboard.width = canvasElem?.width / devicePixelRatio;
+          (rive as any).artboard.height = canvasElem?.height / devicePixelRatio;
+        }
+      }
+
       rive.startRendering();
       rive.resizeToCanvas();
     }
-  }, [rive]);
+  }, [rive, devicePixelRatio]);
 
   // Watch the canvas parent container resize and size the canvas to match
   useResizeCanvas({

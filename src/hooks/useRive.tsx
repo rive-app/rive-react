@@ -83,7 +83,7 @@ export default function useRive(
    */
   const onCanvasHasResized = useCallback(() => {
     if (rive) {
-      if (rive.layout.fit === Fit.Layout) {
+      if (rive.layout && rive.layout.fit === Fit.Layout) {
         if (canvasElem) {
           // TODO (Gordon): expose these are properties on JS runtime
           (rive as any)._devicePixelRatioUsed = devicePixelRatio;

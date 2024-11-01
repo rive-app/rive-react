@@ -86,10 +86,9 @@ export default function useRive(
       if (rive.layout && rive.layout.fit === Fit.Layout) {
         if (canvasElem) {
           const resizeFactor = devicePixelRatio * rive.layout.layoutScaleFactor;
-          // TODO (Gordon): expose these are properties on JS runtime
-          (rive as any)._devicePixelRatioUsed = devicePixelRatio;
-          (rive as any).artboard.width = canvasElem?.width / resizeFactor;
-          (rive as any).artboard.height = canvasElem?.height / resizeFactor;
+          rive.devicePixelRatioUsed = devicePixelRatio;
+          rive.artboardWidth = canvasElem?.width / resizeFactor;
+          rive.artboardHeight = canvasElem?.height / resizeFactor;
         }
       }
 

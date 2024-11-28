@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { EventType, Rive, StateMachineInput } from '@rive-app/canvas';
+import { EventType, StateMachineInput, Rive } from '@rive-app/canvas';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 /**
  * Custom hook for fetching multiple stateMachine inputs from a rive file.
@@ -7,8 +7,8 @@ import { EventType, Rive, StateMachineInput } from '@rive-app/canvas';
  *
  * @param rive - Rive instance
  * @param stateMachineName - Name of the state machine
- * @param inputNames - Names of the inputs
- * @returns StateMachineInput[] | null
+ * @param inputNames - Name and initial value of the inputs
+ * @returns StateMachineInput[]
  */
 export default function useStateMachineInputs(
   rive: Rive | null,
@@ -18,43 +18,46 @@ export default function useStateMachineInputs(
     initialValue?: number | boolean;
   }[]
 ) {
-  const [inputs, setInputs] = useState<StateMachineInput[] | null>(null);
+  const [inputMap, setInputMap] = useState<Map<string, StateMachineInput>>(new Map());
 
-  useEffect(() => {
-    function setStateMachineInput() {
-      if (!rive || !stateMachineName || !inputNames) {
-        setInputs(null);
-      }
+  const syncInputs = useCallback(() => {
+    if (!rive || !stateMachineName || !inputNames) return;
 
-      if (rive && stateMachineName && inputNames) {
-        const inputs = rive.stateMachineInputs(stateMachineName);
-        if (inputs) {
-          const selectedInputs = inputs.filter((input) =>
-            inputNames.some((inputName) => inputName.name === input.name)
-          );
-          if (selectedInputs) {
-            selectedInputs.forEach((input) => {
-              const targetInputName = inputNames.find(inputName => inputName.name === input.name);
-              if(targetInputName?.initialValue){
-                input.value = targetInputName.initialValue
-              }
-            });
-          }
-          setInputs(selectedInputs);
+    const riveInputs = rive.stateMachineInputs(stateMachineName);
+    if (!riveInputs) return;
+
+    // To optimize lookup time from O(n) to O(1) in the following loop
+    const riveInputLookup = new Map<string, StateMachineInput>(riveInputs.map(input => [input.name, input]));
+
+    setInputMap(() => {
+      const newMap = new Map<string, StateMachineInput>();
+
+      // Iterate over inputNames instead of riveInputs to preserve array order
+      inputNames.forEach(inputName => {
+        const riveInput = riveInputLookup.get(inputName.name);
+        if (!riveInput) return;
+
+        if (inputName.initialValue !== undefined) {
+          riveInput.value = inputName.initialValue;
         }
-      } else {
-        setInputs(null);
-      }
-    }
-    setStateMachineInput();
-    if (rive) {
-      rive.on(EventType.Load, () => {
-        // Check if the component/canvas is mounted before setting state to avoid setState
-        // on an unmounted component in some rare cases
-        setStateMachineInput();
+
+        newMap.set(inputName.name, riveInput);
       });
-    }
+
+      return newMap;
+    });
   }, [inputNames, rive, stateMachineName]);
 
-  return inputs;
+  useEffect(() => {
+    syncInputs();
+    if (rive) {
+      rive.on(EventType.Load, syncInputs);
+
+      return () => {
+        rive.off(EventType.Load, syncInputs);
+      };
+    }
+  }, [rive, stateMachineName, inputNames, syncInputs]);
+
+  return useMemo(() => Array.from(inputMap.values()), [inputMap]);
 }

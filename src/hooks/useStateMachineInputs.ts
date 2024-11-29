@@ -1,5 +1,5 @@
 import { EventType, StateMachineInput, Rive } from '@rive-app/canvas';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Custom hook for fetching multiple stateMachine inputs from a rive file.
@@ -18,7 +18,7 @@ export default function useStateMachineInputs(
     initialValue?: number | boolean;
   }[]
 ) {
-  const [inputMap, setInputMap] = useState<Map<string, StateMachineInput>>(new Map());
+  const [inputs, setInputs] = useState<StateMachineInput[]>([]);
 
   const syncInputs = useCallback(() => {
     if (!rive || !stateMachineName || !inputNames) return;
@@ -27,24 +27,23 @@ export default function useStateMachineInputs(
     if (!riveInputs) return;
 
     // To optimize lookup time from O(n) to O(1) in the following loop
-    const riveInputLookup = new Map<string, StateMachineInput>(riveInputs.map(input => [input.name, input]));
+    const riveInputLookup = new Map<string, StateMachineInput>(
+      riveInputs.map(input => [input.name, input])
+    );
 
-    setInputMap(() => {
-      const newMap = new Map<string, StateMachineInput>();
-
+    setInputs(() => {
       // Iterate over inputNames instead of riveInputs to preserve array order
-      inputNames.forEach(inputName => {
-        const riveInput = riveInputLookup.get(inputName.name);
-        if (!riveInput) return;
+      return inputNames
+        .filter(inputName => riveInputLookup.has(inputName.name))
+        .map(inputName => {
+          const riveInput = riveInputLookup.get(inputName.name)!;
 
-        if (inputName.initialValue !== undefined) {
-          riveInput.value = inputName.initialValue;
-        }
+          if (inputName.initialValue !== undefined) {
+            riveInput.value = inputName.initialValue;
+          }
 
-        newMap.set(inputName.name, riveInput);
-      });
-
-      return newMap;
+          return riveInput;
+        });
     });
   }, [inputNames, rive, stateMachineName]);
 
@@ -59,5 +58,5 @@ export default function useStateMachineInputs(
     }
   }, [rive, stateMachineName, inputNames, syncInputs]);
 
-  return useMemo(() => Array.from(inputMap.values()), [inputMap]);
+  return inputs;
 }

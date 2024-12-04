@@ -56,7 +56,7 @@ export default function useStateMachineInputs(
         rive.off(EventType.Load, syncInputs);
       };
     }
-  }, [rive, stateMachineName, inputNames, syncInputs]);
+  }, [rive]);
 
   return inputs;
 }

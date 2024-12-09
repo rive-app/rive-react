@@ -141,6 +141,7 @@ export default function useRive(
         } else {
           // If unmounted, cleanup the rive object immediately
           r.cleanup();
+          r.deleteRiveRenderer();
         }
       });
     }
@@ -224,6 +225,7 @@ export default function useRive(
     return () => {
       if (rive) {
         rive.cleanup();
+        rive.deleteRiveRenderer();
         setRive(null);
       }
     };

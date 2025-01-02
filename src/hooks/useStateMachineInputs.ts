@@ -20,34 +20,34 @@ export default function useStateMachineInputs(
 ) {
   const [inputs, setInputs] = useState<StateMachineInput[]>([]);
 
-  const syncInputs = useCallback(() => {
-    if (!rive || !stateMachineName || !inputNames) return;
-
-    const riveInputs = rive.stateMachineInputs(stateMachineName);
-    if (!riveInputs) return;
-
-    // To optimize lookup time from O(n) to O(1) in the following loop
-    const riveInputLookup = new Map<string, StateMachineInput>(
-      riveInputs.map(input => [input.name, input])
-    );
-
-    setInputs(() => {
-      // Iterate over inputNames instead of riveInputs to preserve array order
-      return inputNames
-        .filter(inputName => riveInputLookup.has(inputName.name))
-        .map(inputName => {
-          const riveInput = riveInputLookup.get(inputName.name)!;
-
-          if (inputName.initialValue !== undefined) {
-            riveInput.value = inputName.initialValue;
-          }
-
-          return riveInput;
-        });
-    });
-  }, [inputNames, rive, stateMachineName]);
-
   useEffect(() => {
+    const syncInputs = () => {
+      if (!rive || !stateMachineName || !inputNames) return;
+
+      const riveInputs = rive.stateMachineInputs(stateMachineName);
+      if (!riveInputs) return;
+
+      // To optimize lookup time from O(n) to O(1) in the following loop
+      const riveInputLookup = new Map<string, StateMachineInput>(
+        riveInputs.map(input => [input.name, input])
+      );
+
+      setInputs(() => {
+        // Iterate over inputNames instead of riveInputs to preserve array order
+        return inputNames
+          .filter(inputName => riveInputLookup.has(inputName.name))
+          .map(inputName => {
+            const riveInput = riveInputLookup.get(inputName.name)!;
+
+            if (inputName.initialValue !== undefined) {
+              riveInput.value = inputName.initialValue;
+            }
+
+            return riveInput;
+          });
+      });
+    };
+
     syncInputs();
     if (rive) {
       rive.on(EventType.Load, syncInputs);

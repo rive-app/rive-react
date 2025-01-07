@@ -1,5 +1,5 @@
 import { EventType, StateMachineInput, Rive } from '@rive-app/canvas';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Custom hook for fetching multiple stateMachine inputs from a rive file.

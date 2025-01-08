@@ -3,6 +3,7 @@ import {
   RiveFile,
   RiveFileParameters,
   RiveParameters,
+  ViewModelInstance,
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
@@ -56,4 +57,24 @@ export type FileStatus = 'idle' | 'loading' | 'failed' | 'success';
 export type RiveFileState = {
   riveFile: RiveFile | null;
   status: FileStatus;
+};
+
+export type UseViewModelParameters = {
+  useDefault?: boolean;
+  name?: string;
+};
+
+export type UseViewModelInstanceParameters = {
+  useNew?: boolean;
+  useDefault?: boolean;
+  name?: string;
+};
+
+export type UseViewModelInstanceValueParameters = {
+  viewModelInstance?: ViewModelInstance | null;
+  rive?: Rive | null;
+};
+
+export type UseViewModelInstanceNumberParameters = UseViewModelInstanceValueParameters & {
+  initialValue?: number;
 };

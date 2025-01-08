@@ -4,6 +4,9 @@ import {
   RiveFileParameters,
   RiveParameters,
   ViewModelInstance,
+  ViewModelInstanceBoolean,
+  ViewModelInstanceNumber,
+  ViewModelInstanceString,
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
@@ -78,3 +81,23 @@ export type UseViewModelInstanceValueParameters = {
 export type UseViewModelInstanceNumberParameters = UseViewModelInstanceValueParameters & {
   initialValue?: number;
 };
+
+export type UseViewModelInstanceStringParameters = UseViewModelInstanceValueParameters & {
+  initialValue?: string;
+};
+
+export type UseViewModelInstanceBooleanParameters = UseViewModelInstanceValueParameters & {
+  initialValue?: boolean;
+};
+
+export type UseViewModelInstancePropertyType = UseViewModelInstanceNumberParameters | UseViewModelInstanceStringParameters | UseViewModelInstanceBooleanParameters;
+
+
+
+export type AcceptedVieModelType<T> = T extends UseViewModelInstanceNumberParameters
+  ? ViewModelInstanceNumber
+  : T extends UseViewModelInstanceStringParameters
+  ? ViewModelInstanceString
+  : T extends UseViewModelInstanceBooleanParameters
+  ? ViewModelInstanceBoolean
+  : never;

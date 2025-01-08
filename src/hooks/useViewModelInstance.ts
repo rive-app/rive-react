@@ -54,7 +54,7 @@ export default function useViewModel(
 
     function setInstance(instance: ViewModelInstance | null) {
       setViewModelInstance(instance);
-      rive!.setDataContextFromInstance(instance);
+      rive!.bindViewModelInstance(instance);
       currentParams.current = parameters;
     }
     function getViewModelInstance(): ViewModelInstance | null {

@@ -30,7 +30,6 @@ const equal = (
     params.rive !== to.parameters.rive ||
     params.viewModelInstance !== to.parameters.viewModelInstance
   ) {
-    console.log('paso 3');
     return false;
   }
   return true;

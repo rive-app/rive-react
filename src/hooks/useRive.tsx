@@ -126,23 +126,31 @@ export default function useRive(
     if (!canvasElem || !riveParams) {
       return;
     }
+    let isLoaded = rive != null;
+    let r: Rive | null;
     if (rive == null) {
       const { useOffscreenRenderer } = options;
-      const r = new Rive({
+      r = new Rive({
         useOffscreenRenderer,
         ...riveParams,
         canvas: canvasElem,
       });
       r.on(EventType.Load, () => {
+        isLoaded = true;
         // Check if the component/canvas is mounted before setting state to avoid setState
         // on an unmounted component in some rare cases
         if (canvasElem) {
           setRive(r);
         } else {
           // If unmounted, cleanup the rive object immediately
-          r.cleanup();
+          r!.cleanup();
         }
       });
+    }
+    return () => {
+      if(!isLoaded) {
+        r?.cleanup();
+      }
     }
   }, [canvasElem, isParamsLoaded, rive]);
   /**

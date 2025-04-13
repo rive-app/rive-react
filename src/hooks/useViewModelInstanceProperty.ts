@@ -66,7 +66,7 @@ export default function useViewModelInstanceProperty(
       if (viewModelInstance) {
         let index = 0;
         while (index < path?.length) {
-          if(!viewModelInstance) {
+          if (!viewModelInstance) {
             return null;
           }
           viewModelInstance = viewModelInstance?.viewModel(path[index]);

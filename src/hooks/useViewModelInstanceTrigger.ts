@@ -14,12 +14,13 @@ export default function useViewModelInstanceTrigger(
     path: string,
     userParameters?: UseViewModelInstanceTriggerParameters
 ): UseViewModelInstanceTriggerResult {
-    return useViewModelInstancePropertyValues<
+    const result = useViewModelInstancePropertyValues<
         void,
         UseViewModelInstanceTriggerParameters,
         ViewModelInstanceTrigger,
         {
             trigger: () => void;
+            instance: ViewModelInstanceTrigger | null;
         }
     >(
         path,
@@ -27,22 +28,31 @@ export default function useViewModelInstanceTrigger(
         undefined,
         (instance, name) => instance.trigger(name),
         () => undefined,
-        (instance, _, __) => {
-            useEffect(() => {
-                if (instance && userParameters?.onTrigger) {
-                    instance.on(userParameters.onTrigger);
+        (instance) => ({
+            trigger: () => {
+                instance?.trigger();
+            },
+            instance
+        })
+    );
 
-                    return () => {
-                        instance.off(userParameters.onTrigger);
-                    };
-                }
-            }, [instance, userParameters?.onTrigger]);
+    const { instance } = result;
 
-            return {
-                trigger: useCallback(() => {
-                    instance?.trigger();
-                }, [instance])
+    useEffect(() => {
+        if (instance && userParameters?.onTrigger) {
+            instance.on(userParameters.onTrigger);
+
+            return () => {
+                instance.off(userParameters.onTrigger);
             };
         }
-    );
+    }, [instance, userParameters?.onTrigger]);
+
+    const trigger = useCallback(() => {
+        instance?.trigger();
+    }, [instance]);
+
+    return {
+        trigger
+    };
 }

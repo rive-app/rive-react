@@ -2,10 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { EventType, Rive, ViewModel } from '@rive-app/canvas';
 import { UseViewModelParameters } from '../types';
 
-const defaultParams: UseViewModelParameters = {
-  useDefault: false,
-  name: '',
-};
+const defaultParams: UseViewModelParameters = { useDefault: true };
 
 const equal = (
   params: UseViewModelParameters | null,
@@ -14,10 +11,16 @@ const equal = (
   if (!params || !to) {
     return false;
   }
-  if (params.useDefault !== to.useDefault || params.name !== to.name) {
-    return false;
+
+  if ('name' in params) {
+    return 'name' in to && params.name === to.name;
   }
-  return true;
+
+  if ('useDefault' in params) {
+    return 'useDefault' in to && params.useDefault === to.useDefault;
+  }
+
+  return false;
 };
 
 /**
@@ -25,7 +28,15 @@ const equal = (
  *
  * @param rive - Rive instance
  * @param userParameters - Parameters to load view model
- * @returns
+ * @returns The ViewModel instance or null if not available
+ * 
+ * @example
+ * // Use the default view model
+ * const viewModel = useViewModel(rive, { useDefault: true });
+ * 
+ * @example
+ * // Use a named view model
+ * const viewModel = useViewModel(rive, { name: 'myViewModel' });
  */
 export default function useViewModel(
   rive: Rive | null,
@@ -35,21 +46,19 @@ export default function useViewModel(
   const currentParams = useRef<UseViewModelParameters | null>(null);
 
   useEffect(() => {
-    const parameters = {
-      ...defaultParams,
-      ...userParameters,
-    };
+    const parameters = userParameters || defaultParams;
 
     function getViewModel(): ViewModel | null {
       if (rive) {
-        if (parameters?.useDefault) {
-          return rive!.defaultViewModel();
-        } else if (parameters?.name) {
-          return rive.viewModelByName(parameters?.name);
+        if ('name' in parameters && parameters.name) {
+          return rive.viewModelByName(parameters.name);
+        } else if ('useDefault' in parameters && parameters.useDefault) {
+          return rive.defaultViewModel();
         }
       }
       return null;
     }
+
     function setViewModelValue() {
       if (!rive) {
         setViewModel(null);

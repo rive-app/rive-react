@@ -178,7 +178,7 @@ export type UseViewModelInstanceColorResult = {
    * Set the red value of the color.
    * @param r - The red value to set the color to.
    */
-  rgb: (r: number, g: number, b: number) => void;
+  setRgb: (r: number, g: number, b: number) => void;
   /**
    * Set the red, green, blue, and alpha values of the color.
    * @param r - The red value to set the color to.
@@ -186,17 +186,17 @@ export type UseViewModelInstanceColorResult = {
    * @param b - The blue value to set the color to.
    * @param a - The alpha value to set the color to.
    */
-  rgba: (r: number, g: number, b: number, a: number) => void;
+  setRgba: (r: number, g: number, b: number, a: number) => void;
   /**
    * Set the alpha value of the color.
    * @param a - The alpha value to set the color to.
    */
-  alpha: (a: number) => void;
+  setAlpha: (a: number) => void;
   /**
    * Set the opacity value of the color.
    * @param o - The opacity value to set the color to.
    */
-  opacity: (o: number) => void;
+  setOpacity: (o: number) => void;
 };
 
 export type UseViewModelInstanceEnumResult = {

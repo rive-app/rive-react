@@ -20,10 +20,10 @@ export default function useViewModelInstanceColor(
         {
             value: number;
             setValue: (value: number) => void;
-            rgb: (r: number, g: number, b: number) => void;
-            rgba: (r: number, g: number, b: number, a: number) => void;
-            alpha: (a: number) => void;
-            opacity: (o: number) => void;
+            setRgb: (r: number, g: number, b: number) => void;
+            setRgba: (r: number, g: number, b: number, a: number) => void;
+            setAlpha: (a: number) => void;
+            setOpacity: (o: number) => void;
         }
     >(
         path,
@@ -34,10 +34,10 @@ export default function useViewModelInstanceColor(
         (instance, value, setValue) => ({
             value,
             setValue,
-            rgb: (r, g, b) => instance?.rgb(r, g, b),
-            rgba: (r, g, b, a) => instance?.rgba(r, g, b, a),
-            alpha: (a) => instance?.alpha(a),
-            opacity: (o) => instance?.opacity(o),
+            setRgb: (r, g, b) => instance?.rgb(r, g, b),
+            setRgba: (r, g, b, a) => instance?.rgba(r, g, b, a),
+            setAlpha: (a) => instance?.alpha(a),
+            setOpacity: (o) => instance?.opacity(o),
         })
     );
 }

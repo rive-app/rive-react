@@ -79,7 +79,7 @@ export default function useViewModelProperties(
       path: string
     ): ViewModelInstance | null {
       const viewModelInstance: ViewModelInstance | null = getViewModelInstance();
-      if(path === '') {
+      if (path === '') {
         return viewModelInstance;
       }
       return viewModelInstance?.viewModel(path) || null;

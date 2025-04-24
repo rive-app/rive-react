@@ -1,83 +1,95 @@
 import { useState, useEffect, useRef } from 'react';
-import { EventType, Rive, ViewModel } from '@rive-app/canvas';
+import { Rive, ViewModel, EventType } from '@rive-app/canvas';
 import { UseViewModelParameters } from '../types';
 
-const defaultParams: UseViewModelParameters = { useDefault: true };
 
-const equal = (
-  params: UseViewModelParameters | null,
-  to: UseViewModelParameters | null
-): boolean => {
-  if (!params || !to) {
+function areParamsEqual(
+    prev?: UseViewModelParameters,
+    next?: UseViewModelParameters
+): boolean {
+    if (prev === next) return true;
+    if (!prev || !next) return prev === next;
+
+    if ('name' in prev && 'name' in next) {
+        return prev.name === next.name;
+    }
+
+    if ('useDefault' in prev && 'useDefault' in next) {
+        return prev.useDefault === next.useDefault;
+    }
+
     return false;
-  }
-
-  if ('name' in params) {
-    return 'name' in to && params.name === to.name;
-  }
-
-  if ('useDefault' in params) {
-    return 'useDefault' in to && params.useDefault === to.useDefault;
-  }
-
-  return false;
-};
+}
 
 /**
- * Custom hook for fetching a view model.
+ * Hook for fetching a ViewModel from a Rive instance.
  *
- * @param rive - Rive instance
- * @param userParameters - Parameters to load view model
- * @returns The ViewModel instance or null if not available
- * 
- * @example
- * // Use the default view model
- * const viewModel = useViewModel(rive, { useDefault: true });
- * 
- * @example
- * // Use a named view model
- * const viewModel = useViewModel(rive, { name: 'myViewModel' });
+ * @param params - Parameters for retrieving a ViewModel
+ * @param params.rive - The Rive instance to retrieve the ViewModel from
+ * @param params.name - When provided, specifies the name of the ViewModel to retrieve
+ * @param params.useDefault - When true, uses the default ViewModel from the Rive instance
+ * @returns The ViewModel or null if not found
  */
-export default function useViewModel(
-  rive: Rive | null,
-  userParameters?: UseViewModelParameters
-): ViewModel | null {
-  const [viewModel, setViewModel] = useState<ViewModel | null>(null);
-  const currentParams = useRef<UseViewModelParameters | null>(null);
+export default function useViewModel(params: UseViewModelParameters): ViewModel | null {
+    const { rive, name, useDefault = false } = params;
+    const riveRef = useRef<Rive | null>(null);
+    const paramsRef = useRef<UseViewModelParameters>(params);
+    const [viewModel, setViewModel] = useState<ViewModel | null>(null);
 
-  useEffect(() => {
-    const parameters = userParameters || defaultParams;
+    const shouldUpdate = useRef(true);
 
-    function getViewModel(): ViewModel | null {
-      if (rive) {
-        if ('name' in parameters && parameters.name) {
-          return rive.viewModelByName(parameters.name);
-        } else if ('useDefault' in parameters && parameters.useDefault) {
-          return rive.defaultViewModel();
+    useEffect(() => {
+        const isRiveChanged = riveRef.current !== rive;
+        const areParamsChanged = !areParamsEqual(paramsRef.current, params);
+
+        shouldUpdate.current = isRiveChanged || areParamsChanged;
+
+        riveRef.current = rive;
+        paramsRef.current = params;
+    }, [rive, name, useDefault]);
+
+    useEffect(() => {
+        if (!shouldUpdate.current && viewModel) {
+            return;
         }
-      }
-      return null;
-    }
 
-    function setViewModelValue() {
-      if (!rive) {
-        setViewModel(null);
-        currentParams.current = null;
-      } else {
-        const viewModel = getViewModel();
-        setViewModel(viewModel);
-        currentParams.current = parameters;
-      }
-    }
+        function fetchViewModel() {
+            const currentRive = riveRef.current;
+            const currentParams = paramsRef.current;
 
-    if (!equal(parameters, currentParams.current)) {
-      rive?.on(EventType.Load, setViewModelValue);
-      setViewModelValue();
-    }
-    return () => {
-      rive?.off(EventType.Load, setViewModelValue);
-    };
-  }, [rive, userParameters]);
+            if (!currentRive) {
+                setViewModel(null);
+                return;
+            }
 
-  return viewModel;
-}
+            let model: ViewModel | null = null;
+
+            if (currentParams && 'name' in currentParams && currentParams.name != null) {
+                model = currentRive.viewModelByName?.(currentParams.name) || null;
+            } else if (currentParams && currentParams.useDefault) {
+                const defaultViewModel = currentRive.defaultViewModel();
+                if (defaultViewModel) {
+                    model = defaultViewModel;
+                }
+            }
+
+            setViewModel(model);
+            shouldUpdate.current = false;
+        }
+
+        fetchViewModel();
+
+        const currentRive = riveRef.current;
+        if (currentRive) {
+            currentRive.on(EventType.Load, fetchViewModel);
+        }
+
+        return () => {
+            if (currentRive) {
+                currentRive.off(EventType.Load, fetchViewModel);
+            }
+        };
+    }, [rive, name, useDefault]);
+
+    return viewModel;
+} 

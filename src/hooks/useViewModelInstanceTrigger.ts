@@ -1,58 +1,40 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { ViewModelInstanceTrigger } from '@rive-app/canvas';
 import { UseViewModelInstanceTriggerParameters, UseViewModelInstanceTriggerResult } from '../types';
-import { useViewModelInstancePropertyValues } from './useViewModelInstancePropertyValues';
+import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
- * Hook for interacting with trigger ViewModel instance properties.
- * 
- * @param path Path to the property (e.g. "buttonPress" or "nested/buttonPress")
- * @param userParameters Optional parameters including onTrigger callback
- * @returns Object with trigger function
+ * Hook for interacting with trigger properties of a ViewModelInstance.
+ *
+ * @param params - Parameters for interacting with trigger properties
+ * @param params.path - Path to the trigger property (e.g. "onTap" or "group/onTap")
+ * @param params.viewModelInstance - The ViewModelInstance containing the trigger property
+ * @param params.onTrigger - Callback that runs when the trigger is fired
+ * @returns An object with a trigger function
  */
 export default function useViewModelInstanceTrigger(
-    path: string,
-    userParameters?: UseViewModelInstanceTriggerParameters
+    params: UseViewModelInstanceTriggerParameters
 ): UseViewModelInstanceTriggerResult {
-    const result = useViewModelInstancePropertyValues<
-        void,
-        UseViewModelInstanceTriggerParameters,
-        ViewModelInstanceTrigger,
-        {
-            trigger: () => void;
-            instance: ViewModelInstanceTrigger | null;
-        }
-    >(
+    const { path, viewModelInstance, onTrigger } = params;
+
+    const { trigger } = useViewModelInstanceProperty<ViewModelInstanceTrigger, undefined, UseViewModelInstanceTriggerResult>(
         path,
-        userParameters,
-        undefined,
-        (instance, name) => instance.trigger(name),
-        () => undefined,
-        (instance) => ({
-            trigger: () => {
-                instance?.trigger();
-            },
-            instance
-        })
+        viewModelInstance,
+        {
+            getProperty: useCallback((vm, p) => vm.trigger(p), []),
+            getValue: useCallback(() => undefined, []), // Triggers don't have a 'value'
+            defaultValue: null,
+            onPropertyEvent: onTrigger,
+            buildPropertyOperations: useCallback((safePropertyAccess) => ({
+                trigger: () => {
+
+                    safePropertyAccess(prop => {
+                        prop.trigger();
+                    });
+                }
+            }), [])
+        }
     );
 
-    const { instance } = result;
-
-    useEffect(() => {
-        if (instance && userParameters?.onTrigger) {
-            instance.on(userParameters.onTrigger);
-
-            return () => {
-                instance.off(userParameters.onTrigger);
-            };
-        }
-    }, [instance, userParameters?.onTrigger]);
-
-    const trigger = useCallback(() => {
-        instance?.trigger();
-    }, [instance]);
-
-    return {
-        trigger
-    };
-}
+    return { trigger };
+} 

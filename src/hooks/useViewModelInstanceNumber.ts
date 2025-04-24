@@ -1,32 +1,38 @@
+import { useCallback } from 'react';
 import { ViewModelInstanceNumber } from '@rive-app/canvas';
 import { UseViewModelInstanceNumberParameters, UseViewModelInstanceNumberResult } from '../types';
-import { useViewModelInstancePropertyValues } from './useViewModelInstancePropertyValues';
+import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
- * Hook for interacting with numeric ViewModel instance properties.
- * 
- * @param path Path to the property (e.g. "itemCount" or "nested/itemCount")
- * @param userParameters Optional parameters including initial value
- * @returns Object with value and setter function
+ * Hook for interacting with number properties of a ViewModelInstance.
+ *
+ * @param params - Parameters for interacting with number properties
+ * @param params.path - Path to the number property (e.g. "speed" or "group/speed")
+ * @param params.viewModelInstance - The ViewModelInstance containing the number property
+ * @returns An object with the number value and a setter function
  */
 export default function useViewModelInstanceNumber(
-  path: string,
-  userParameters?: UseViewModelInstanceNumberParameters
+    params: UseViewModelInstanceNumberParameters
 ): UseViewModelInstanceNumberResult {
-  return useViewModelInstancePropertyValues<
-    number,
-    UseViewModelInstanceNumberParameters,
-    ViewModelInstanceNumber,
-    { value: number; setValue: (value: number) => void }
-  >(
-    path,
-    userParameters,
-    0,
-    (instance, name) => instance.number(name),
-    (instance) => instance.value,
-    (_instance, value, setValue) => ({
-      value,
-      setValue
-    })
-  );
-}
+    const { path, viewModelInstance } = params;
+
+    const result = useViewModelInstanceProperty<ViewModelInstanceNumber, number, Omit<UseViewModelInstanceNumberResult, 'value'>>(
+        path,
+        viewModelInstance,
+        {
+            getProperty: useCallback((vm, p) => vm.number(p), []),
+            getValue: useCallback((prop) => prop.value, []),
+            defaultValue: null,
+            buildPropertyOperations: useCallback((safePropertyAccess) => ({
+                setValue: (newValue: number) => {
+                    safePropertyAccess(prop => { prop.value = newValue; });
+                }
+            }), [])
+        }
+    );
+
+    return {
+        value: result.value,
+        setValue: result.setValue
+    };
+} 

@@ -1,32 +1,38 @@
+import { useCallback } from 'react';
 import { ViewModelInstanceBoolean } from '@rive-app/canvas';
 import { UseViewModelInstanceBooleanParameters, UseViewModelInstanceBooleanResult } from '../types';
-import { useViewModelInstancePropertyValues } from './useViewModelInstancePropertyValues';
+import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
  * Hook for interacting with boolean ViewModel instance properties.
- * 
- * @param path Path to the property (e.g. "isVisible" or "nested/isVisible")
- * @param userParameters Optional parameters including initial value
- * @returns Object with value and setter function
+ *
+ * @param params - Parameters for interacting with a boolean ViewModel instance property
+ * @param params.path - The path to the boolean property
+ * @param params.viewModelInstance - The ViewModelInstance containing the boolean property to operate on
+ * @returns An object with the boolean value and a setter function
  */
 export default function useViewModelInstanceBoolean(
-    path: string,
-    userParameters?: UseViewModelInstanceBooleanParameters
+    params: UseViewModelInstanceBooleanParameters
 ): UseViewModelInstanceBooleanResult {
-    return useViewModelInstancePropertyValues<
-        boolean,
-        UseViewModelInstanceBooleanParameters,
-        ViewModelInstanceBoolean,
-        { value: boolean; setValue: (value: boolean) => void }
-    >(
+    const { path, viewModelInstance } = params;
+
+    const result = useViewModelInstanceProperty<ViewModelInstanceBoolean, boolean, Omit<UseViewModelInstanceBooleanResult, 'value'>>(
         path,
-        userParameters,
-        false,
-        (instance, name) => instance.boolean(name),
-        (instance) => instance.value,
-        (_instance, value, setValue) => ({
-            value,
-            setValue
-        })
+        viewModelInstance,
+        {
+            getProperty: useCallback((vm, p) => vm.boolean(p), []),
+            getValue: useCallback((prop) => prop.value, []),
+            defaultValue: null,
+            buildPropertyOperations: useCallback((safePropertyAccess) => ({
+                setValue: (newValue: boolean) => {
+                    safePropertyAccess(prop => { prop.value = newValue; });
+                }
+            }), [])
+        }
     );
-}
+
+    return {
+        value: result.value,
+        setValue: result.setValue
+    };
+} 

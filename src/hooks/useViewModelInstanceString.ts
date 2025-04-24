@@ -1,32 +1,38 @@
+import { useCallback } from 'react';
 import { ViewModelInstanceString } from '@rive-app/canvas';
 import { UseViewModelInstanceStringParameters, UseViewModelInstanceStringResult } from '../types';
-import { useViewModelInstancePropertyValues } from './useViewModelInstancePropertyValues';
+import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
- * Hook for interacting with string ViewModel instance properties.
- * 
- * @param path Path to the property (e.g. "text" or "nested/text")
- * @param userParameters Optional parameters including initial value
- * @returns Object with value and setter function
+ * Hook for interacting with string properties of a ViewModelInstance.
+ *
+ * @param params - Parameters for interacting with string properties
+ * @param params.path - Path to the property (e.g. "text" or "nested/text")
+ * @param params.viewModelInstance - The ViewModelInstance containing the string property
+ * @returns An object with the string value and a setter function
  */
 export default function useViewModelInstanceString(
-    path: string,
-    userParameters?: UseViewModelInstanceStringParameters
+    params: UseViewModelInstanceStringParameters
 ): UseViewModelInstanceStringResult {
-    return useViewModelInstancePropertyValues<
-        string,
-        UseViewModelInstanceStringParameters,
-        ViewModelInstanceString,
-        { value: string; setValue: (value: string) => void }
-    >(
+    const { path, viewModelInstance } = params;
+
+    const result = useViewModelInstanceProperty<ViewModelInstanceString, string, Omit<UseViewModelInstanceStringResult, 'value'>>(
         path,
-        userParameters,
-        '',
-        (instance, name) => instance.string(name),
-        (instance) => instance.value,
-        (_instance, value, setValue) => ({
-            value,
-            setValue
-        })
+        viewModelInstance,
+        {
+            getProperty: useCallback((vm, p) => vm.string(p), []),
+            getValue: useCallback((prop) => prop.value, []),
+            defaultValue: null,
+            buildPropertyOperations: useCallback((safePropertyAccess) => ({
+                setValue: (newValue: string) => {
+                    safePropertyAccess(prop => { prop.value = newValue; });
+                }
+            }), [])
+        }
     );
-}
+
+    return {
+        value: result.value,
+        setValue: result.setValue
+    };
+} 

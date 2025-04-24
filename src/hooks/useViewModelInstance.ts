@@ -1,105 +1,104 @@
 import { useState, useEffect, useRef } from 'react';
-import {
-  EventType,
-  Rive,
-  ViewModel,
-  ViewModelInstance,
-} from '@rive-app/canvas';
+import { ViewModel, ViewModelInstance } from '@rive-app/canvas';
 import { UseViewModelInstanceParameters } from '../types';
 
-const defaultParams: UseViewModelInstanceParameters = { useNew: true };
 
-const equal = (
-  params: UseViewModelInstanceParameters | null,
-  to: UseViewModelInstanceParameters | null
-): boolean => {
-  if (!params || !to) {
+function areParamsEqual(
+    prev?: UseViewModelInstanceParameters,
+    next?: UseViewModelInstanceParameters
+): boolean {
+    if (prev === next) return true;
+    if (!prev || !next) return prev === next;
+
+    if ('name' in prev && 'name' in next) {
+        return prev.name === next.name;
+    }
+
+    if ('useDefault' in prev && 'useDefault' in next) {
+        return prev.useDefault === next.useDefault;
+    }
+
+    if ('useNew' in prev && 'useNew' in next) {
+        return prev.useNew === next.useNew;
+    }
+
     return false;
-  }
-
-  if ('name' in params) {
-    return 'name' in to && params.name === to.name;
-  }
-
-  if ('useDefault' in params) {
-    return 'useDefault' in to && params.useDefault === to.useDefault;
-  }
-
-  if ('useNew' in params) {
-    return 'useNew' in to && params.useNew === to.useNew;
-  }
-
-  return false;
-};
+}
 
 /**
- * Custom hook for fetching a view model instance.
+ * Hook for fetching a ViewModelInstance from a ViewModel.
  *
- * @param rive - Rive instance
- * @param viewModel - ViewModel to get an instance from
- * @param userParameters - Parameters to load view model instance
- * @returns The ViewModelInstance or null if not available
- * 
- * @example
- * // Create a new instance of the view model
- * const viewModelInstance = useViewModelInstance(rive, viewModel, { useNew: true });
- * 
- * @example
- * // Use the default instance of the view model
- * const viewModelInstance = useViewModelInstance(rive, viewModel, { useDefault: true });
- * 
- * @example
- * // Use a named instance of the view model
- * const viewModelInstance = useViewModelInstance(rive, viewModel, { name: 'myInstance' });
+ * @param params - Parameters for retrieving a ViewModelInstance
+ * @param params.viewModel - The ViewModel to get an instance from
+ * @param params.name - When provided, specifies the name of the instance to retrieve
+ * @param params.useDefault - When true, uses the default instance from the ViewModel
+ * @param params.useNew - When true, creates a new instance of the ViewModel
+ * @param params.rive - If provided, automatically binds the instance to this Rive instance
+ * @returns The ViewModelInstance or null if not found
  */
 export default function useViewModelInstance(
-  rive: Rive | null,
-  viewModel: ViewModel | null,
-  userParameters?: UseViewModelInstanceParameters
+    params: UseViewModelInstanceParameters
 ): ViewModelInstance | null {
-  const [viewModelInstance, setViewModelInstance] =
-    useState<ViewModelInstance | null>(null);
-  const currentParams = useRef<UseViewModelInstanceParameters | null>(null);
+    const { viewModel, name, useDefault = false, useNew = false, rive } = params;
+    const [instance, setInstance] = useState<ViewModelInstance | null>(null);
 
-  useEffect(() => {
-    const parameters = userParameters || defaultParams;
+    const viewModelRef = useRef<ViewModel | null>(viewModel);
+    const paramsRef = useRef<UseViewModelInstanceParameters>(params);
+    const instanceRef = useRef<ViewModelInstance | null>(null);
 
-    function setInstance(instance: ViewModelInstance | null) {
-      setViewModelInstance(instance);
-      rive!.bindViewModelInstance(instance);
-      currentParams.current = parameters;
-    }
+    const shouldUpdate = useRef(true);
 
-    function getViewModelInstance(): ViewModelInstance | null {
-      if (viewModel) {
-        if ('name' in parameters && parameters.name) {
-          return viewModel.instanceByName(parameters.name);
-        } else if ('useDefault' in parameters && parameters.useDefault) {
-          return viewModel.defaultInstance();
-        } else if ('useNew' in parameters && parameters.useNew) {
-          return viewModel.instance();
+    useEffect(() => {
+        const isViewModelChanged = viewModelRef.current !== viewModel;
+        const areParamsChanged = !areParamsEqual(paramsRef.current, params);
+
+        shouldUpdate.current = isViewModelChanged || areParamsChanged;
+
+        viewModelRef.current = viewModel;
+        paramsRef.current = params;
+    }, [viewModel, name, useDefault, useNew]);
+
+    useEffect(() => {
+        if (!shouldUpdate.current && instanceRef.current) {
+            return;
         }
-      }
-      return null;
-    }
 
-    function setViewModelValue() {
-      if (!rive || !viewModel) {
-        setViewModelInstance(null);
-      } else {
-        const instance = getViewModelInstance();
-        setInstance(instance ?? null);
-      }
-    }
+        const currentViewModel = viewModelRef.current;
+        const currentParams = paramsRef.current;
 
-    if (!equal(parameters, currentParams.current)) {
-      rive?.on(EventType.Load, setViewModelValue);
-      setViewModelValue();
-    }
-    return () => {
-      rive?.off(EventType.Load, setViewModelValue);
-    };
-  }, [rive, userParameters]);
+        if (!currentViewModel) {
+            setInstance(null);
+            instanceRef.current = null;
+            return;
+        }
 
-  return viewModelInstance;
-}
+        let result: ViewModelInstance | null = null;
+
+        if (currentParams) {
+            if ('name' in currentParams && currentParams.name != null) {
+                result = currentViewModel.instanceByName?.(currentParams.name) || null;
+            } else if ('useDefault' in currentParams && currentParams.useDefault) {
+                result = currentViewModel.defaultInstance?.() || null;
+            } else if ('useNew' in currentParams && currentParams.useNew) {
+                result = currentViewModel.instance?.() || null;
+            }
+        } else {
+            // Default to using default instance if no params provided
+            result = currentViewModel.defaultInstance?.() || null;
+        }
+
+        instanceRef.current = result;
+        setInstance(result);
+        shouldUpdate.current = false;
+    }, [viewModel, name, useDefault, useNew]);
+
+    // Automatically bind to Rive when requested, if not already bound
+    useEffect(() => {
+        if (!rive || !instance) return;
+        if (rive.viewModelInstance !== instance) {
+            rive.bindViewModelInstance(instance);
+        }
+    }, [rive, instance]);
+
+    return instance;
+} 

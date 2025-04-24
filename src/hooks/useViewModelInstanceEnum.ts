@@ -1,37 +1,45 @@
+import { useCallback } from 'react';
 import { ViewModelInstanceEnum } from '@rive-app/canvas';
 import { UseViewModelInstanceEnumParameters, UseViewModelInstanceEnumResult } from '../types';
-import { useViewModelInstancePropertyValues } from './useViewModelInstancePropertyValues';
+import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
- * Hook for interacting with enum ViewModel instance properties.
- * 
- * @param path Path to the property (e.g. "state" or "nested/state")
- * @param userParameters Optional parameters including initial value
- * @returns Object with value, values array, and setter function
+ * Hook for interacting with enum properties of a ViewModelInstance.
+ *
+ * @param params - Parameters for interacting with enum properties
+ * @param params.path - Path to the enum property (e.g. "state" or "group/state")
+ * @param params.viewModelInstance - The ViewModelInstance containing the enum property
+ * @returns An object with the enum value, available values, and a setter function
  */
 export default function useViewModelInstanceEnum(
-    path: string,
-    userParameters?: UseViewModelInstanceEnumParameters
+    params: UseViewModelInstanceEnumParameters
 ): UseViewModelInstanceEnumResult {
-    return useViewModelInstancePropertyValues<
-        string,
-        UseViewModelInstanceEnumParameters,
+    const { path, viewModelInstance } = params;
+
+    const result = useViewModelInstanceProperty<
         ViewModelInstanceEnum,
-        {
-            value: string;
-            setValue: (value: string) => void;
-            values: string[];
-        }
+        string,
+        Omit<UseViewModelInstanceEnumResult, 'value' | 'values'>,
+        string[]
     >(
         path,
-        userParameters,
-        '',
-        (instance, name) => instance.enum(name),
-        (instance) => instance.value,
-        (instance, value, setValue) => ({
-            value,
-            setValue,
-            values: instance?.values || []
-        })
+        viewModelInstance,
+        {
+            getProperty: useCallback((vm, p) => vm.enum(p), []),
+            getValue: useCallback((prop) => prop.value, []),
+            defaultValue: null,
+            getExtendedData: useCallback((prop) => prop.values, []),
+            buildPropertyOperations: useCallback((safePropertyAccess) => ({
+                setValue: (newValue: string) => {
+                    safePropertyAccess(prop => { prop.value = newValue; });
+                }
+            }), [])
+        }
     );
-}
+
+    return {
+        value: result.value,
+        values: result.extendedData || [],
+        setValue: result.setValue
+    };
+} 

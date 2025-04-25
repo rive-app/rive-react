@@ -21,7 +21,8 @@
     "setup-builds": "./scripts/build.sh",
     "setup-packages": "./scripts/setup_all_packages.sh",
     "bump-versions": "./scripts/bump_all_versions.sh $npm_package_version",
-    "publish:all": "./scripts/publish_all.sh --access public"
+    "publish:all": "./scripts/publish_all.sh --access public",
+    "storybook": "yarn --cwd examples storybook"
   },
   "repository": {
     "type": "git",

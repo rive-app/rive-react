@@ -148,10 +148,10 @@ export default function useRive(
       });
     }
     return () => {
-      if(!isLoaded) {
+      if (!isLoaded) {
         r?.cleanup();
       }
-    }
+    };
   }, [canvasElem, isParamsLoaded, rive]);
   /**
    * Ref callback called when the container element mounts

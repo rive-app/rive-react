@@ -18,6 +18,15 @@ const config: StorybookConfig = {
     if (!config.resolve) config.resolve = {};
     if (!config.resolve.alias) config.resolve.alias = {};
 
+    config.resolve.alias['react'] = path.resolve(
+      __dirname,
+      '../../node_modules/react'
+    );
+    config.resolve.alias['react-dom'] = path.resolve(
+      __dirname,
+      '../../node_modules/react-dom'
+    );
+
     config.resolve.alias['@rive-app/react-canvas'] = path.resolve(
       __dirname,
       '../../'

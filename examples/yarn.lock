@@ -1719,58 +1719,6 @@
     schema-utils "^4.2.0"
     source-map "^0.7.3"
 
-"@rive-app/canvas-lite@2.27.0":
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/@rive-app/canvas-lite/-/canvas-lite-2.27.0.tgz#04d36a0f58b6e5dd7f117e187616df7ff009ca86"
-  integrity sha512-pVU+G2k4yyVHzuEHHuiuJ2KRRkNrUzR2q6Xtksxlgc2D0nWgea6cQXym7pI3Bb2pCnXP9C07HDnteNyxO7kcUQ==
-
-"@rive-app/canvas@2.27.0":
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/@rive-app/canvas/-/canvas-2.27.0.tgz#322b91dfbf791754e219cfe0a97059b50fdf45e2"
-  integrity sha512-wXGYCjXO+UpqesRPVSy7YmTnKSelhJVEu6kCWNWzwFD5IfwaM7rF9oG6WsubZ/D2Aacl9snaJUWjos7Em8mUSg==
-
-"@rive-app/react-canvas-lite@file:..":
-  version "4.18.8"
-  dependencies:
-    "@rive-app/canvas" "2.27.0"
-    "@rive-app/canvas-lite" "2.27.0"
-    "@rive-app/webgl" "2.27.0"
-    "@rive-app/webgl2" "2.27.0"
-
-"@rive-app/react-canvas@file:..":
-  version "4.18.8"
-  dependencies:
-    "@rive-app/canvas" "2.27.0"
-    "@rive-app/canvas-lite" "2.27.0"
-    "@rive-app/webgl" "2.27.0"
-    "@rive-app/webgl2" "2.27.0"
-
-"@rive-app/react-webgl2@file:..":
-  version "4.18.8"
-  dependencies:
-    "@rive-app/canvas" "2.27.0"
-    "@rive-app/canvas-lite" "2.27.0"
-    "@rive-app/webgl" "2.27.0"
-    "@rive-app/webgl2" "2.27.0"
-
-"@rive-app/react-webgl@file:..":
-  version "4.18.8"
-  dependencies:
-    "@rive-app/canvas" "2.27.0"
-    "@rive-app/canvas-lite" "2.27.0"
-    "@rive-app/webgl" "2.27.0"
-    "@rive-app/webgl2" "2.27.0"
-
-"@rive-app/webgl2@2.27.0":
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/@rive-app/webgl2/-/webgl2-2.27.0.tgz#854a527309375b61873339e418180d68eb9f3e96"
-  integrity sha512-RmrHsB5swsliKZhFFwMlwKTP9Afl4ZvcXlWT0Wf/556dUEF9yi15/QxQl/0gHaYi6wiacYpJ+JG0BC6rEkUC3Q==
-
-"@rive-app/webgl@2.27.0":
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/@rive-app/webgl/-/webgl-2.27.0.tgz#2a6f98d3c68356a1ec4308857be2deb45b3a2022"
-  integrity sha512-8UJ9cjibP2JHUiyM6ZvuokaUysEGPF9u/UsHNYzjI6+qgamvErcvmnkeAMDwLNA4y93c6vTK6Qp1uKKW3eHVqw==
-
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -8652,7 +8600,7 @@ react-docgen@^7.0.0:
     resolve "^1.22.1"
     strip-indent "^4.0.0"
 
-"react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", react-dom@^19.1.0:
+"react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0":
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.1.0.tgz#133558deca37fa1d682708df8904b25186793623"
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
@@ -8739,7 +8687,7 @@ react-scripts@5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-"react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", react@^19.1.0:
+"react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0":
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react/-/react-19.1.0.tgz#926864b6c48da7627f004795d6cce50e90793b75"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==

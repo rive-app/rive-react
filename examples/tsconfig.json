@@ -6,6 +6,12 @@
       "dom.iterable",
       "esnext"
     ],
+    "paths": {
+      "@rive-app/react-canvas": ["../"],
+      "@rive-app/react-webgl": ["../"],
+      "@rive-app/react-webgl2": ["../"],
+      "@rive-app/react-canvas-lite": ["../"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

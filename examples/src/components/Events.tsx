@@ -9,7 +9,7 @@ const Events = () => {
     automaticallyHandleEvents: true,
   });
 
-  const onRiveEventReceived = (riveEvent) => {
+  const onRiveEventReceived = (riveEvent: any) => {
     console.log('Rive event received:', riveEvent);
     const eventData = riveEvent.data;
     const eventProperties = eventData.properties;

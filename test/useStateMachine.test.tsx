@@ -1,5 +1,5 @@
 import { mocked } from 'jest-mock';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import useStateMachineInput from '../src/hooks/useStateMachineInput';
 import { Rive, StateMachineInput } from '@rive-app/canvas';

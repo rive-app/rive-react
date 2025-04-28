@@ -6,6 +6,7 @@ jest.mock('@rive-app/canvas', () => ({
   Rive: jest.fn().mockImplementation(() => ({
     on: jest.fn(),
     stop: jest.fn(),
+    cleanup: jest.fn(),
   })),
   Layout: jest.fn(),
   Fit: {

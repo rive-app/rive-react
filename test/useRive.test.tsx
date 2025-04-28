@@ -38,6 +38,8 @@ describe('useRive', () => {
       stop: jest.fn(),
       stopRendering: jest.fn(),
       startRendering: jest.fn(),
+      cleanup: jest.fn(),
+      resizeToCanvas: jest.fn(),
     };
   });
 

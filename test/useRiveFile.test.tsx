@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { mocked } from 'jest-mock';
 
 import useRiveFile from '../src/hooks/useRiveFile';
@@ -17,18 +17,15 @@ jest.mock('@rive-app/canvas', () => ({
   },
 }));
 
-
 describe('useRiveFile', () => {
   beforeEach(() => {
     mocked(RiveFile).mockClear();
   });
 
-
-
   it('initializes RiveFile with provided parameters', async () => {
     const params = {
       src: 'file-src',
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     const { result } = renderHook(() => useRiveFile(params));
@@ -40,7 +37,7 @@ describe('useRiveFile', () => {
   it('cleans up RiveFile on unmount', async () => {
     const params = {
       src: 'file-src',
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     const { result, unmount } = renderHook(() => useRiveFile(params));
@@ -56,7 +53,7 @@ describe('useRiveFile', () => {
   it('does not reinitialize RiveFile if src has not changed', async () => {
     const params = {
       src: 'file-src',
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     const { rerender } = renderHook(() => useRiveFile(params));
@@ -69,7 +66,7 @@ describe('useRiveFile', () => {
   it('does not reinitialize RiveFile if buffer has not changed', async () => {
     const params = {
       buffer: new ArrayBuffer(10),
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     const { rerender } = renderHook(() => useRiveFile(params));
@@ -82,14 +79,14 @@ describe('useRiveFile', () => {
   it('reinitializes RiveFile if src changes', async () => {
     let params = {
       src: 'file-src',
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     const { rerender } = renderHook(() => useRiveFile(params));
 
     params = {
       src: 'new-file-src',
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     rerender();
@@ -100,14 +97,14 @@ describe('useRiveFile', () => {
   it('reinitializes RiveFile if buffer changes', async () => {
     let params = {
       buffer: new ArrayBuffer(10),
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     const { rerender } = renderHook(() => useRiveFile(params));
 
     params = {
       buffer: new ArrayBuffer(20),
-      enableRiveAssetCDN: false
+      enableRiveAssetCDN: false,
     };
 
     rerender();
@@ -116,9 +113,10 @@ describe('useRiveFile', () => {
   });
 
   it('handles RiveFile initialization failure gracefully', async () => {
-
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-    const error = new Error("Initialization failed");
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const error = new Error('Initialization failed');
 
     mocked(RiveFile).mockImplementation(() => {
       throw error;

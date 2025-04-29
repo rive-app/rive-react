@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ViewModelInstance, ViewModelInstanceValue } from '@rive-app/canvas';
 
 /**
@@ -157,7 +157,10 @@ export function useViewModelInstanceProperty<P extends ViewModelInstanceValue, V
         [property, viewModelInstance]
     );
 
-    const operations = options.buildPropertyOperations(safePropertyAccess);
+    const operations = useMemo(
+        () => optionsRef.current.buildPropertyOperations(safePropertyAccess),
+        [safePropertyAccess]
+    );
 
     const result = {
         value,

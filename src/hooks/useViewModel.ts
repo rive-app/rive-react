@@ -43,12 +43,9 @@ export default function useViewModel(params: UseViewModelParameters): ViewModel 
         const areParamsChanged = !areParamsEqual(paramsRef.current, params);
 
         shouldUpdate.current = isRiveChanged || areParamsChanged;
-
         riveRef.current = rive;
         paramsRef.current = params;
-    }, [rive, name, useDefault]);
 
-    useEffect(() => {
         if (!shouldUpdate.current && viewModel) {
             return;
         }

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ViewModelInstanceTrigger } from '@rive-app/canvas';
+import { ViewModelInstance, ViewModelInstanceTrigger } from '@rive-app/canvas';
 import { UseViewModelInstanceTriggerParameters, UseViewModelInstanceTriggerResult } from '../types';
 import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
@@ -13,9 +13,11 @@ import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
  * @returns An object with a trigger function
  */
 export default function useViewModelInstanceTrigger(
-    params: UseViewModelInstanceTriggerParameters
+    path: string,
+    viewModelInstance?: ViewModelInstance | null,
+    params?: UseViewModelInstanceTriggerParameters
 ): UseViewModelInstanceTriggerResult {
-    const { path, viewModelInstance, onTrigger } = params;
+    const { onTrigger } = params ?? {};
 
     const { trigger } = useViewModelInstanceProperty<ViewModelInstanceTrigger, undefined, UseViewModelInstanceTriggerResult>(
         path,

@@ -1,10 +1,8 @@
 import {
   Rive,
-  type ViewModel,
   RiveFile,
   RiveFileParameters,
   RiveParameters,
-  type ViewModelInstance,
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
@@ -61,93 +59,35 @@ export type RiveFileState = {
 };
 
 /**
- * Parameters for retrieving a ViewModel from a Rive instance.
+ * Parameters for useViewModel hook.
  *
- * @property rive - The Rive instance to retrieve the ViewModel from.
  * @property name - When provided, specifies the name of the ViewModel to retrieve.
  * @property useDefault - When true, uses the default ViewModel from the Rive instance.
  */
 export type UseViewModelParameters =
-  | { rive: Rive | null; name: string; useDefault?: never }
-  | { rive: Rive | null; useDefault?: boolean; name?: never };
+  | { name: string; useDefault?: never }
+  | { useDefault?: boolean; name?: never };
 
 /**
- * Parameters for retrieving a ViewModelInstance.
+ * Parameters for useViewModelInstance hook.
  *
- * @property viewModel - The ViewModel to get an instance from.
  * @property name - When provided, specifies the name of the instance to retrieve.
  * @property useDefault - When true, uses the default instance from the ViewModel.
  * @property useNew - When true, creates a new instance of the ViewModel.
- * @property rive - When provided, automatically binds the instance to this Rive instance.
+ * @property rive - If provided, automatically binds the instance to this Rive instance.
  */
 export type UseViewModelInstanceParameters =
-  | { viewModel: ViewModel | null; name: string; rive?: Rive | null; useDefault?: never; useNew?: never }
-  | { viewModel: ViewModel | null; useDefault?: boolean; rive?: Rive | null; name?: never; useNew?: never }
-  | { viewModel: ViewModel | null; useNew?: boolean; rive?: Rive | null; name?: never; useDefault?: never };
+  | { name: string; useDefault?: never; useNew?: never; rive?: Rive | null }
+  | { useDefault?: boolean; name?: never; useNew?: never; rive?: Rive | null }
+  | { useNew?: boolean; name?: never; useDefault?: never; rive?: Rive | null };
 
-export type UseViewModelInstanceValueParameters = {
-  viewModelInstance?: ViewModelInstance | null;
-};
 
-/**
- * Parameters for interacting with number properties of a ViewModelInstance
- * @property path - Path to the number property (e.g. "speed" or "group/speed")
- * @property viewModelInstance - The ViewModelInstance containing the number property
- */
-export type UseViewModelInstanceNumberParameters = {
-  path: string;
-  viewModelInstance?: ViewModelInstance | null;
-};
-
-/**
- * Parameters for interacting with string properties of a ViewModelInstance
- * @property path - Path to the string property (e.g. "text" or "nested/text")
- * @property viewModelInstance - The ViewModelInstance containing the string property
- */
-export type UseViewModelInstanceStringParameters = {
-  path: string;
-  viewModelInstance?: ViewModelInstance | null;
-};
-
-/**
- * Parameters for interacting with boolean properties of a ViewModelInstance
- * @property path - Path to the boolean property (e.g. "agreedToTerms" or "group/agreedToTerms")
- * @property viewModelInstance - The ViewModelInstance containing the boolean property
- */
-export type UseViewModelInstanceBooleanParameters = {
-  path: string;
-  viewModelInstance?: ViewModelInstance | null;
-};
-
-/**
- * Parameters for interacting with color properties of a ViewModelInstance
- * @property path - Path to the color property (e.g. "color" or "group/color")
- * @property viewModelInstance - The ViewModelInstance containing the color property
- */
-export type UseViewModelInstanceColorParameters = {
-  path: string;
-  viewModelInstance?: ViewModelInstance | null;
-};
-
-/**
- * Parameters for interacting with enum properties of a ViewModelInstance
- * @property path - Path to the enum property (e.g. "state" or "group/state")
- * @property viewModelInstance - The ViewModelInstance containing the enum property
- */
-export type UseViewModelInstanceEnumParameters = {
-  path: string;
-  viewModelInstance?: ViewModelInstance | null;
-};
 
 /**
  * Parameters for interacting with trigger properties of a ViewModelInstance
- * @property path - Path to the trigger property (e.g. "onTap" or "group/onTap")
- * @property viewModelInstance - The ViewModelInstance containing the trigger
  * @property onTrigger - Callback that runs when the trigger fires
  */
 export type UseViewModelInstanceTriggerParameters = {
-  path: string;
-  viewModelInstance?: ViewModelInstance | null;
   onTrigger?: () => void;
 };
 

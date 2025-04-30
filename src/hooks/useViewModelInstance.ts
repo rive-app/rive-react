@@ -28,8 +28,8 @@ function areParamsEqual(
 /**
  * Hook for fetching a ViewModelInstance from a ViewModel.
  *
- * @param params - Parameters for retrieving a ViewModelInstance
- * @param params.viewModel - The ViewModel to get an instance from
+ * @param viewModel - The ViewModel to get an instance from
+ * @param params - Options for retrieving a ViewModelInstance
  * @param params.name - When provided, specifies the name of the instance to retrieve
  * @param params.useDefault - When true, uses the default instance from the ViewModel
  * @param params.useNew - When true, creates a new instance of the ViewModel
@@ -37,13 +37,14 @@ function areParamsEqual(
  * @returns The ViewModelInstance or null if not found
  */
 export default function useViewModelInstance(
-    params: UseViewModelInstanceParameters
+    viewModel: ViewModel | null,
+    params?: UseViewModelInstanceParameters
 ): ViewModelInstance | null {
-    const { viewModel, name, useDefault = false, useNew = false, rive } = params;
+    const { name, useDefault = false, useNew = false, rive } = params ?? {};
     const [instance, setInstance] = useState<ViewModelInstance | null>(null);
 
     const viewModelRef = useRef<ViewModel | null>(viewModel);
-    const paramsRef = useRef<UseViewModelInstanceParameters>(params);
+    const paramsRef = useRef<UseViewModelInstanceParameters | undefined>(params);
     const instanceRef = useRef<ViewModelInstance | null>(null);
 
     const shouldUpdate = useRef(true);

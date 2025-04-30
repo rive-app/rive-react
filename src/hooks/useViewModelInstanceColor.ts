@@ -1,21 +1,19 @@
 import { useCallback } from 'react';
-import { ViewModelInstanceColor } from '@rive-app/canvas';
-import { UseViewModelInstanceColorParameters, UseViewModelInstanceColorResult } from '../types';
+import { ViewModelInstanceColor, ViewModelInstance } from '@rive-app/canvas';
+import { UseViewModelInstanceColorResult } from '../types';
 import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
  * Hook for interacting with color properties of a ViewModelInstance.
  *
- * @param params - Parameters for interacting with color properties
- * @param params.path - Path to the color property
- * @param params.viewModelInstance - The ViewModelInstance containing the color property
+ * @param path - Path to the color property
+ * @param viewModelInstance - The ViewModelInstance containing the color property
  * @returns An object with the color value and setter functions for different color formats
  */
 export default function useViewModelInstanceColor(
-    params: UseViewModelInstanceColorParameters
+    path: string,
+    viewModelInstance?: ViewModelInstance | null
 ): UseViewModelInstanceColorResult {
-    const { path, viewModelInstance } = params;
-
     const result = useViewModelInstanceProperty<ViewModelInstanceColor, number, Omit<UseViewModelInstanceColorResult, 'value'>>(
         path,
         viewModelInstance,

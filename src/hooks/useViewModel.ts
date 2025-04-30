@@ -24,16 +24,19 @@ function areParamsEqual(
 /**
  * Hook for fetching a ViewModel from a Rive instance.
  *
- * @param params - Parameters for retrieving a ViewModel
- * @param params.rive - The Rive instance to retrieve the ViewModel from
+ * @param rive - The Rive instance to retrieve the ViewModel from
+ * @param params - Options for retrieving a ViewModel
  * @param params.name - When provided, specifies the name of the ViewModel to retrieve
  * @param params.useDefault - When true, uses the default ViewModel from the Rive instance
  * @returns The ViewModel or null if not found
  */
-export default function useViewModel(params: UseViewModelParameters): ViewModel | null {
-    const { rive, name, useDefault = false } = params;
+export default function useViewModel(
+    rive: Rive | null,
+    params?: UseViewModelParameters
+): ViewModel | null {
+    const { name, useDefault = false } = params ?? {};
     const riveRef = useRef<Rive | null>(null);
-    const paramsRef = useRef<UseViewModelParameters>(params);
+    const paramsRef = useRef<UseViewModelParameters | undefined>(params);
     const [viewModel, setViewModel] = useState<ViewModel | null>(null);
 
     const shouldUpdate = useRef(true);

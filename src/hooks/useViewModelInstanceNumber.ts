@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { ViewModelInstanceNumber } from '@rive-app/canvas';
-import { UseViewModelInstanceNumberParameters, UseViewModelInstanceNumberResult } from '../types';
+import { ViewModelInstance, ViewModelInstanceNumber } from '@rive-app/canvas';
+import { UseViewModelInstanceNumberResult } from '../types';
 import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
@@ -12,10 +12,9 @@ import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
  * @returns An object with the number value and a setter function
  */
 export default function useViewModelInstanceNumber(
-    params: UseViewModelInstanceNumberParameters
+    path: string,
+    viewModelInstance?: ViewModelInstance | null
 ): UseViewModelInstanceNumberResult {
-    const { path, viewModelInstance } = params;
-
     const result = useViewModelInstanceProperty<ViewModelInstanceNumber, number, Omit<UseViewModelInstanceNumberResult, 'value'>>(
         path,
         viewModelInstance,

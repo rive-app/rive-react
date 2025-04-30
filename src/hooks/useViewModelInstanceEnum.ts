@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { ViewModelInstanceEnum } from '@rive-app/canvas';
-import { UseViewModelInstanceEnumParameters, UseViewModelInstanceEnumResult } from '../types';
+import { ViewModelInstance, ViewModelInstanceEnum } from '@rive-app/canvas';
+import { UseViewModelInstanceEnumResult } from '../types';
 import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
@@ -12,10 +12,9 @@ import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
  * @returns An object with the enum value, available values, and a setter function
  */
 export default function useViewModelInstanceEnum(
-    params: UseViewModelInstanceEnumParameters
+    path: string,
+    viewModelInstance?: ViewModelInstance | null
 ): UseViewModelInstanceEnumResult {
-    const { path, viewModelInstance } = params;
-
     const result = useViewModelInstanceProperty<
         ViewModelInstanceEnum,
         string,

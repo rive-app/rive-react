@@ -1,21 +1,19 @@
 import { useCallback } from 'react';
-import { ViewModelInstanceBoolean } from '@rive-app/canvas';
-import { UseViewModelInstanceBooleanParameters, UseViewModelInstanceBooleanResult } from '../types';
+import { ViewModelInstanceBoolean, ViewModelInstance } from '@rive-app/canvas';
+import { UseViewModelInstanceBooleanResult } from '../types';
 import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
 
 /**
  * Hook for interacting with boolean ViewModel instance properties.
  *
- * @param params - Parameters for interacting with a boolean ViewModel instance property
- * @param params.path - The path to the boolean property
- * @param params.viewModelInstance - The ViewModelInstance containing the boolean property to operate on
+ * @param path - The path to the boolean property
+ * @param viewModelInstance - The ViewModelInstance containing the boolean property to operate on
  * @returns An object with the boolean value and a setter function
  */
 export default function useViewModelInstanceBoolean(
-    params: UseViewModelInstanceBooleanParameters
+    path: string,
+    viewModelInstance?: ViewModelInstance | null
 ): UseViewModelInstanceBooleanResult {
-    const { path, viewModelInstance } = params;
-
     const result = useViewModelInstanceProperty<ViewModelInstanceBoolean, boolean, Omit<UseViewModelInstanceBooleanResult, 'value'>>(
         path,
         viewModelInstance,

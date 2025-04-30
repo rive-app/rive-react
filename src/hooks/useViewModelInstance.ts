@@ -54,12 +54,9 @@ export default function useViewModelInstance(
         const areParamsChanged = !areParamsEqual(paramsRef.current, params);
 
         shouldUpdate.current = isViewModelChanged || areParamsChanged;
-
         viewModelRef.current = viewModel;
         paramsRef.current = params;
-    }, [viewModel, name, useDefault, useNew]);
 
-    useEffect(() => {
         if (!shouldUpdate.current && instanceRef.current) {
             return;
         }
@@ -91,15 +88,12 @@ export default function useViewModelInstance(
         instanceRef.current = result;
         setInstance(result);
         shouldUpdate.current = false;
-    }, [viewModel, name, useDefault, useNew]);
 
-    // Automatically bind to Rive when requested, if not already bound
-    useEffect(() => {
-        if (!rive || !instance) return;
-        if (rive.viewModelInstance !== instance) {
-            rive.bindViewModelInstance(instance);
+        // Bind instance to Rive if needed
+        if (rive && result && rive.viewModelInstance !== result) {
+            rive.bindViewModelInstance(result);
         }
-    }, [rive, instance]);
+    }, [viewModel, name, useDefault, useNew, rive]);
 
     return instance;
 } 

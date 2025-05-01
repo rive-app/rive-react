@@ -21,7 +21,7 @@ npm run dev
 
 ### Running the example storybook locally
 
-We use Storybook to deploy our examples out onto a public-facing page for folks to view and see code examples for. It also serves as the place we'll include any example suites. These story files are stored in `examples/**.stories.mdx`. `.mdx` is an extension Storybook supports to support both `jsx` (React files) and `md` (markdown) in one file.
+We use Storybook to deploy our examples out onto a public-facing page for folks to view and see code examples for. It also serves as the place we'll include any example suites. These story files are stored in `/examples`
 
 To run Storybook, run the following command in the terminal:
 
@@ -29,7 +29,11 @@ To run Storybook, run the following command in the terminal:
 npm run storybook
 ```
 
-Any changes made in any files should reflect automatically, including the `.mdx` example files, and `src/` files.
+To see changes made to the Rive React runtime reflected in your storyook, run the following command in a separate terminal window:
+
+```
+npm run dev
+```
 
 ### Testing
 

@@ -19,7 +19,7 @@ const DataBinding = () => {
   const viewModel = useViewModel(rive, { name: 'Rewards' });
 
   // Get the default instance of the view model
-  const viewModelInstance = useViewModelInstance(viewModel);
+  const viewModelInstance = useViewModelInstance(viewModel, { rive });
   console.log('ViewModelInstance:', viewModelInstance);
 
   const { value: priceValue, setValue: setPriceValue } =

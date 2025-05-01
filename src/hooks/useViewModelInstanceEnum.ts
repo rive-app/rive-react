@@ -12,33 +12,34 @@ import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
  * @returns An object with the enum value, available values, and a setter function
  */
 export default function useViewModelInstanceEnum(
-    path: string,
-    viewModelInstance?: ViewModelInstance | null
+  path: string,
+  viewModelInstance?: ViewModelInstance | null
 ): UseViewModelInstanceEnumResult {
-    const result = useViewModelInstanceProperty<
-        ViewModelInstanceEnum,
-        string,
-        Omit<UseViewModelInstanceEnumResult, 'value' | 'values'>,
-        string[]
-    >(
-        path,
-        viewModelInstance,
-        {
-            getProperty: useCallback((vm, p) => vm.enum(p), []),
-            getValue: useCallback((prop) => prop.value, []),
-            defaultValue: null,
-            getExtendedData: useCallback((prop) => prop.values, []),
-            buildPropertyOperations: useCallback((safePropertyAccess) => ({
-                setValue: (newValue: string) => {
-                    safePropertyAccess(prop => { prop.value = newValue; });
-                }
-            }), [])
-        }
-    );
+  const result = useViewModelInstanceProperty<
+    ViewModelInstanceEnum,
+    string,
+    Omit<UseViewModelInstanceEnumResult, 'value' | 'values'>,
+    string[]
+  >(path, viewModelInstance, {
+    getProperty: useCallback((vm, p) => vm.enum(p), []),
+    getValue: useCallback((prop) => prop.value, []),
+    defaultValue: null,
+    getExtendedData: useCallback((prop: any) => prop.values, []),
+    buildPropertyOperations: useCallback(
+      (safePropertyAccess) => ({
+        setValue: (newValue: string) => {
+          safePropertyAccess((prop) => {
+            prop.value = newValue;
+          });
+        },
+      }),
+      []
+    ),
+  });
 
-    return {
-        value: result.value,
-        values: result.extendedData || [],
-        setValue: result.setValue
-    };
-} 
+  return {
+    value: result.value,
+    values: result.extendedData || [],
+    setValue: result.setValue,
+  };
+}

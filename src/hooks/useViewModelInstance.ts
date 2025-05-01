@@ -72,16 +72,13 @@ export default function useViewModelInstance(
 
         let result: ViewModelInstance | null = null;
 
-        if (currentParams) {
-            if ('name' in currentParams && currentParams.name != null) {
-                result = currentViewModel.instanceByName?.(currentParams.name) || null;
-            } else if ('useDefault' in currentParams && currentParams.useDefault) {
-                result = currentViewModel.defaultInstance?.() || null;
-            } else if ('useNew' in currentParams && currentParams.useNew) {
-                result = currentViewModel.instance?.() || null;
-            }
+        if (currentParams?.name != null) {
+            result = currentViewModel.instanceByName(currentParams.name) || null;
+        } else if (currentParams?.useDefault) {
+            result = currentViewModel.defaultInstance?.() || null;
+        } else if (currentParams?.useNew) {
+            result = currentViewModel.instance?.() || null;
         } else {
-            // Default to using default instance if no params provided
             result = currentViewModel.defaultInstance?.() || null;
         }
 

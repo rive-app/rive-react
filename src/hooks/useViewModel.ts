@@ -64,13 +64,12 @@ export default function useViewModel(
 
             let model: ViewModel | null = null;
 
-            if (currentParams && 'name' in currentParams && currentParams.name != null) {
+            if (currentParams?.name != null) {
                 model = currentRive.viewModelByName?.(currentParams.name) || null;
-            } else if (currentParams && currentParams.useDefault) {
-                const defaultViewModel = currentRive.defaultViewModel();
-                if (defaultViewModel) {
-                    model = defaultViewModel;
-                }
+            } else if (currentParams?.useDefault) {
+                model = currentRive.defaultViewModel() || null;
+            } else {
+                model = currentRive.defaultViewModel() || null;
             }
 
             setViewModel(model);

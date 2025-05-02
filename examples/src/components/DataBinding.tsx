@@ -5,48 +5,137 @@ import {
   useViewModelInstance,
   useViewModelInstanceColor,
   useViewModelInstanceNumber,
-} from '@rive-app/react-canvas';
+  useViewModelInstanceString,
+  useViewModelInstanceEnum,
+  useViewModelInstanceTrigger,
+} from '@rive-app/react-webgl2';
+
+const randomValue = () => Math.random() * 200 - 100;
 
 const DataBinding = () => {
   const { rive, RiveComponent } = useRive({
-    src: 'rewards.riv',
+    src: 'stocks.riv',
     artboard: 'Main',
     stateMachines: 'State Machine 1',
     autoplay: true,
     autoBind: false,
   });
 
-  const viewModel = useViewModel(rive, { name: 'Rewards' });
-
   // Get the default instance of the view model
-  const viewModelInstance = useViewModelInstance(viewModel);
-  console.log('ViewModelInstance:', viewModelInstance);
+  const viewModel = useViewModel(rive, { name: 'Dashboard' });
+  const viewModelInstance = useViewModelInstance(viewModel, { rive });
 
-  const { value: priceValue, setValue: setPriceValue } =
-    useViewModelInstanceNumber('PriceValue', viewModelInstance);
+  // Get the view model instance properties
 
-  const { value: mainColor, setValue: setMainColor } =
-    useViewModelInstanceColor('color', viewModelInstance);
+  const { setValue: setTitle } = useViewModelInstanceString(
+    'title',
+    viewModelInstance
+  );
 
-  const { value: lives, setValue: setLives } = useViewModelInstanceNumber(
-    'Button/Lives',
+  const { setValue: setLogoShape } = useViewModelInstanceEnum(
+    'logoShape',
+    viewModelInstance
+  );
+
+  const { setValue: setRootColor } = useViewModelInstanceColor(
+    'rootColor',
+    viewModelInstance
+  );
+
+  const { trigger: triggerSpinLogo } = useViewModelInstanceTrigger(
+    'triggerSpinLogo',
+    viewModelInstance
+  );
+
+  // Apple Values
+  const { setValue: setAppleName } = useViewModelInstanceString(
+    'apple/name',
+    viewModelInstance
+  );
+  const { setValue: setAppleStockChange } = useViewModelInstanceNumber(
+    'apple/stockChange',
+    viewModelInstance
+  );
+  const { value: appleColor } = useViewModelInstanceColor(
+    'apple/currentColor',
+    viewModelInstance
+  );
+  // Apple Values
+  const { setValue: setMicrosoftName } = useViewModelInstanceString(
+    'microsoft/name',
+    viewModelInstance
+  );
+  const { setValue: setMicrosoftStockChange } = useViewModelInstanceNumber(
+    'microsoft/stockChange',
+    viewModelInstance
+  );
+  // Tesla Values
+  const { setValue: setTeslaName } = useViewModelInstanceString(
+    'tesla/name',
+    viewModelInstance
+  );
+  const { setValue: setTeslaStockChange } = useViewModelInstanceNumber(
+    'tesla/stockChange',
     viewModelInstance
   );
 
   useEffect(() => {
-    setPriceValue(100); // Set the initial price value
-  }, [setPriceValue]);
-
-  useEffect(() => {
-    setMainColor(parseInt('ffc0ffee', 16)); // Set the initial price value
-  }, [setMainColor]);
-
-  useEffect(() => {
-    if (setLives && lives) {
-      console.log('Lives changed:', lives);
-      setLives(3); // Set the initial lives value
+    // Set initial values for the view model
+    if (
+      setTitle &&
+      setLogoShape &&
+      setRootColor &&
+      setAppleName &&
+      setMicrosoftName &&
+      setTeslaName
+    ) {
+      setTitle('Rive Stocks Dashboard');
+      setLogoShape('triangle');
+      setRootColor(parseInt('ffc0ffee', 16));
+      setAppleName('AAPL');
+      setMicrosoftName('MSFT');
+      setTeslaName('TSLA');
     }
-  }, [setLives, lives]);
+
+    // randomly generate stock values every 2 seconds
+    const interval = setInterval(() => {
+      const appleValue = randomValue();
+      const microsoftValue = randomValue();
+      const teslaValue = randomValue();
+
+      setAppleStockChange(appleValue);
+      setMicrosoftStockChange(microsoftValue);
+      setTeslaStockChange(teslaValue);
+
+      // If all the stock values are either all positive or all negative, spin the logo
+      if (
+        (appleValue > 0 && microsoftValue > 0 && teslaValue > 0) ||
+        (appleValue < 0 && microsoftValue < 0 && teslaValue < 0)
+      ) {
+        triggerSpinLogo();
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [
+    setTitle,
+    setLogoShape,
+    setRootColor,
+    setAppleName,
+    setMicrosoftName,
+    setTeslaName,
+    setAppleStockChange,
+    setMicrosoftStockChange,
+    setTeslaStockChange,
+    triggerSpinLogo,
+  ]);
+
+  // listen for changes to the AAPL color and log them
+  useEffect(() => {
+    if (appleColor) {
+      console.log('Apple color changed:', appleColor);
+    }
+  }, [appleColor]);
 
   return <RiveComponent />;
 };

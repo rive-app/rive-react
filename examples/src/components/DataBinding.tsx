@@ -47,6 +47,10 @@ const DataBinding = () => {
     viewModelInstance
   );
 
+  useViewModelInstanceTrigger('triggerButton', viewModelInstance, {
+    onTrigger: () => console.log('Button Triggered!'),
+  });
+
   // Apple Values
   const { setValue: setAppleName } = useViewModelInstanceString(
     'apple/name',

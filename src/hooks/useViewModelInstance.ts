@@ -1,29 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { ViewModel, ViewModelInstance } from '@rive-app/canvas';
 import { UseViewModelInstanceParameters } from '../types';
-
-
-function areParamsEqual(
-    prev?: UseViewModelInstanceParameters,
-    next?: UseViewModelInstanceParameters
-): boolean {
-    if (prev === next) return true;
-    if (!prev || !next) return prev === next;
-
-    if ('name' in prev && 'name' in next) {
-        return prev.name === next.name;
-    }
-
-    if ('useDefault' in prev && 'useDefault' in next) {
-        return prev.useDefault === next.useDefault;
-    }
-
-    if ('useNew' in prev && 'useNew' in next) {
-        return prev.useNew === next.useNew;
-    }
-
-    return false;
-}
 
 /**
  * Hook for fetching a ViewModelInstance from a ViewModel.
@@ -43,50 +20,26 @@ export default function useViewModelInstance(
     const { name, useDefault = false, useNew = false, rive } = params ?? {};
     const [instance, setInstance] = useState<ViewModelInstance | null>(null);
 
-    const viewModelRef = useRef<ViewModel | null>(viewModel);
-    const paramsRef = useRef<UseViewModelInstanceParameters | undefined>(params);
-    const instanceRef = useRef<ViewModelInstance | null>(null);
-
-    const shouldUpdate = useRef(true);
-
     useEffect(() => {
-        const isViewModelChanged = viewModelRef.current !== viewModel;
-        const areParamsChanged = !areParamsEqual(paramsRef.current, params);
-
-        shouldUpdate.current = isViewModelChanged || areParamsChanged;
-        viewModelRef.current = viewModel;
-        paramsRef.current = params;
-
-        if (!shouldUpdate.current && instanceRef.current) {
-            return;
-        }
-
-        const currentViewModel = viewModelRef.current;
-        const currentParams = paramsRef.current;
-
-        if (!currentViewModel) {
+        if (!viewModel) {
             setInstance(null);
-            instanceRef.current = null;
             return;
         }
 
         let result: ViewModelInstance | null = null;
 
-        if (currentParams?.name != null) {
-            result = currentViewModel.instanceByName(currentParams.name) || null;
-        } else if (currentParams?.useDefault) {
-            result = currentViewModel.defaultInstance?.() || null;
-        } else if (currentParams?.useNew) {
-            result = currentViewModel.instance?.() || null;
+        if (name != null) {
+            result = viewModel.instanceByName(name) || null;
+        } else if (useDefault) {
+            result = viewModel.defaultInstance?.() || null;
+        } else if (useNew) {
+            result = viewModel.instance?.() || null;
         } else {
-            result = currentViewModel.defaultInstance?.() || null;
+            result = viewModel.defaultInstance?.() || null;
         }
 
-        instanceRef.current = result;
         setInstance(result);
-        shouldUpdate.current = false;
 
-        // Bind instance to Rive if needed
         if (rive && result && rive.viewModelInstance !== result) {
             rive.bindViewModelInstance(result);
         }

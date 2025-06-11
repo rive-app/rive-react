@@ -14,9 +14,10 @@ jobs:
   publish_job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_GITHUB }}
       - name: Setup Git config
         run: |
           git config --local user.email 'hello@rive.app'
@@ -39,20 +40,14 @@ jobs:
         name: Major Release - Bump version number, update changelog, push and tag
         run: npm run release:major
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{inputs.major == false && inputs.minor == true}}
         name: Minor release - Bump version number, update changelog, push and tag
         run: npm run release:minor
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{inputs.major == false && inputs.minor == false}}
         name: Patch release - Bump version number, update changelog, push and tag
         run: npm run release:patch
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

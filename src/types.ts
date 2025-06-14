@@ -1,4 +1,5 @@
 import {
+  type decodeImage,
   Rive,
   RiveFile,
   RiveFileParameters,
@@ -185,4 +186,14 @@ export type UseViewModelInstanceTriggerResult = {
    * Fires the property trigger.
    */
   trigger: () => void;
+};
+
+export type RiveRenderImage = Awaited<ReturnType<typeof decodeImage>>;
+
+export type UseViewModelInstanceImageResult = {
+  /**
+   * Set the value of the image.
+   * @param value - The image to set.
+   */
+  setValue: (value: RiveRenderImage | null) => void;
 };

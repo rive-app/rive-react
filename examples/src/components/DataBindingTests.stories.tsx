@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect, waitFor, userEvent } from '@storybook/test';
 
-import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances } from './DataBindingTests';
+import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest } from './DataBindingTests';
 
 const meta: Meta = {
     title: 'Tests/DataBinding',
@@ -345,4 +345,44 @@ export const PersonFormStory: StoryObj = {
 };
 
 
+export const ImagePropertyStory: StoryObj = {
+    name: 'Image Property',
+    render: () => <ImagePropertyTest src="image_db_test.riv" />,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
 
+        // Wait for the Rive file to load
+        await waitFor(() => {
+            expect(canvas.getByTestId('load-random-image')).toBeTruthy();
+            expect(canvas.getByTestId('clear-image')).toBeTruthy();
+        }, { timeout: 3000 });
+
+        const loadImageButton = canvas.getByTestId('load-random-image');
+        const clearImageButton = canvas.getByTestId('clear-image');
+
+        expect(canvas.queryByTestId('current-image-url')).toBeNull();
+
+        // Load a random image
+        await userEvent.click(loadImageButton);
+
+        // Wait for the image to load and URL to appear
+        await waitFor(() => {
+            expect(canvas.getByTestId('current-image-url')).toBeTruthy();
+        }, { timeout: 5000 });
+
+        // Verify the image URL is displayed
+        const imageUrlElement = canvas.getByTestId('current-image-url');
+        expect(imageUrlElement.textContent).toContain('Current image: https://picsum.photos');
+
+        // Clear the image
+        await userEvent.click(clearImageButton);
+
+        // Load another image to test it works multiple times
+        await userEvent.click(loadImageButton);
+
+        // Wait for the new image to load
+        await waitFor(() => {
+            expect(canvas.getByTestId('current-image-url')).toBeTruthy();
+        }, { timeout: 5000 });
+    }
+};

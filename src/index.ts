@@ -9,6 +9,7 @@ import useViewModelInstanceBoolean from './hooks/useViewModelInstanceBoolean';
 import useViewModelInstanceColor from './hooks/useViewModelInstanceColor';
 import useViewModelInstanceEnum from './hooks/useViewModelInstanceEnum';
 import useViewModelInstanceTrigger from './hooks/useViewModelInstanceTrigger';
+import useViewModelInstanceImage from './hooks/useViewModelInstanceImage';
 import useResizeCanvas from './hooks/useResizeCanvas';
 import useRiveFile from './hooks/useRiveFile';
 
@@ -26,6 +27,7 @@ export {
     useViewModelInstanceColor,
     useViewModelInstanceEnum,
     useViewModelInstanceTrigger,
+    useViewModelInstanceImage,
     RiveProps,
 };
 export {

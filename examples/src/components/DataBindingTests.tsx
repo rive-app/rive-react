@@ -9,7 +9,9 @@ import Rive, {
     useViewModelInstanceNumber,
     useViewModelInstanceEnum,
     useViewModelInstanceColor,
-    useViewModelInstanceTrigger
+    useViewModelInstanceTrigger,
+    useViewModelInstanceImage,
+    decodeImage
 } from '@rive-app/react-webgl2';
 
 
@@ -519,6 +521,93 @@ export const PersonInstances = ({ src }: { src: string }) => {
                 <p data-testid="person-age">Age: {age}</p>
                 <p data-testid="person-country">Country: {country}</p>
             </div>
+        </div>
+    );
+};
+
+export const ImagePropertyTest = ({ src }: { src: string }) => {
+    const [currentImageUrl, setCurrentImageUrl] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { rive, RiveComponent } = useRive({
+        src,
+        artboard: "Artboard",
+        stateMachines: "State Machine 1",
+        autoplay: true,
+        autoBind: false,
+    });
+
+    const viewModel = useViewModel(rive, { name: 'Post' });
+    const viewModelInstance = useViewModelInstance(viewModel, { rive });
+
+    const { setValue: setImage } = useViewModelInstanceImage(
+        'image',
+        viewModelInstance
+    );
+
+    const loadRandomImage = async () => {
+        if (!setImage) return;
+
+        setIsLoading(true);
+        try {
+            const imageUrl = `https://picsum.photos/400/300?random=${Date.now()}`;
+            setCurrentImageUrl(imageUrl);
+
+            const response = await fetch(imageUrl);
+            const imageBuffer = await response.arrayBuffer();
+            const decodedImage = await decodeImage(new Uint8Array(imageBuffer));
+
+            setImage(decodedImage);
+
+            decodedImage.unref();
+        } catch (error) {
+            console.error('Failed to load image:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const clearImage = () => {
+        if (setImage) {
+            setImage(null);
+            setCurrentImageUrl('');
+        }
+    };
+
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+            <div style={{ width: '400px', height: '300px', border: '1px solid #ccc' }}>
+                <RiveComponent />
+            </div>
+
+            {rive === null ? (
+                <div data-testid="loading-text">Loading…</div>
+            ) : (
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <button
+                        onClick={loadRandomImage}
+                        disabled={isLoading}
+                        data-testid="load-random-image"
+                    >
+                        {isLoading ? 'Loading...' : 'Load Random Image'}
+                    </button>
+
+                    <button
+                        onClick={clearImage}
+                        disabled={isLoading}
+                        data-testid="clear-image"
+                    >
+                        Clear Image
+                    </button>
+                </div>
+            )}
+
+            {currentImageUrl && (
+                <div style={{ fontSize: '12px', color: '#666' }}>
+                    <span data-testid="current-image-url">Current image: {currentImageUrl}</span>
+                </div>
+            )}
         </div>
     );
 };

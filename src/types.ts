@@ -4,6 +4,7 @@ import {
   RiveFile,
   RiveFileParameters,
   RiveParameters,
+  ViewModelInstance,
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
@@ -196,4 +197,45 @@ export type UseViewModelInstanceImageResult = {
    * @param value - The image to set.
    */
   setValue: (value: RiveRenderImage | null) => void;
+};
+
+export type UseViewModelInstanceListResult = {
+  /**
+   * The current length of the list.
+   */
+  length: number;
+  /**
+   * Add an instance to the end of the list.
+   * @param instance - The ViewModelInstance to add.
+   */
+  addInstance: (instance: ViewModelInstance) => void;
+  /**
+   * Add an instance at a specific index in the list.
+   * @param instance - The ViewModelInstance to add.
+   * @param index - The index to add the instance at.
+   * @returns True if the instance was successfully added, false otherwise.
+   */
+  addInstanceAt: (instance: ViewModelInstance, index: number) => boolean;
+  /**
+   * Remove an instance from the list.
+   * @param instance - The ViewModelInstance to remove.
+   */
+  removeInstance: (instance: ViewModelInstance) => void;
+  /**
+   * Remove an instance at a specific index from the list.
+   * @param index - The index to remove the instance from.
+   */
+  removeInstanceAt: (index: number) => void;
+  /**
+   * Get an instance at a specific index from the list.
+   * @param index - The index to get the instance from.
+   * @returns The ViewModelInstance at the index, or null if not found.
+   */
+  getInstanceAt: (index: number) => ViewModelInstance | null;
+  /**
+   * Swap two instances in the list.
+   * @param a - The first index.
+   * @param b - The second index.
+   */
+  swap: (a: number, b: number) => void;
 };

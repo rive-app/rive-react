@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { ViewModelInstance, ViewModelInstanceList } from '@rive-app/canvas';
 import { UseViewModelInstanceListResult } from '../types';
 import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
@@ -15,13 +15,22 @@ export default function useViewModelInstanceList(
     viewModelInstance?: ViewModelInstance | null
 ): UseViewModelInstanceListResult {
 
+    // We track revision to trigger re-renders on list manipulation (e.g. addInstance, removeInstance, etc).
+    // This is mostly important for things like the swap function which wouldn't trigger a re-render otherwise.
+    // It also accounts for changes that happen within the Rive file itself rather than through the hook.
+    const [_revision, setRevision] = useState(0);
+
     const result = useViewModelInstanceProperty<ViewModelInstanceList, number, Omit<UseViewModelInstanceListResult, 'length'>>(
         path,
         viewModelInstance,
         {
             getProperty: useCallback((vm, p) => vm.list(p), []),
             getValue: useCallback((prop) => prop.length, []),
-            defaultValue: 0,
+            defaultValue: null,
+            onPropertyEvent: () => {
+                // This fires when the list changes in Rive
+                setRevision(prev => prev + 1);
+            },
             buildPropertyOperations: useCallback((safePropertyAccess) => ({
                 addInstance: (instance: ViewModelInstance) => {
                     safePropertyAccess(prop => prop.addInstance(instance));

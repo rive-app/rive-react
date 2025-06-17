@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect, waitFor, userEvent } from '@storybook/test';
 
-import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest } from './DataBindingTests';
+import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest, TodoListTest } from './DataBindingTests';
 
 const meta: Meta = {
     title: 'Tests/DataBinding',
@@ -384,5 +384,101 @@ export const ImagePropertyStory: StoryObj = {
         await waitFor(() => {
             expect(canvas.getByTestId('current-image-url')).toBeTruthy();
         }, { timeout: 5000 });
+    }
+};
+
+
+export const TodoListStory: StoryObj = {
+    name: 'Todo List Property',
+    render: () => <TodoListTest src="db_list_test.riv" />,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        // Wait for the Rive file to load
+        await waitFor(() => {
+            expect(canvas.getByTestId('list-length')).toBeTruthy();
+        }, { timeout: 3000 });
+
+        const initialLengthText = canvas.getByTestId('list-length').textContent;
+        const initialCount = parseInt(initialLengthText?.match(/Items: (\d+)/)?.[1] || '0');
+
+        // Test 1: addInstance - Add item to end
+        const addButton = canvas.getByTestId('add-item-button');
+        await userEvent.click(addButton);
+
+        await waitFor(() => {
+            expect(canvas.getByTestId('list-length').textContent).toContain(`Items: ${initialCount + 1}`);
+        });
+
+        // Test 2: addInstanceAt - Add item at specific index (if we have items)
+        if (initialCount > 0) {
+            const addAtButton = canvas.getByTestId('add-item-at-button');
+            await userEvent.click(addAtButton);
+
+            await waitFor(() => {
+                expect(canvas.getByTestId('list-length').textContent).toContain(`Items: ${initialCount + 2}`);
+            });
+        }
+
+        // Test 3: getInstanceAt - Interact with specific items
+        const currentCount = initialCount + (initialCount > 0 ? 2 : 1);
+        if (currentCount > 0) {
+            await waitFor(() => {
+                expect(canvas.getByTestId('todo-item-0')).toBeTruthy();
+            });
+
+            // Edit the first item
+            const todoText = canvas.getByTestId('todo-text-0');
+            await userEvent.clear(todoText);
+
+            // Wait for the input to be cleared to avoid issues with autocomplete
+            await waitFor(() => {
+                expect((todoText as HTMLInputElement).value).toBe('');
+            }, { timeout: 2000 });
+
+            await userEvent.click(todoText);
+            await userEvent.paste('Test Item');
+
+            await waitFor(() => {
+                expect(canvas.getByTestId('todo-text-value-0').textContent).toContain('Test Item');
+            }, { timeout: 3000 });
+
+        }
+
+        // Test 4: swap - Swap first two items
+        if (currentCount >= 2) {
+            const firstText = canvas.getByTestId<HTMLInputElement>('todo-text-0').value;
+            const secondText = canvas.getByTestId<HTMLInputElement>('todo-text-1').value;
+
+            const swapButton = canvas.getByTestId('swap-button');
+            await userEvent.click(swapButton);
+
+            await waitFor(() => {
+                expect(canvas.getByTestId('todo-text-0')).toHaveValue(secondText);
+                expect(canvas.getByTestId('todo-text-1')).toHaveValue(firstText);
+            }, { timeout: 3000 });
+        }
+
+        // Test 5: removeInstance - Remove by instance reference
+        if (currentCount > 0) {
+            const removeInstanceButton = canvas.getByTestId('remove-instance-button');
+            await userEvent.click(removeInstanceButton);
+
+            await waitFor(() => {
+                expect(canvas.getByTestId('list-length').textContent).toContain(`Items: ${currentCount - 1}`);
+            }, { timeout: 3000 });
+        }
+
+        // Test 6: removeInstanceAt - Remove by index
+        const afterRemoveInstance = currentCount > 0 ? currentCount - 1 : 0;
+        if (afterRemoveInstance > 0) {
+            const removeIndexButton = canvas.getByTestId('remove-index-button');
+            await userEvent.click(removeIndexButton);
+
+            await waitFor(() => {
+                expect(canvas.getByTestId('list-length').textContent).toContain(`Items: ${afterRemoveInstance - 1}`);
+            }, { timeout: 3000 });
+        }
+
     }
 };

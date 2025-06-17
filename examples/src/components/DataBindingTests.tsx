@@ -11,7 +11,9 @@ import Rive, {
     useViewModelInstanceColor,
     useViewModelInstanceTrigger,
     useViewModelInstanceImage,
-    decodeImage
+    decodeImage,
+    ViewModelInstance,
+    useViewModelInstanceList
 } from '@rive-app/react-webgl2';
 
 
@@ -606,6 +608,180 @@ export const ImagePropertyTest = ({ src }: { src: string }) => {
             {currentImageUrl && (
                 <div style={{ fontSize: '12px', color: '#666' }}>
                     <span data-testid="current-image-url">Current image: {currentImageUrl}</span>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// List Property Test
+
+const TodoItemComponent = ({
+    index,
+    todoItem
+}: {
+    index: number;
+    todoItem: ViewModelInstance | null;
+}) => {
+    const { value: text, setValue: setText } = useViewModelInstanceString('text', todoItem);
+    const { value: isDone, setValue: setIsDone } = useViewModelInstanceBoolean('isDone', todoItem);
+
+    if (!todoItem) {
+        return <div data-testid={`todo-item-${index}`}>Item not found</div>;
+    }
+
+    return (
+        <div data-testid={`todo-item-${index}`} style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '8px',
+            border: '1px solid #ccc',
+            marginBottom: '4px'
+        }}>
+            <input
+                data-testid={`todo-checkbox-${index}`}
+                type="checkbox"
+                checked={isDone ?? false}
+                onChange={(e) => setIsDone(e.target.checked)}
+            />
+            <input
+                data-testid={`todo-text-${index}`}
+                type="text"
+                value={text || ''}
+                onChange={(e) => setText(e.target.value)}
+                style={{ flex: 1 }}
+            />
+            <div data-testid={`todo-text-value-${index}`} style={{ fontSize: '12px', color: '#666' }}>
+                Text: {text}
+            </div>
+            <div data-testid={`todo-done-value-${index}`} style={{ fontSize: '12px', color: '#666' }}>
+                Done: {isDone ? 'true' : 'false'}
+            </div>
+        </div>
+    );
+};
+
+export const TodoListTest = ({ src }: { src: string }) => {
+    const { rive, RiveComponent } = useRive({
+        src,
+        autoplay: true,
+        artboard: "Artboard",
+        autoBind: false,
+        stateMachines: "State Machine 1",
+    });
+
+    const viewModel = useViewModel(rive, { name: 'TodoList' });
+    const viewModelInstance = useViewModelInstance(viewModel, { rive });
+
+    const {
+        length,
+        addInstance,
+        addInstanceAt,
+        removeInstance,
+        removeInstanceAt,
+        getInstanceAt,
+        swap
+    } = useViewModelInstanceList('items', viewModelInstance);
+
+    const handleAddItem = () => {
+        const todoItemViewModel = rive?.viewModelByName?.('TodoItem');
+        if (todoItemViewModel) {
+            const newTodoItem = todoItemViewModel.instance?.();
+            if (newTodoItem) {
+                addInstance(newTodoItem);
+            }
+        }
+    };
+
+    const handleAddItemAt = () => {
+        const todoItemViewModel = rive?.viewModelByName?.('TodoItem');
+        if (todoItemViewModel && length > 0) {
+            const newTodoItem = todoItemViewModel.instance?.();
+            if (newTodoItem) {
+                addInstanceAt(newTodoItem, 1);
+            }
+        }
+    };
+
+    const handleRemoveFirstInstance = () => {
+        const firstInstance = getInstanceAt(0);
+        if (firstInstance) {
+            removeInstance(firstInstance);
+        }
+    };
+
+    const handleRemoveFirstByIndex = () => {
+        if (length > 0) {
+            removeInstanceAt(0);
+        }
+    };
+
+    const handleSwapItems = () => {
+        if (length >= 2) {
+            swap(0, 1);
+        }
+    };
+
+    return (
+        <div>
+            <RiveComponent style={{ width: '400px', height: '400px' }} />
+            {rive === null ? (
+                <div data-testid="loading-text">Loading…</div>
+            ) : (
+                <div>
+                    <div data-testid="list-length">Items: {length}</div>
+
+                    <div style={{ marginBottom: '10px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        <button
+                            data-testid="add-item-button"
+                            onClick={handleAddItem}
+                        >
+                            Add Item (End)
+                        </button>
+
+                        <button
+                            data-testid="add-item-at-button"
+                            onClick={handleAddItemAt}
+                            disabled={length === 0}
+                        >
+                            Add Item at Index 1
+                        </button>
+
+                        <button
+                            data-testid="remove-instance-button"
+                            onClick={handleRemoveFirstInstance}
+                            disabled={length === 0}
+                        >
+                            Remove First (by Instance)
+                        </button>
+
+                        <button
+                            data-testid="remove-index-button"
+                            onClick={handleRemoveFirstByIndex}
+                            disabled={length === 0}
+                        >
+                            Remove First (by Index)
+                        </button>
+
+                        <button
+                            data-testid="swap-button"
+                            onClick={handleSwapItems}
+                            disabled={length < 2}
+                        >
+                            Swap First Two
+                        </button>
+                    </div>
+
+                    <div data-testid="todo-items">
+                        {Array.from({ length }, (_, index) => (
+                            <TodoItemComponent
+                                key={index}
+                                index={index}
+                                todoItem={getInstanceAt(index)}
+                            />
+                        ))}
+                    </div>
                 </div>
             )}
         </div>

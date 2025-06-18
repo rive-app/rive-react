@@ -69,6 +69,7 @@ export default function useRive(
 ): RiveState {
   const [canvasElem, setCanvasElem] = useState<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
+  const riveRef = useRef<Rive | null>(null);
 
   const [rive, setRive] = useState<Rive | null>(null);
 
@@ -135,6 +136,10 @@ export default function useRive(
         ...riveParams,
         canvas: canvasElem,
       });
+      if (riveRef.current != null) {
+        riveRef.current!.cleanup();
+      }
+      riveRef.current = r;
       r.on(EventType.Load, () => {
         isLoaded = true;
         // Check if the component/canvas is mounted before setting state to avoid setState
@@ -236,6 +241,14 @@ export default function useRive(
       }
     };
   }, [rive, canvasElem]);
+
+  useEffect(() => {
+    return () => {
+      if (riveRef.current != null) {
+        riveRef.current!.cleanup();
+      }
+    };
+  }, []);
 
   /**
    * Listen for changes in the animations params

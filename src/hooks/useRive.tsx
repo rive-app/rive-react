@@ -142,6 +142,11 @@ export default function useRive(
       riveRef.current = r;
       r.on(EventType.Load, () => {
         isLoaded = true;
+
+        if (options.onLoad) {
+          options.onLoad(r!);
+        }
+
         // Check if the component/canvas is mounted before setting state to avoid setState
         // on an unmounted component in some rare cases
         if (canvasElem) {

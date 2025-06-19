@@ -15,6 +15,7 @@ export type UseRiveOptions = {
   useOffscreenRenderer: boolean;
   shouldResizeCanvasToContainer: boolean;
   shouldUseIntersectionObserver?: boolean;
+  onLoad?: (rive: Rive) => void;
 };
 
 export type Dimensions = {

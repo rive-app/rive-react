@@ -6,7 +6,9 @@ import {
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
-export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> | null;
+export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> & {
+  onRiveReady?: (rive: Rive) => void;
+} | null;
 
 export type UseRiveOptions = {
   useDevicePixelRatio: boolean;
@@ -15,7 +17,6 @@ export type UseRiveOptions = {
   useOffscreenRenderer: boolean;
   shouldResizeCanvasToContainer: boolean;
   shouldUseIntersectionObserver?: boolean;
-  onLoad?: (rive: Rive) => void;
 };
 
 export type Dimensions = {

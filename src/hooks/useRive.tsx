@@ -131,9 +131,10 @@ export default function useRive(
     let r: Rive | null;
     if (rive == null) {
       const { useOffscreenRenderer } = options;
+      const { onRiveReady, ...restRiveParams } = riveParams;
       r = new Rive({
         useOffscreenRenderer,
-        ...riveParams,
+        ...restRiveParams,
         canvas: canvasElem,
       });
       if (riveRef.current != null) {
@@ -143,8 +144,8 @@ export default function useRive(
       r.on(EventType.Load, () => {
         isLoaded = true;
 
-        if (options.onLoad) {
-          options.onLoad(r!);
+        if (onRiveReady) {
+          onRiveReady(r!);
         }
 
         // Check if the component/canvas is mounted before setting state to avoid setState

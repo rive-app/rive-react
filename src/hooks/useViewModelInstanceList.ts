@@ -16,9 +16,10 @@ export default function useViewModelInstanceList(
 ): UseViewModelInstanceListResult {
 
     // We track revision to trigger re-renders on list manipulation (e.g. addInstance, removeInstance, etc).
-    // This is mostly important for things like the swap function which wouldn't trigger a re-render otherwise.
+    // This is mostly important for things like the swap function which wouldn't trigger a re-render otherwise because it doesn't change the length of the list.
+    // For example, if the user swaps two items in the list and we don't trigger a re-render, the user will see the old items if they were using the getInstanceAt function.
     // It also accounts for changes that happen within the Rive file itself rather than through the hook.
-    const [_revision, setRevision] = useState(0);
+    const [, setRevision] = useState(0);
 
     const result = useViewModelInstanceProperty<ViewModelInstanceList, number, Omit<UseViewModelInstanceListResult, 'length'>>(
         path,

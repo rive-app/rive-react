@@ -13,6 +13,7 @@ import useViewModelInstanceImage from './hooks/useViewModelInstanceImage';
 import useViewModelInstanceList from './hooks/useViewModelInstanceList';
 import useResizeCanvas from './hooks/useResizeCanvas';
 import useRiveFile from './hooks/useRiveFile';
+import useViewModelInstanceArtboard from './hooks/useViewModelInstanceArtboard';
 
 export default Rive;
 export {
@@ -30,6 +31,7 @@ export {
     useViewModelInstanceTrigger,
     useViewModelInstanceImage,
     useViewModelInstanceList,
+    useViewModelInstanceArtboard,
     RiveProps,
 };
 export {

@@ -5,6 +5,7 @@ import {
   RiveFileParameters,
   RiveParameters,
   ViewModelInstance,
+  ViewModelInstanceArtboard,
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
@@ -238,4 +239,12 @@ export type UseViewModelInstanceListResult = {
    * @param b - The second index.
    */
   swap: (a: number, b: number) => void;
+};
+
+export type UseViewModelInstanceArtboardResult = {
+  /**
+   * Set the value of the artboard.
+   * @param value - The artboard to set.
+   */
+  setValue: (value: ViewModelInstanceArtboard extends { value: infer T } ? T : never) => void;
 };

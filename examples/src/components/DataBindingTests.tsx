@@ -13,7 +13,8 @@ import Rive, {
     useViewModelInstanceImage,
     decodeImage,
     ViewModelInstance,
-    useViewModelInstanceList
+    useViewModelInstanceList,
+    useViewModelInstanceArtboard
 } from '@rive-app/react-webgl2';
 
 
@@ -781,6 +782,97 @@ export const TodoListTest = ({ src }: { src: string }) => {
                                 todoItem={getInstanceAt(index)}
                             />
                         ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export const ArtboardPropertyTest = ({ src }: { src: string }) => {
+    const [currentArtboard1, setCurrentArtboard1] = useState<string>('None');
+    const [currentArtboard2, setCurrentArtboard2] = useState<string>('None');
+
+    const { rive, RiveComponent } = useRive({
+        src,
+        autoplay: true,
+        artboard: "Main",
+        autoBind: true,
+        stateMachines: "State Machine 1",
+    });
+
+    const { setValue: setArtboard1 } = useViewModelInstanceArtboard('artboard_1', rive?.viewModelInstance);
+    const { setValue: setArtboard2 } = useViewModelInstanceArtboard('artboard_2', rive?.viewModelInstance);
+
+    const handleSetArtboard1 = (artboardName: string) => {
+        if (rive) {
+            const artboard = rive.getArtboard(artboardName);
+            setArtboard1(artboard);
+            setCurrentArtboard1(artboardName);
+        }
+    };
+
+    const handleSetArtboard2 = (artboardName: string) => {
+        if (rive) {
+            const artboard = rive.getArtboard(artboardName);
+            setArtboard2(artboard);
+            setCurrentArtboard2(artboardName);
+        }
+    };
+
+    return (
+        <div>
+            <RiveComponent style={{ width: '400px', height: '400px' }} />
+            {(rive === null) ? <div data-testid="loading-text">Loading…</div> : (
+                <div>
+                    <div style={{ marginBottom: '20px' }}>
+                        <h4>Artboard 1:</h4>
+                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                            <button
+                                data-testid="set-artboard1-blue"
+                                onClick={() => handleSetArtboard1('ArtboardBlue')}
+                            >
+                                Set Blue Artboard
+                            </button>
+                            <button
+                                data-testid="set-artboard1-red"
+                                onClick={() => handleSetArtboard1('ArtboardRed')}
+                            >
+                                Set Red Artboard
+                            </button>
+                            <button
+                                data-testid="set-artboard1-green"
+                                onClick={() => handleSetArtboard1('ArtboardGreen')}
+                            >
+                                Set Green Artboard
+                            </button>
+                        </div>
+                        <div data-testid="artboard1-current">Current: {currentArtboard1}</div>
+                    </div>
+
+                    <div>
+                        <h4>Artboard 2:</h4>
+                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                            <button
+                                data-testid="set-artboard2-blue"
+                                onClick={() => handleSetArtboard2('ArtboardBlue')}
+                            >
+                                Set Blue Artboard
+                            </button>
+                            <button
+                                data-testid="set-artboard2-red"
+                                onClick={() => handleSetArtboard2('ArtboardRed')}
+                            >
+                                Set Red Artboard
+                            </button>
+                            <button
+                                data-testid="set-artboard2-green"
+                                onClick={() => handleSetArtboard2('ArtboardGreen')}
+                            >
+                                Set Green Artboard
+                            </button>
+                        </div>
+                        <div data-testid="artboard2-current">Current: {currentArtboard2}</div>
                     </div>
                 </div>
             )}

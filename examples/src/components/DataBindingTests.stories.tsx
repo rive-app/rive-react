@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect, waitFor, userEvent } from '@storybook/test';
 
-import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest, TodoListTest } from './DataBindingTests';
+import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest, TodoListTest, ArtboardPropertyTest } from './DataBindingTests';
 
 const meta: Meta = {
     title: 'Tests/DataBinding',
@@ -480,5 +480,48 @@ export const TodoListStory: StoryObj = {
             }, { timeout: 3000 });
         }
 
+    }
+};
+
+export const ArtboardPropertyStory: StoryObj = {
+    name: 'Artboard Property',
+    render: () => <ArtboardPropertyTest src="artboard_db_test.riv" />,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        // Wait for the Rive file to load
+        await waitFor(() => {
+            expect(canvas.getByTestId('set-artboard1-blue')).toBeTruthy();
+            expect(canvas.getByTestId('set-artboard1-red')).toBeTruthy();
+            expect(canvas.getByTestId('set-artboard1-green')).toBeTruthy();
+        }, { timeout: 3000 });
+
+        // Initially should show None
+        expect(canvas.getByTestId('artboard1-current').textContent).toBe('Current: None');
+        expect(canvas.getByTestId('artboard2-current').textContent).toBe('Current: None');
+
+        // Set artboard 1 to blue
+        await userEvent.click(canvas.getByTestId('set-artboard1-blue'));
+        await waitFor(() => {
+            expect(canvas.getByTestId('artboard1-current').textContent).toBe('Current: ArtboardBlue');
+        });
+
+        // Set artboard 2 to red
+        await userEvent.click(canvas.getByTestId('set-artboard2-red'));
+        await waitFor(() => {
+            expect(canvas.getByTestId('artboard2-current').textContent).toBe('Current: ArtboardRed');
+        });
+
+        // Switch artboard 1 to green
+        await userEvent.click(canvas.getByTestId('set-artboard1-green'));
+        await waitFor(() => {
+            expect(canvas.getByTestId('artboard1-current').textContent).toBe('Current: ArtboardGreen');
+        });
+
+        // Switch artboard 2 to blue
+        await userEvent.click(canvas.getByTestId('set-artboard2-blue'));
+        await waitFor(() => {
+            expect(canvas.getByTestId('artboard2-current').textContent).toBe('Current: ArtboardBlue');
+        });
     }
 };

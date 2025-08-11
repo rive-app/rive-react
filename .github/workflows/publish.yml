@@ -26,7 +26,7 @@ jobs:
         run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
+          node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Force NPM clean
         run: npm cache clean --force

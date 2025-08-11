@@ -3,7 +3,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "lib": ["esnext", "dom"],
+    "lib": ["esnext", "dom", "esnext.disposable"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,

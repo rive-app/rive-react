@@ -28,6 +28,8 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Force NPM clean
+        run: npm cache clean --force
       - name: Install Modules
         run: npm install
       - name: Run type check

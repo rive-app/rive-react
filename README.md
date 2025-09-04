@@ -6,9 +6,16 @@
 
 ![Rive hero image](https://cdn.rive.app/rive_logo_dark_bg.png)
 
-A React runtime library for [Rive](https://rive.app).
+[Rive](https://rive.app) combines an interactive design tool, a new stateful graphics format, a lightweight multi-platform runtime, and a blazing-fast vector renderer. This end-to-end pipeline guarantees that what you build in the Rive Editor is exactly what ships in your apps, games, and websites.
 
-This library is a wrapper around the [JS/Wasm runtime](https://github.com/rive-app/rive-wasm), giving full control over the js runtime while providing components and hooks for React applications.
+This library is a wrapper around the [JS/Wasm runtime](https://github.com/rive-app/rive-wasm), giving full control over the JS/Wasm runtime while providing components and hooks for React applications.
+
+For more information, check out the following resources:
+
+- [Homepage](https://rive.app/)
+- [General Docs](https://rive.app/docs/)
+- [React Docs](https://rive.app/docs/runtimes/react/react)
+- [Rive Community / Support](https://community.rive.app/c/support/)
 
 ## Table of contents
 

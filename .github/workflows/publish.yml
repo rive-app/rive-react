@@ -31,6 +31,8 @@ jobs:
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+      - name: Upgrade npm for OIDC support
+        run: npm install -g npm@latest
       - name: Install Modules
         run: npm install
       - name: Run type check

@@ -10,6 +10,11 @@ on:
         description: 'Minor'
         type: boolean
         default: false
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   publish_job:
     runs-on: ubuntu-latest
@@ -22,11 +27,9 @@ jobs:
         run: |
           git config --local user.email 'hello@rive.app'
           git config --local user.name ${{ github.actor }}
-      - name: Authenticate with registry
-        run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16.x'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
       - name: Install Modules
         run: npm install
@@ -39,15 +42,9 @@ jobs:
       - if: ${{ inputs.major == true }}
         name: Major Release - Bump version number, update changelog, push and tag
         run: npm run release:major
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{inputs.major == false && inputs.minor == true}}
         name: Minor release - Bump version number, update changelog, push and tag
         run: npm run release:minor
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{inputs.major == false && inputs.minor == false}}
         name: Patch release - Bump version number, update changelog, push and tag
         run: npm run release:patch
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

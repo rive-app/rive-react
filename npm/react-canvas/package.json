@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-canvas",
-  "version": "4.26.2",
+  "version": "4.27.0",
   "description": "React wrapper around the @rive-app/canvas library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "@rive-app/canvas": "2.34.2"
+    "@rive-app/canvas": "2.35.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0"

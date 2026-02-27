@@ -55,7 +55,7 @@ For more information, see the Runtime sections of the Rive help documentation:
 
 ## Supported versions
 
-This library supports React versions `^16.8.0` through `^18.0.0`.
+This library supports React versions `^16.8.0` through `^19.0.0`.
 
 ## Examples
 

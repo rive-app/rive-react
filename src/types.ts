@@ -1,5 +1,5 @@
-import {
-  type decodeImage,
+import type {
+  decodeImage,
   Rive,
   RiveFile,
   RiveFileParameters,
@@ -9,9 +9,11 @@ import {
 } from '@rive-app/canvas';
 import { ComponentProps, RefCallback } from 'react';
 
-export type UseRiveParameters = Partial<Omit<RiveParameters, 'canvas'>> & {
-  onRiveReady?: (rive: Rive) => void;
-} | null;
+export type UseRiveParameters =
+  | (Partial<Omit<RiveParameters, 'canvas'>> & {
+      onRiveReady?: (rive: Rive) => void;
+    })
+  | null;
 
 export type UseRiveOptions = {
   useDevicePixelRatio: boolean;
@@ -86,8 +88,6 @@ export type UseViewModelInstanceParameters =
   | { useDefault?: boolean; name?: never; useNew?: never; rive?: Rive | null }
   | { useNew?: boolean; name?: never; useDefault?: never; rive?: Rive | null };
 
-
-
 /**
  * Parameters for interacting with trigger properties of a ViewModelInstance
  * @property onTrigger - Callback that runs when the trigger fires
@@ -95,8 +95,6 @@ export type UseViewModelInstanceParameters =
 export type UseViewModelInstanceTriggerParameters = {
   onTrigger?: () => void;
 };
-
-
 
 export type UseViewModelInstanceNumberResult = {
   /**
@@ -246,5 +244,7 @@ export type UseViewModelInstanceArtboardResult = {
    * Set the value of the artboard.
    * @param value - The artboard to set.
    */
-  setValue: (value: ViewModelInstanceArtboard extends { value: infer T } ? T : never) => void;
+  setValue: (
+    value: ViewModelInstanceArtboard extends { value: infer T } ? T : never
+  ) => void;
 };

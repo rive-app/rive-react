@@ -1,4 +1,4 @@
-import Rive, { RiveProps } from './components/Rive';
+import Rive, { type RiveProps } from './components/Rive';
 import useRive from './hooks/useRive';
 import useStateMachineInput from './hooks/useStateMachineInput';
 import useViewModel from './hooks/useViewModel';
@@ -17,27 +17,27 @@ import useViewModelInstanceArtboard from './hooks/useViewModelInstanceArtboard';
 
 export default Rive;
 export {
-    useRive,
-    useStateMachineInput,
-    useResizeCanvas,
-    useRiveFile,
-    useViewModel,
-    useViewModelInstance,
-    useViewModelInstanceNumber,
-    useViewModelInstanceString,
-    useViewModelInstanceBoolean,
-    useViewModelInstanceColor,
-    useViewModelInstanceEnum,
-    useViewModelInstanceTrigger,
-    useViewModelInstanceImage,
-    useViewModelInstanceList,
-    useViewModelInstanceArtboard,
-    RiveProps,
+  useRive,
+  useStateMachineInput,
+  useResizeCanvas,
+  useRiveFile,
+  useViewModel,
+  useViewModelInstance,
+  useViewModelInstanceNumber,
+  useViewModelInstanceString,
+  useViewModelInstanceBoolean,
+  useViewModelInstanceColor,
+  useViewModelInstanceEnum,
+  useViewModelInstanceTrigger,
+  useViewModelInstanceImage,
+  useViewModelInstanceList,
+  useViewModelInstanceArtboard,
+  RiveProps,
 };
-export {
-    RiveState,
-    UseRiveParameters,
-    UseRiveFileParameters,
-    UseRiveOptions,
+export type {
+  RiveState,
+  UseRiveParameters,
+  UseRiveFileParameters,
+  UseRiveOptions,
 } from './types';
 export * from '@rive-app/canvas';

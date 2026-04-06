@@ -1,0 +1,105 @@
+name: Problem with the Rive React Runtime
+description: Report a bug or unexpected behavior in the Rive React runtime.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for using Rive and taking the time to fill this issue report out! Before filing an issue, please:
+        - Confirm if the issue is still present on the [latest version of `@rive-app/react-canvas`](https://www.npmjs.com/package/@rive-app/react-canvas) or [`@rive-app/react-webgl2`](https://www.npmjs.com/package/@rive-app/react-webgl2)
+        - Check the [Rive documentation](https://rive.app/docs/runtimes/react/react)
+        - Search for help on the [Rive forums](https://community.rive.app/c/start-here)
+        - For general Rive product feature requests, use the [feature request forum](https://community.rive.app/c/feature-requests/)
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I have confirmed the issue is present in the latest version of `@rive-app/react-canvas` or `@rive-app/react-webgl2` (or the renderer variant I'm using)
+          required: true
+        - label: I have searched the documentation and forums and could not find an answer
+          required: true
+        - label: I have searched existing issues and this is not a duplicate
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What issue are you running into? What's your expected behavior?
+      placeholder: Describe the issue you're experiencing
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro-description
+    attributes:
+      label: Reproduction steps / code
+      description: |
+        Please provide the most **minimal reproduction** you can. Paste a code snippet if the problem is small enough. Or, you can also share a link to a minimal GitHub repository that reproduces the issue (ideally with a `package.json` and instructions to run)
+
+        Alternatively, you can share a CodeSandbox link or upload a .zip of your reproduction in the next question.
+      placeholder: |
+        ```js
+        // paste your code here
+        ```
+    validations:
+      required: false
+
+  - type: upload
+    id: repro-files
+    attributes:
+      label: Upload your reproduction files / stack trace
+      description: |
+      
+        If your reproduction is more complex, you can upload a .zip of your project. 
+        Include a file with your stack trace if available as well if you cannot provide it above.
+        Please make sure to include a `README` with instructions on how to run the reproduction.
+
+  - type: input
+    id: rive_version
+    attributes:
+      label: Rive React package version
+      description: Which version of `@rive-app/react-canvas` (or other renderer variant) are you using?
+      placeholder: "e.g. @rive-app/react-canvas@4.27.3"
+    validations:
+      required: true
+
+  - type: upload
+    id: riv_file
+    attributes:
+      label: Source `.riv` / `.rev` file
+      description: |
+        If you are able, attaching the runtime-exported `.riv` file (and ideally the source `.rev` backup) is immensely helpful for reproducing and fixing the issue quickly.
+
+        Note: Use a ZIP archive to upload `.riv`/`.rev` files (GitHub only supports certain file types). You can also share files privately at support@rive.app.
+    validations:
+      required: false
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Screenshots / video
+      description: If applicable, add screenshots or a screen recording to help explain the problem.
+    validations:
+      required: false
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & version
+      placeholder: "e.g. Chrome 123 Stable, Firefox 124, Safari 17.4"
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system & version
+      placeholder: "e.g. macOS 14.4, Windows 11, Ubuntu 22.04"
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Any other context about the problem (frameworks, bundlers, relevant config, frequency of occurrence, etc.).
+    validations:
+      required: false

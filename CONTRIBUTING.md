@@ -69,10 +69,10 @@ git commit -m "Major: Restructuring the useRive API with new parameters"
 
 These messages help make the changelog clear as to what changes are made for future devs to see.
 
-When pull requests are merged, the runtime will automatically deploy the next release version. By default, patch versions are published. If you want to set the next version as a minor/major version to be released, you have to manually update the `package.json` file at the root of the project to the verison you want it to.
+When pull requests are merged, the runtime will automatically deploy the next release version. By default, patch versions are published. If you want to set the next version as a minor/major version to be released, you have to manually update the `package.json` file at the root of the project to the version you want it to.
 
 You can find the deploy scripts in `.github/`
 
 ## Bumping the underlying JS/WASM runtime
 
-Many times, fixes to the runtime and feature adds come from the underlying JS/WASM runtime. In these cases, just bump the `@rive-app/canvas` and `@rive-app/webgl2` versions to the verison you need to incorporate the fix/feature. Run `npm i` and test out the change locally against the Storybook examples and run the test suite to make sure nothing breaks, and then submit a PR with just the `package.json` change if that's all that's needed.
+Many times, fixes to the runtime and feature adds come from the underlying JS/WASM runtime. In these cases, just bump the `@rive-app/canvas` and `@rive-app/webgl2` versions to the version you need to incorporate the fix/feature. Run `npm i` and test out the change locally against the Storybook examples and run the test suite to make sure nothing breaks, and then submit a PR with just the `package.json` change if that's all that's needed.

@@ -21,11 +21,11 @@ export interface RiveProps {
    */
   stateMachines?: string | string[];
   /**
-   * Specify a starting Layout object to set Fill and Alignment for the drawing surface. See docs at https://rive.app/community/doc/layout/docBl81zd1GB for more on layout configuration.
+   * Specify a starting Layout object to set Fill and Alignment for the drawing surface. See docs at https://rive.app/docs/runtimes/react/layouts for more on layout configuration.
    */
   layout?: Layout;
   /**
-   * For `@rive-app/react-webgl`, sets this property to maintain a single WebGL context for multiple canvases. **We recommend to keep the default value** when rendering multiple Rive instances on a page.
+   * For `@rive-app/react-webgl2`, sets this property to maintain a single WebGL context for multiple canvases. **We recommend to keep the default value** when rendering multiple Rive instances on a page.
    */
   useOffscreenRenderer?: boolean;
   /**

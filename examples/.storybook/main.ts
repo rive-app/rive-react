@@ -34,10 +34,6 @@ const config: StorybookConfig = {
       __dirname,
       '../../'
     );
-    config.resolve.alias['@rive-app/react-webgl'] = path.resolve(
-      __dirname,
-      '../../'
-    );
     config.resolve.alias['@rive-app/react-webgl2'] = path.resolve(
       __dirname,
       '../../'

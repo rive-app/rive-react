@@ -1,4 +1,4 @@
-import { Rive } from '@rive-app/canvas';
+import type { Rive } from '@rive-app/canvas';
 
 // Rive instances with a bind already queued this tick. WeakSet so instances
 // coalesce independently and entries free themselves on GC.

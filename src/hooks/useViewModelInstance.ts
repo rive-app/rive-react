@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ViewModel, ViewModelInstance } from '@rive-app/canvas';
+import type { ViewModel, ViewModelInstance } from '@rive-app/canvas';
 import { UseViewModelInstanceParameters } from '../types';
 import { scheduleBind } from '../bindScheduler';
 import { resolveViewModelInstance } from '../resolveViewModelInstance';

@@ -1,4 +1,4 @@
-import { ViewModel, ViewModelInstance } from '@rive-app/canvas';
+import type { ViewModel, ViewModelInstance } from '@rive-app/canvas';
 
 /**
  * Resolves a ViewModelInstance from a ViewModel. Shared by useViewModelInstance

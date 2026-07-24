@@ -3,6 +3,7 @@ import useRive from './hooks/useRive';
 import useStateMachineInput from './hooks/useStateMachineInput';
 import useViewModel from './hooks/useViewModel';
 import useViewModelInstance from './hooks/useViewModelInstance';
+import useGlobalViewModelInstance from './hooks/useGlobalViewModelInstance';
 import useViewModelInstanceNumber from './hooks/useViewModelInstanceNumber';
 import useViewModelInstanceString from './hooks/useViewModelInstanceString';
 import useViewModelInstanceBoolean from './hooks/useViewModelInstanceBoolean';
@@ -23,6 +24,7 @@ export {
   useRiveFile,
   useViewModel,
   useViewModelInstance,
+  useGlobalViewModelInstance,
   useViewModelInstanceNumber,
   useViewModelInstanceString,
   useViewModelInstanceBoolean,

@@ -89,6 +89,21 @@ export type UseViewModelInstanceParameters =
   | { useNew?: boolean; name?: never; useDefault?: never; rive?: Rive | null };
 
 /**
+ * Parameters for useGlobalViewModelInstance. Selects which instance to resolve
+ * from the view model (default when none given); `rive` binds it.
+ *
+ * @property instanceName - Resolve the view model instance with this instance name.
+ * @property useNew - Create a new blank instance of the view model.
+ * @property instance - Register this caller-supplied instance directly. May be null while it loads.
+ * @property rive - Registers the instance as the global and schedules a coalesced
+ * bind. Required for the hook to register/bind anything.
+ */
+export type UseGlobalViewModelInstanceParameters =
+  | { instanceName: string; useNew?: never; instance?: never; rive?: Rive | null }
+  | { useNew?: boolean; instanceName?: never; instance?: never; rive?: Rive | null }
+  | { instance?: ViewModelInstance | null; instanceName?: never; useNew?: never; rive?: Rive | null };
+
+/**
  * Parameters for interacting with trigger properties of a ViewModelInstance
  * @property onTrigger - Callback that runs when the trigger fires
  */

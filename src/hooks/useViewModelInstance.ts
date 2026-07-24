@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ViewModel, ViewModelInstance } from '@rive-app/canvas';
 import { UseViewModelInstanceParameters } from '../types';
+import { scheduleBind } from '../bindScheduler';
+import { resolveViewModelInstance } from '../resolveViewModelInstance';
 
 /**
  * Hook for fetching a ViewModelInstance from a ViewModel.
@@ -26,22 +28,18 @@ export default function useViewModelInstance(
             return;
         }
 
-        let result: ViewModelInstance | null = null;
-
-        if (name != null) {
-            result = viewModel.instanceByName(name) || null;
-        } else if (useDefault) {
-            result = viewModel.defaultInstance?.() || null;
-        } else if (useNew) {
-            result = viewModel.instance?.() || null;
-        } else {
-            result = viewModel.defaultInstance?.() || null;
-        }
+        // useDefault is the implicit default, so it needs no dedicated branch.
+        const result = resolveViewModelInstance(viewModel, { name, useNew });
 
         setInstance(result);
 
         if (rive && result && rive.viewModelInstance !== result) {
-            rive.bindViewModelInstance(result);
+            // Set the main instance (cheap) and schedule a coalesced bind() —
+            // deduped with any other view model hook binding in the same commit,
+            // rather than a full bind() per set. Equivalent to the previous
+            // bindViewModelInstance(result), just batched.
+            rive.setViewModelInstance(result);
+            scheduleBind(rive);
         }
     }, [viewModel, name, useDefault, useNew, rive]);
 

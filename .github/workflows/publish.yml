@@ -13,7 +13,7 @@ on:
 
 permissions:
   id-token: write # Required for OIDC
-  contents: read
+  contents: write
 
 jobs:
   publish_job:
@@ -44,9 +44,15 @@ jobs:
       - if: ${{ inputs.major == true }}
         name: Major Release - Bump version number, update changelog, push and tag
         run: npm run release:major
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{inputs.major == false && inputs.minor == true}}
         name: Minor release - Bump version number, update changelog, push and tag
         run: npm run release:minor
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{inputs.major == false && inputs.minor == false}}
         name: Patch release - Bump version number, update changelog, push and tag
         run: npm run release:patch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

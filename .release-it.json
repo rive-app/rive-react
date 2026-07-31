@@ -11,7 +11,8 @@
   },
   "github": {
     "release": true,
-    "releaseName": "${version}"
+    "releaseName": "${version}",
+    "releaseNotes": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
   },
   "hooks": {
     "after:version:bump": [

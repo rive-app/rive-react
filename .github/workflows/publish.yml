@@ -14,6 +14,7 @@ on:
 permissions:
   id-token: write # Required for OIDC
   contents: write
+  issues: write
 
 jobs:
   publish_job:
@@ -56,3 +57,41 @@ jobs:
         run: npm run release:patch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify packages are available on npm
+        run: |
+          for i in $(seq 1 10); do
+            missing=0
+            for pkg_json in npm/*/package.json; do
+              PKG=$(node -p "require('./${pkg_json}').name")
+              VERSION=$(node -p "require('./${pkg_json}').version")
+              if npm view "$PKG@$VERSION" version > /dev/null 2>&1; then
+                echo "$PKG@$VERSION is live on npm"
+              else
+                echo "$PKG@$VERSION not visible on npm yet"
+                missing=1
+              fi
+            done
+            if [ "$missing" -eq 0 ]; then
+              echo "All packages are live on npm"
+              exit 0
+            fi
+            echo "Retrying in 30s ($i/10)"
+            sleep 30
+          done
+          echo "One or more packages did not appear on npm"
+          exit 1
+
+      - name: File issue on publish failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Publish workflow failed for v${VERSION}" \
+            --body "The publish workflow for \`v${VERSION}\` failed; check if the packages are fully available on npm.
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          cc @zplata"

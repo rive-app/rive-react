@@ -1,4 +1,5 @@
 import type {
+  decodeFont,
   decodeImage,
   Rive,
   RiveFile,
@@ -211,6 +212,16 @@ export type UseViewModelInstanceImageResult = {
    * @param value - The image to set.
    */
   setValue: (value: RiveRenderImage | null) => void;
+};
+
+export type RiveDecodedFont = Awaited<ReturnType<typeof decodeFont>>;
+
+export type UseViewModelInstanceFontResult = {
+  /**
+   * Set the value of the font.
+   * @param value - The decoded font to set (from `decodeFont`), or null to clear.
+   */
+  setValue: (value: RiveDecodedFont | null) => void;
 };
 
 export type UseViewModelInstanceListResult = {

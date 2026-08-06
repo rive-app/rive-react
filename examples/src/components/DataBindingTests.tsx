@@ -11,7 +11,9 @@ import Rive, {
     useViewModelInstanceColor,
     useViewModelInstanceTrigger,
     useViewModelInstanceImage,
+    useViewModelInstanceFont,
     decodeImage,
+    decodeFont,
     ViewModelInstance,
     useViewModelInstanceList,
     useViewModelInstanceArtboard
@@ -609,6 +611,102 @@ export const ImagePropertyTest = ({ src }: { src: string }) => {
             {currentImageUrl && (
                 <div style={{ fontSize: '12px', color: '#666' }}>
                     <span data-testid="current-image-url">Current image: {currentImageUrl}</span>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const FONT_OPTIONS = [
+    {
+        name: 'Noto Serif Thai',
+        url: 'https://raw.githubusercontent.com/google/fonts/main/ofl/notoserifthai/NotoSerifThai%5Bwdth%2Cwght%5D.ttf',
+        testId: 'set-font-noto-thai',
+    },
+    {
+        name: 'Noto Sans Arabic',
+        url: './NotoSansArabic-VariableFont_wdth,wght.ttf',
+        testId: 'set-font-noto-arabic',
+    },
+] as const;
+
+export const FontPropertyTest = ({ src }: { src: string }) => {
+    const [currentFont, setCurrentFont] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { rive, RiveComponent } = useRive({
+        src,
+        stateMachines: 'State Machine 1',
+        autoplay: true,
+        autoBind: true,
+    });
+
+    const { setValue: setFont } = useViewModelInstanceFont(
+        'fontProperty',
+        rive?.viewModelInstance
+    );
+
+    const loadFont = async (name: string, url: string) => {
+        if (!setFont) return;
+
+        setIsLoading(true);
+        try {
+            const response = await fetch(url);
+            const fontBuffer = await response.arrayBuffer();
+            const decodedFont = await decodeFont(new Uint8Array(fontBuffer));
+
+            setFont(decodedFont);
+            setCurrentFont(name);
+
+            decodedFont.unref();
+        } catch (error) {
+            console.error('Failed to load font:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const clearFont = () => {
+        if (setFont) {
+            setFont(null);
+            setCurrentFont('');
+        }
+    };
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+            <div style={{ width: '400px', height: '400px', border: '1px solid #ccc' }}>
+                <RiveComponent />
+            </div>
+
+            {rive === null ? (
+                <div data-testid="loading-text">Loading…</div>
+            ) : (
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {FONT_OPTIONS.map((font) => (
+                        <button
+                            key={font.name}
+                            onClick={() => loadFont(font.name, font.url)}
+                            disabled={isLoading}
+                            data-testid={font.testId}
+                        >
+                            {isLoading ? 'Loading...' : `Set ${font.name}`}
+                        </button>
+                    ))}
+
+                    <button
+                        onClick={clearFont}
+                        disabled={isLoading}
+                        data-testid="clear-font"
+                    >
+                        Clear Font
+                    </button>
+                </div>
+            )}
+
+            {currentFont && (
+                <div style={{ fontSize: '12px', color: '#666' }}>
+                    <span data-testid="current-font">Current font: {currentFont}</span>
                 </div>
             )}
         </div>

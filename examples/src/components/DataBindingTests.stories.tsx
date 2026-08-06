@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect, waitFor, userEvent } from '@storybook/test';
 
-import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest, TodoListTest, ArtboardPropertyTest } from './DataBindingTests';
+import { StringPropertyTest, NumberPropertyTest, BooleanPropertyTest, ColorPropertyTest, EnumPropertyTest, NestedViewModelTest, TriggerPropertyTest, PersonForm, PersonInstances, ImagePropertyTest, FontPropertyTest, TodoListTest, ArtboardPropertyTest } from './DataBindingTests';
 
 const meta: Meta = {
     title: 'Tests/DataBinding',
@@ -383,6 +383,44 @@ export const ImagePropertyStory: StoryObj = {
         // Wait for the new image to load
         await waitFor(() => {
             expect(canvas.getByTestId('current-image-url')).toBeTruthy();
+        }, { timeout: 5000 });
+    }
+};
+
+export const FontPropertyStory: StoryObj = {
+    name: 'Font Property',
+    render: () => <FontPropertyTest src="font_db_test.riv" />,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await waitFor(() => {
+            expect(canvas.getByTestId('set-font-noto-thai')).toBeTruthy();
+            expect(canvas.getByTestId('set-font-noto-arabic')).toBeTruthy();
+            expect(canvas.getByTestId('clear-font')).toBeTruthy();
+        }, { timeout: 3000 });
+
+        expect(canvas.queryByTestId('current-font')).toBeNull();
+
+        await userEvent.click(canvas.getByTestId('set-font-noto-arabic'));
+
+        await waitFor(() => {
+            expect(canvas.getByTestId('current-font').textContent).toBe(
+                'Current font: Noto Sans Arabic'
+            );
+        }, { timeout: 5000 });
+
+        await userEvent.click(canvas.getByTestId('clear-font'));
+
+        await waitFor(() => {
+            expect(canvas.queryByTestId('current-font')).toBeNull();
+        }, { timeout: 2000 });
+
+        await userEvent.click(canvas.getByTestId('set-font-noto-arabic'));
+
+        await waitFor(() => {
+            expect(canvas.getByTestId('current-font').textContent).toBe(
+                'Current font: Noto Sans Arabic'
+            );
         }, { timeout: 5000 });
     }
 };

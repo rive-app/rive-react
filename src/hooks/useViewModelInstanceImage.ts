@@ -8,7 +8,7 @@ import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
  *
  * @param path - Path to the image property (e.g. "profileImage" or "group/avatar")
  * @param viewModelInstance - The ViewModelInstance containing the image property
- * @returns An object with a setter function
+ * @returns An object with a setter function to set a new font value
  */
 export default function useViewModelInstanceImage(
     path: string,

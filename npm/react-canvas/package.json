@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-canvas",
-  "version": "4.30.1",
+  "version": "4.31.0",
   "description": "React wrapper around the @rive-app/canvas library",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",

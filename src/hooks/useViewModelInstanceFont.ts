@@ -8,7 +8,7 @@ import { useViewModelInstanceProperty } from './useViewModelInstanceProperty';
  *
  * @param path - Path to the font property (e.g. "boundFont" or "group/titleFont")
  * @param viewModelInstance - The ViewModelInstance containing the font property
- * @returns An object with a setter function
+ * @returns An object with a setter function to set a new font value
  */
 export default function useViewModelInstanceFont(
     path: string,

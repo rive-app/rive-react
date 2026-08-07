@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   useRive,
@@ -770,26 +770,29 @@ export const FontPropertyTest = ({ src }: { src: string }) => {
     rive?.viewModelInstance
   );
 
-  const loadFont = async (name: string, url: string) => {
-    if (!setHeadingFont) return;
+  const loadFont = useCallback(
+    async (name: string, url: string) => {
+      if (!setHeadingFont) return;
 
-    setIsLoading(true);
-    try {
-      const response = await fetch(url);
-      const fontBuffer = await response.arrayBuffer();
-      const decodedFont = await decodeFont(new Uint8Array(fontBuffer));
+      setIsLoading(true);
+      try {
+        const response = await fetch(url);
+        const fontBuffer = await response.arrayBuffer();
+        const decodedFont = await decodeFont(new Uint8Array(fontBuffer));
 
-      setHeadingFont(decodedFont);
-      setSubheadingFont(decodedFont);
-      setCurrentFont(name);
+        setHeadingFont(decodedFont);
+        setSubheadingFont(decodedFont);
+        setCurrentFont(name);
 
-      decodedFont.unref();
-    } catch (error) {
-      console.error('Failed to load font:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        decodedFont.unref();
+      } catch (error) {
+        console.error('Failed to load font:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setHeadingFont, setSubheadingFont]
+  );
 
   const clearFont = () => {
     if (setHeadingFont) {
@@ -798,6 +801,12 @@ export const FontPropertyTest = ({ src }: { src: string }) => {
       setCurrentFont('');
     }
   };
+
+  useEffect(() => {
+    if (rive) {
+      loadFont(FONT_OPTIONS[0].name, FONT_OPTIONS[0].url);
+    }
+  }, [loadFont, rive]);
 
   return (
     <div

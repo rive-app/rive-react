@@ -21,7 +21,6 @@ const COLOR_PROP = 'backgroundColor';
 const GLOBAL_VM_CURRENCY = 'Labels';
 const CURRENCY_PROP = 'currency';
 
-
 const GlobalViewModelInstance = () => {
   const { rive, RiveComponent } = useRive({
     src: 'global_variables_test.riv',
@@ -29,14 +28,14 @@ const GlobalViewModelInstance = () => {
     autoplay: false,
     autoBind: false,
   });
-  
+
   // Set up the main view model instance if you need a reference to it to change any properties.
   // These two lines are optional here: the global hooks below trigger a bind(), and bind() fills
   // any unset slots (including main) with their default instance — so the default main gets bound
   // either way. (With autoBind:false and no globals, you'd need to set the main yourself.)
   const mainViewModel = useViewModel(rive, { name: 'Main' });
-  useViewModelInstance(mainViewModel, {rive});
-  
+  useViewModelInstance(mainViewModel, { rive });
+
   // Set up global view model instances
   // Note that we don't need to specify every global view model here - only the ones we want to have a reference to
   // to change values on. The other globals will use a default instance.
@@ -47,19 +46,21 @@ const GlobalViewModelInstance = () => {
     { rive }
   );
 
-  const globalCurrencyViewModel = useViewModel(rive, { name: GLOBAL_VM_CURRENCY });
+  const globalCurrencyViewModel = useViewModel(rive, {
+    name: GLOBAL_VM_CURRENCY,
+  });
   const globalCurrencyInstance = useGlobalViewModelInstance(
     globalCurrencyViewModel,
     GLOBAL_VM_CURRENCY,
     { rive }
   );
 
-  const { value: bgColor, setValue: setBgColor } = useViewModelInstanceColor(
+  const { setValue: setBgColor } = useViewModelInstanceColor(
     COLOR_PROP,
     globalColorsInstance
   );
 
-  const { value: currency, setValue: setCurrency } = useViewModelInstanceString(
+  const { setValue: setCurrency } = useViewModelInstanceString(
     CURRENCY_PROP,
     globalCurrencyInstance
   );

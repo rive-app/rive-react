@@ -95,8 +95,9 @@ export default function useResizeCanvas({
   const { maxX, maxY } = artboardBounds ?? {};
 
   const getContainerDimensions = useCallback(() => {
-    const width = containerRef.current?.clientWidth ?? 0;
-    const height = containerRef.current?.clientHeight ?? 0;
+    const boundingBox = containerRef.current?.getBoundingClientRect();
+    const width = Math.ceil(boundingBox?.width ?? 0);
+    const height = Math.ceil(boundingBox?.height ?? 0);
     if (fitCanvasToArtboardHeight && artboardBounds) {
       const { maxY, maxX } = artboardBounds;
       return { width, height: width * (maxY / maxX) };

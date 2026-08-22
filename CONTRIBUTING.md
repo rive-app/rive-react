@@ -23,16 +23,16 @@ npm run dev
 
 We use Storybook to deploy our examples out onto a public-facing page for folks to view and see code examples for. It also serves as the place we'll include any example suites. These story files are stored in `/examples`
 
+To make sure you're using the latest version of the runtime and to see changes made to the Rive React runtime reflected in your storybook, run the following command in a separate terminal window:
+
+```
+npm run dev
+```
+
 To run Storybook, run the following command in the terminal:
 
 ```
 npm run storybook
-```
-
-To see changes made to the Rive React runtime reflected in your storyook, run the following command in a separate terminal window:
-
-```
-npm run dev
 ```
 
 ### Testing

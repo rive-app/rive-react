@@ -5,13 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  useRive,
-  EventType,
-  SemanticMode,
-  Fit,
-  Layout,
-} from '@rive-app/react-canvas';
+import { useRive, SemanticMode, Fit, Layout } from '@rive-app/react-canvas';
 
 /**
  * Testing semantics tree feature in Rive. Enable your accessibility tool to traverse the examples here (i.e. VoiceOver).
@@ -22,10 +16,7 @@ import {
 
 // The example .riv files, copied into examples/public. Each is loaded with the
 // file's default artboard and a state machine named "State Machine 1".
-const RIV_FILES = [
-  'data_binding_lists.riv',
-  'semantic_warning_exp4.riv',
-];
+const RIV_FILES = ['data_binding_lists.riv', 'semantic_warning_exp4.riv'];
 
 type FitValue = 'contain' | 'cover' | 'layout';
 
@@ -233,7 +224,7 @@ const Semantics = () => {
           onDrop={onDrop}
         >
           {source && (
-            <div style={{width: '100%', height: '100%'}}>
+            <div style={{ width: '100%', height: '100%' }}>
               <RiveStage
                 key={loadKey}
                 source={source}

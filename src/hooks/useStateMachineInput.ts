@@ -4,6 +4,11 @@ import { EventType, Rive, StateMachineInput } from '@rive-app/canvas';
 /**
  * Custom hook for fetching a stateMachine input from a rive file.
  *
+ * @deprecated State machine inputs are deprecated and will be removed in a
+ * future major version: please use data binding properties instead. See
+ * {@link https://rive.app/docs/editor/data-binding/migration-guide#state-machine-inputs}
+ * for how to migrate.
+ *
  * @param rive - Rive instance
  * @param stateMachineName - Name of the state machine
  * @param inputName - Name of the input

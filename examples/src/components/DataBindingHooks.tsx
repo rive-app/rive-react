@@ -25,7 +25,7 @@ const CURRENCY_PROP = 'currency';
 const GlobalViewModelInstance = () => {
   const { rive, RiveComponent } = useRive({
     src: 'global_variables_test.riv',
-    stateMachines: 'State Machine 1',
+    stateMachine: 'State Machine 1',
     autoplay: false,
     autoBind: false,
   });

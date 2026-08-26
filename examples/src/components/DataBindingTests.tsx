@@ -26,7 +26,7 @@ export const StringPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { value: name, setValue: setName } = useViewModelInstanceString('name', rive?.viewModelInstance);
@@ -59,7 +59,7 @@ export const NumberPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { value: age, setValue: setAge } = useViewModelInstanceNumber('age', rive?.viewModelInstance);
@@ -93,7 +93,7 @@ export const BooleanPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { value: agreedToTerms, setValue: setAgreedToTerms } = useViewModelInstanceBoolean('agreedToTerms', rive?.viewModelInstance);
@@ -138,7 +138,7 @@ export const ColorPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
 
@@ -191,7 +191,7 @@ export const EnumPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { value: country, setValue: setCountry, values: countries } = useViewModelInstanceEnum('country', rive?.viewModelInstance);
@@ -226,7 +226,7 @@ export const NestedViewModelTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { value: drinkType, setValue: setDrinkType, values: drinkTypes } = useViewModelInstanceEnum('favDrink/type', rive?.viewModelInstance);
@@ -263,7 +263,7 @@ export const TriggerPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         autoBind: true,
         artboard: "Artboard",
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
 
@@ -315,7 +315,7 @@ export const PersonForm = ({ src }: { src: string }) => {
         autoplay: true,
         autoBind: true,
         artboard: "Artboard",
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { value: name, setValue: setName } = useViewModelInstanceString('name', rive?.viewModelInstance);
@@ -469,7 +469,7 @@ export const PersonInstances = ({ src }: { src: string }) => {
         src,
         autoplay: true,
         artboard: "Artboard",
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const viewModel = useViewModel(rive, { name: 'PersonViewModel' });
@@ -537,7 +537,7 @@ export const ImagePropertyTest = ({ src }: { src: string }) => {
     const { rive, RiveComponent } = useRive({
         src,
         artboard: "Artboard",
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
         autoplay: true,
         autoBind: false,
     });
@@ -636,7 +636,7 @@ export const FontPropertyTest = ({ src }: { src: string }) => {
 
     const { rive, RiveComponent } = useRive({
         src,
-        stateMachines: 'State Machine 1',
+        stateMachine: 'State Machine 1',
         autoplay: true,
         autoBind: true,
     });
@@ -767,7 +767,7 @@ export const TodoListTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Artboard",
         autoBind: false,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const viewModel = useViewModel(rive, { name: 'TodoList' });
@@ -896,7 +896,7 @@ export const ArtboardPropertyTest = ({ src }: { src: string }) => {
         autoplay: true,
         artboard: "Main",
         autoBind: true,
-        stateMachines: "State Machine 1",
+        stateMachine: "State Machine 1",
     });
 
     const { setValue: setArtboard1 } = useViewModelInstanceArtboard('artboard_1', rive?.viewModelInstance);

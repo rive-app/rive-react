@@ -37,7 +37,7 @@ const FallbackFonts = () => {
     src: "fallback-fonts-3.riv",
     autoplay: true,
     autoBind: true,
-    stateMachines: "State Machine 1",
+    stateMachine: "State Machine 1",
     layout: new Layout({
       fit: Fit.Contain,
       alignment: Alignment.Center,

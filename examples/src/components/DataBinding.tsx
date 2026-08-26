@@ -16,7 +16,7 @@ const DataBinding = () => {
   const { rive, RiveComponent } = useRive({
     src: 'stocks.riv',
     artboard: 'Main',
-    stateMachines: 'State Machine 1',
+    stateMachine: 'State Machine 1',
     autoplay: true,
     autoBind: false,
   });

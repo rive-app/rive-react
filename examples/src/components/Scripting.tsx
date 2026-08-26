@@ -5,7 +5,7 @@ const ScriptedEffect = () => {
   const { RiveComponent } = useRive({
     src: 'scripted-path-effect.riv',
     artboard: 'Multishape',
-    stateMachines: "State Machine 1",
+    stateMachine: "State Machine 1",
     autoplay: true,
   });
 

@@ -65,7 +65,7 @@ const RiveStage = ({ source, label, fit, scale, onLog }: RiveStageProps) => {
 
   const { rive, RiveComponent } = useRive({
     ...source,
-    stateMachines: 'State Machine 1',
+    stateMachine: 'State Machine 1',
     autoplay: true,
     autoBind: true,
     layout,

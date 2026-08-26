@@ -4,7 +4,7 @@ import { useRive, EventType, RiveEventType } from '@rive-app/react-canvas';
 const Events = () => {
   const { rive, RiveComponent } = useRive({
     src: 'rating.riv',
-    stateMachines: 'State Machine 1',
+    stateMachine: 'State Machine 1',
     autoplay: true,
     automaticallyHandleEvents: true,
   });

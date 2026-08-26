@@ -17,7 +17,7 @@ const CURRENCY_PROP = 'currency';
 const GlobalViewModels = () => {
   const { RiveComponent } = useRive({
     src: 'global_variables_test.riv',
-    stateMachines: 'State Machine 1',
+    stateMachine: 'State Machine 1',
     autoplay: true,
     // set autoBind to false to set up main+global instances before first frame manually
     autoBind: false,

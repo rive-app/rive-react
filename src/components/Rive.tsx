@@ -13,11 +13,25 @@ export interface RiveProps {
    */
   artboard?: string;
   /**
+   * Name of the state machine to play.
+   */
+  stateMachine?: string;
+  /**
    * Specify a starting animation to play.
+   *
+   * @deprecated Use the `stateMachine` prop to play a state machine instead.
+   * Support for starting playback with named animations will be removed in a
+   * future major version. See
+   * {@link https://rive.app/docs/editor/state-machine/state-machine} for more on
+   * setting up state machines in your Rive file.
    */
   animations?: string | string[];
   /**
    * Specify a starting state machine to play.
+   *
+   * @deprecated Use `stateMachine` with a single state machine name instead.
+   * Support for playing multiple state machines at once will be removed in a
+   * future major version.
    */
   stateMachines?: string | string[];
   /**
@@ -46,6 +60,10 @@ export interface RiveProps {
    * This flag is false by default to prevent any unwanted behaviors from taking place.
    * This means any special Rive Event will have to be handled manually by subscribing to
    * EventType.RiveEvent
+   *
+   * @deprecated Rive Events are deprecated and will be removed in a future
+   * major version: please use data binding instead. See
+   * {@link https://rive.app/docs/runtimes/web/rive-events} for how to migrate.
    */
   automaticallyHandleEvents?: boolean;
 }
@@ -53,6 +71,7 @@ export interface RiveProps {
 const Rive = ({
   src,
   artboard,
+  stateMachine,
   animations,
   stateMachines,
   layout,
@@ -66,6 +85,7 @@ const Rive = ({
   const params = {
     src,
     artboard,
+    stateMachine,
     animations,
     layout,
     stateMachines,

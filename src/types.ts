@@ -20,6 +20,18 @@ export type UseRiveOptions = {
   useDevicePixelRatio: boolean;
   customDevicePixelRatio: number;
   fitCanvasToArtboardHeight: boolean;
+  /**
+   * For `@rive-app/react-webgl2`, share one WebGL context across every canvas
+   * on the page instead of giving this canvas its own.
+   *
+   * **We recommend leaving this unset**, which picks the right value for you:
+   * - `true` normally, so multiple Rive graphics on a page share one context.
+   * - `false` when `enableGPUCanvas` is on, because GPU Canvas needs a context
+   *   of its own for each `<canvas>`.
+   *
+   * Setting it explicitly always wins. Setting it to `true` alongside
+   * `enableGPUCanvas` means GPU Canvas content will not draw.
+   */
   useOffscreenRenderer: boolean;
   shouldResizeCanvasToContainer: boolean;
   shouldUseIntersectionObserver?: boolean;

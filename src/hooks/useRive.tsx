@@ -10,7 +10,7 @@ import { Rive, EventType, Fit } from '@rive-app/canvas';
 import { UseRiveParameters, UseRiveOptions, RiveState } from '../types';
 import useResizeCanvas from './useResizeCanvas';
 import useDevicePixelRatio from './useDevicePixelRatio';
-import { getOptions } from '../utils';
+import { defaultOptions, getOptions, safeCleanup } from '../utils';
 import useIntersectionObserver from './useIntersectionObserver';
 
 type RiveComponentProps = {
@@ -76,6 +76,46 @@ export default function useRive(
   const isParamsLoaded = Boolean(riveParams);
   const options = getOptions(opts);
 
+  /**
+   * GPU Canvas records into a deferred session bound to ONE canvas. The
+   * offscreen renderer is the opposite: it shares a single GL context across
+   * every `<canvas>` on the page. Hand the JS runtime both and it warns, re-imports the file in
+   * immediate mode, and GPU Canvas content silently never draws.
+   *
+   * The JS runtime's own default for `useOffscreenRenderer` is `false`; the `true`
+   * is React runtime's (see `defaultOptions`). So opting into GPU Canvas only has
+   * to unwind React's default — an explicit value from the caller still wins, and
+   * still loses GPU Canvas, which the effect below warns about.
+   */
+  const explicitOffscreenRenderer =
+    riveParams?.useOffscreenRenderer ?? opts.useOffscreenRenderer;
+
+  // A file's rendering mode is fixed at import and wins over the instance's own
+  // flag, so a `riveFile` built with `enableGPUCanvas: true` needs a
+  // non-offscreen renderer even when `useRive` was never told about it.
+  // `deferredRequested` is marked `@internal` on the runtime's RiveFile.
+  const wantsGPUCanvas =
+    Boolean(riveParams?.enableGPUCanvas) ||
+    Boolean(riveParams?.riveFile?.deferredRequested);
+
+  const useOffscreenRenderer =
+    explicitOffscreenRenderer ??
+    (wantsGPUCanvas ? false : defaultOptions.useOffscreenRenderer);
+
+  // The runtime warns about this too, but from where it sits it cannot say that
+  // a hook option is what turned the offscreen renderer on.
+  useEffect(() => {
+    if (wantsGPUCanvas && useOffscreenRenderer) {
+      console.warn(
+        '[Rive] `enableGPUCanvas` and `useOffscreenRenderer` cannot both be on. ' +
+          'A GPU Canvas session records for a single <canvas>, while the offscreen ' +
+          'renderer shares one context across every <canvas> on the page. This ' +
+          'instance falls back to immediate rendering and GPU Canvas content will ' +
+          'not draw — drop the explicit `useOffscreenRenderer: true` to use it.'
+      );
+    }
+  }, [wantsGPUCanvas, useOffscreenRenderer]);
+
   const devicePixelRatio = useDevicePixelRatio();
 
   /**
@@ -130,15 +170,16 @@ export default function useRive(
     let isLoaded = rive != null;
     let r: Rive | null;
     if (rive == null) {
-      const { useOffscreenRenderer } = options;
       const { onRiveReady, ...restRiveParams } = riveParams;
       r = new Rive({
-        useOffscreenRenderer,
         ...restRiveParams,
+        useOffscreenRenderer,
         canvas: canvasElem,
       });
       if (riveRef.current != null) {
-        riveRef.current!.cleanup();
+        safeCleanup('replacing a previous instance', () =>
+          riveRef.current!.cleanup()
+        );
       }
       riveRef.current = r;
       r.on(EventType.Load, () => {
@@ -154,13 +195,13 @@ export default function useRive(
           setRive(r);
         } else {
           // If unmounted, cleanup the rive object immediately
-          r!.cleanup();
+          safeCleanup('unmounted before load', () => r!.cleanup());
         }
       });
     }
     return () => {
       if (!isLoaded) {
-        r?.cleanup();
+        safeCleanup('teardown before load', () => r?.cleanup());
       }
     };
   }, [canvasElem, isParamsLoaded, rive]);
@@ -242,7 +283,8 @@ export default function useRive(
   useEffect(() => {
     return () => {
       if (rive) {
-        rive.cleanup();
+        // setRive(null) runs either way — a half-destroyed instance is unusable.
+        safeCleanup('unmount', () => rive.cleanup());
         setRive(null);
       }
     };
@@ -251,7 +293,7 @@ export default function useRive(
   useEffect(() => {
     return () => {
       if (riveRef.current != null) {
-        riveRef.current!.cleanup();
+        safeCleanup('final unmount', () => riveRef.current!.cleanup());
       }
     };
   }, []);

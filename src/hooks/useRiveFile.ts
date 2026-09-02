@@ -5,6 +5,7 @@ import type {
   FileStatus,
 } from '../types';
 import { EventType, RiveFile } from '@rive-app/canvas';
+import { safeCleanup } from '../utils';
 
 /**
  * Custom hook for initializing and managing a RiveFile instance within a component.
@@ -47,9 +48,12 @@ function useRiveFile(params: UseRiveFileParameters): RiveFileState {
     loadRiveFile();
 
     return () => {
-      file?.cleanup();
+      safeCleanup('RiveFile unmount', () => file?.cleanup());
     };
-  }, [params.src, params.buffer]);
+    // `enableGPUCanvas` is in here because a file's rendering mode is fixed at
+    // import and has no setter — toggling it has to re-import, or it is a
+    // silent no-op.
+  }, [params.src, params.buffer, params.enableGPUCanvas]);
 
   return { riveFile, status };
 }

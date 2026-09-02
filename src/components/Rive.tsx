@@ -39,9 +39,33 @@ export interface RiveProps {
    */
   layout?: Layout;
   /**
-   * For `@rive-app/react-webgl2`, sets this property to maintain a single WebGL context for multiple canvases. **We recommend to keep the default value** when rendering multiple Rive instances on a page.
+   * For `@rive-app/react-webgl2`, share one WebGL context across every canvas
+   * on the page instead of giving this canvas its own.
+   *
+   * **We recommend leaving this unset**, which picks the right value for you:
+   * - `true` normally, so multiple Rive graphics on a page share one context.
+   * - `false` when `enableGPUCanvas` is on, because GPU Canvas needs a context
+   *   of its own for each `<canvas>`.
+   *
+   * Setting it explicitly always wins. Setting it to `true` alongside
+   * `enableGPUCanvas` means GPU Canvas content will not draw.
    */
   useOffscreenRenderer?: boolean;
+  /**
+   * @experimental This API is early and may encounter breaking behavior change without a major version bump
+   *
+   * Render GPU Canvas content, which draws through the runtime's deferred
+   * renderer. False by default.
+   *
+   * IMPORTANT: Turning this on makes `useOffscreenRenderer` default to `false` for this
+   * component if it was not specified, since a GPU Canvas session records for a single `<canvas>` context. Highly recommended to
+   * only set `true` on this property for graphics that use GPU Canvas content, and leave
+   * `enableGPUCanvas` unset, or set to `false` for other graphics on the page.
+   *
+   * Each of these takes its own WebGL context, and browsers cap how many a page may
+   * have (the limit varies by browser), so enabling it on too many at once can throw.
+   */
+  enableGPUCanvas?: boolean;
   /**
    * Specify whether to disable Rive listeners on the canvas, thus preventing any event listeners to be attached to the canvas element
    */
@@ -75,7 +99,11 @@ const Rive = ({
   animations,
   stateMachines,
   layout,
-  useOffscreenRenderer = true,
+  // No default: useRive treats a defined value as an explicit choice, and GPU
+  // Canvas has to be able to bend the default. Left out of `options` below when
+  // undefined, it falls through to defaultOptions — which will still be `true`.
+  useOffscreenRenderer,
+  enableGPUCanvas,
   shouldDisableRiveListeners = false,
   shouldResizeCanvasToContainer = true,
   automaticallyHandleEvents = false,
@@ -92,11 +120,12 @@ const Rive = ({
     autoplay: true,
     shouldDisableRiveListeners,
     automaticallyHandleEvents,
+    enableGPUCanvas,
   };
 
   const options = {
-    useOffscreenRenderer,
     shouldResizeCanvasToContainer,
+    ...(useOffscreenRenderer !== undefined && { useOffscreenRenderer }),
   };
 
   const { RiveComponent } = useRive(params, options);

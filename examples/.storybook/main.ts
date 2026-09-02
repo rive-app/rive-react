@@ -49,8 +49,7 @@ const config: StorybookConfig = {
      *
      * webgl2 because the GPU Canvas stories need it — their .riv files are
      * shader-driven and canvas2d has no shader stage, so those canvases render
-     * blank on canvas2d while still reporting deferred (see gpuCanvasShared.ts).
-     * Every other story renders the same on either backend.
+     * blank on canvas2d
      *
      * To check something against canvas2d, drop this alias rather than adding a
      * flag — it is one line, and a half-configured backend is worse than an

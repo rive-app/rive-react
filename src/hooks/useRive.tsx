@@ -107,7 +107,7 @@ export default function useRive(
   useEffect(() => {
     if (wantsGPUCanvas && useOffscreenRenderer) {
       console.warn(
-        '[Rive] `enableGPUCanvas` and `useOffscreenRenderer` cannot both be on. ' +
+        '[Rive] GPU Canvas and `useOffscreenRenderer` cannot both be on. ' +
           'A GPU Canvas session records for a single <canvas>, while the offscreen ' +
           'renderer shares one context across every <canvas> on the page. This ' +
           'instance falls back to immediate rendering and GPU Canvas content will ' +

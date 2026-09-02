@@ -22,11 +22,9 @@ export function getOptions(opts: Partial<UseRiveOptions>) {
 /**
  * Runs a Rive teardown call without letting it escape into React.
  *
- * `cleanup()` always runs from an effect cleanup, so a throw is routed to the
- * nearest error boundary — or unmounts the whole root if there isn't one.
- * Swallowing is safe here: nothing runs after cleanup, so the worst case is a
- * leaked GPU resource on a page that is going away. Warns in every build
- * because these throws are GPU/driver dependent and surface in the field.
+ * Teardown can also run while replacing an instance, so a failure may leak
+ * GPU resources while the page remains active. Warn in every build because
+ * these throws are GPU/driver dependent and surface in the field.
  */
 export function safeCleanup(label: string, cleanup: () => void) {
   try {

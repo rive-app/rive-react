@@ -69,6 +69,7 @@ export default function useRive(
 ): RiveState {
   const [canvasElem, setCanvasElem] = useState<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const riveRef = useRef<Rive | null>(null);
 
   const [rive, setRive] = useState<Rive | null>(null);
@@ -153,11 +154,17 @@ export default function useRive(
    */
   const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
     (canvas: HTMLCanvasElement | null) => {
-      if (canvas === null && canvasElem) {
-        canvasElem.height = 0;
-        canvasElem.width = 0;
+      // Safari releases a canvas' backing store when the element is
+      // collected, which can lag well behind unmount. Zeroing the dimensions
+      // frees it synchronously. Read the previous canvas from a ref, because
+      // canvasElem is never updated in this callback
+      const previousCanvas = canvasRef.current;
+      if (canvas === null && previousCanvas) {
+        previousCanvas.height = 0;
+        previousCanvas.width = 0;
       }
 
+      canvasRef.current = canvas;
       setCanvasElem(canvas);
     },
     []
@@ -264,6 +271,7 @@ export default function useRive(
       observe(canvasElem, onChange);
     }
     return () => {
+      clearTimeout(timeoutId);
       if (canvasElem) {
         unobserve(canvasElem);
       }

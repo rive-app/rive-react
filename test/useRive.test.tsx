@@ -431,6 +431,60 @@ describe('useRive', () => {
     expect(container.firstChild).not.toHaveStyle('width: 50%');
   });
 
+  it('releases the canvas backing store when the component unmounts', async () => {
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    let captured: HTMLCanvasElement | null = null;
+    function Harness() {
+      const { RiveComponent, canvas } = useRive({ src: 'file-src' });
+      React.useEffect(() => {
+        if (canvas) captured = canvas;
+      }, [canvas]);
+      return <RiveComponent />;
+    }
+
+    const { unmount } = render(<Harness />);
+    await waitFor(() => expect(captured).not.toBeNull());
+
+    await act(async () => {
+      captured!.width = 800;
+      captured!.height = 600;
+      controlledRiveloadCb();
+    });
+    expect(captured!.width).toBe(800);
+    expect(captured!.height).toBe(600);
+
+    unmount();
+
+    expect(captured!.width).toBe(0);
+    expect(captured!.height).toBe(0);
+  });
+
+  it('keeps setCanvasRef referentially stable across renders', async () => {
+    const params = { src: 'file-src' };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const { result } = renderHook(() => useRive(params));
+    const initialSetCanvasRef = result.current.setCanvasRef;
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+    });
+    await waitFor(() => expect(result.current.canvas).toBe(canvasSpy));
+    expect(result.current.setCanvasRef).toBe(initialSetCanvasRef);
+
+    // Loading sets `rive` state, re-rendering the hook.
+    await act(async () => {
+      controlledRiveloadCb();
+    });
+    await waitFor(() => expect(result.current.rive).not.toBeNull());
+    expect(result.current.setCanvasRef).toBe(initialSetCanvasRef);
+  });
+
   it('has a canvas size of 0 by default', async () => {
     const params = {
       src: 'file-src',

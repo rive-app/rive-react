@@ -159,12 +159,20 @@ export default function useRive(
       // frees it synchronously. Read the previous canvas from a ref, because
       // canvasElem is never updated in this callback
       const previousCanvas = canvasRef.current;
+      canvasRef.current = canvas;
+
       if (canvas === null && previousCanvas) {
-        previousCanvas.height = 0;
-        previousCanvas.width = 0;
+        // A null ref is not always an unmount. React detaches and re-attaches
+        // the same element when it re-runs a mount on strict mode -- so
+        // defer and release only if this element did not come back.
+        queueMicrotask(() => {
+          if (canvasRef.current !== previousCanvas) {
+            previousCanvas.height = 0;
+            previousCanvas.width = 0;
+          }
+        });
       }
 
-      canvasRef.current = canvas;
       setCanvasElem(canvas);
     },
     []

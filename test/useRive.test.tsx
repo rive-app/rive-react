@@ -455,10 +455,43 @@ describe('useRive', () => {
     expect(captured!.width).toBe(800);
     expect(captured!.height).toBe(600);
 
-    unmount();
+    // The release is deferred a microtask so a ref detach that is immediately
+    // followed by a re-attach (StrictMode) does not zero a live canvas.
+    await act(async () => {
+      unmount();
+    });
 
     expect(captured!.width).toBe(0);
     expect(captured!.height).toBe(0);
+  });
+
+  it('does not release the backing store when the ref is re-attached immediately', async () => {
+    // React re-runs a mount by detaching the ref and immediately re-attaching
+    // the identical element; StrictMode does this on every mount under React 19.
+    const params = { src: 'file-src' };
+
+    // @ts-ignore
+    mocked(rive.Rive).mockImplementation(() => baseRiveMock);
+
+    const canvasSpy = document.createElement('canvas');
+    const { result } = renderHook(() => useRive(params));
+
+    await act(async () => {
+      result.current.setCanvasRef(canvasSpy);
+    });
+    await waitFor(() => expect(result.current.canvas).toBe(canvasSpy));
+
+    canvasSpy.width = 800;
+    canvasSpy.height = 600;
+
+    await act(async () => {
+      result.current.setCanvasRef(null);
+      result.current.setCanvasRef(canvasSpy);
+      await Promise.resolve();
+    });
+
+    expect(canvasSpy.width).toBe(800);
+    expect(canvasSpy.height).toBe(600);
   });
 
   it('keeps setCanvasRef referentially stable across renders', async () => {

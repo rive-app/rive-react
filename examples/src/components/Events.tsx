@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { useRive, EventType, RiveEventType } from '@rive-app/react-canvas';
+import { Rive, useRive, EventType, RiveEventType } from '@rive-app/react-canvas';
 
 const Events = () => {
+  Rive.suppressDeprecationWarnings = ['rive-events'];
   const { rive, RiveComponent } = useRive({
     src: 'rating.riv',
     stateMachine: 'State Machine 1',

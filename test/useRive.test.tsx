@@ -429,6 +429,7 @@ describe('useRive', () => {
       <RiveTestComponent className="rive-test-clas" style={{ width: '50%' }} />
     );
     expect(container.firstChild).not.toHaveStyle('width: 50%');
+    expect(container.firstChild).not.toHaveStyle('overflow: hidden');
   });
 
   it('releases the canvas backing store when the component unmounts', async () => {
@@ -542,6 +543,7 @@ describe('useRive', () => {
     const { RiveComponent: RiveTestComponent } = result.current;
     const { container } = render(<RiveTestComponent />);
     expect(container.querySelector('canvas')).toHaveStyle('width: 0');
+    expect(container.firstChild).toHaveStyle('overflow: hidden');
   });
 
   it('sets the canvas width and height after calculating the container size', async () => {

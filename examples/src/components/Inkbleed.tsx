@@ -18,17 +18,17 @@ interface CardProps {
 
 const Card = ({ title, expectInkbleed, params, opts }: CardProps) => {
   const { rive, RiveComponent } = useRive(params, opts);
-  // rive.inkbleed isn't React state, so re-render after toggling it.
-  const [, rerender] = useState(0);
+  // What this card currently asks for; the Toggle button flips it.
+  const [expected, setExpected] = useState(expectInkbleed);
 
   let label = 'loading…';
   let color: string = COLORS.textMuted;
 
   if (rive) {
     const on = rive.inkbleed;
-    const ok = on === expectInkbleed;
+    const ok = on === expected;
     label = `inkbleed ${on ? 'on' : 'off'} ${
-      ok ? '✓' : `✗ expected ${expectInkbleed ? 'on' : 'off'}`
+      ok ? '✓' : `✗ expected ${expected ? 'on' : 'off'}`
     }`;
     color = ok ? COLORS.pass : COLORS.fail;
   }
@@ -49,8 +49,9 @@ const Card = ({ title, expectInkbleed, params, opts }: CardProps) => {
             disabled={!rive}
             onClick={() => {
               if (!rive) return;
-              rive.inkbleed = !rive.inkbleed;
-              rerender((n) => n + 1);
+              const next = !expected;
+              rive.inkbleed = next;
+              setExpected(next);
             }}
           >
             Toggle

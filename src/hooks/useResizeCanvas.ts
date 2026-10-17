@@ -1,4 +1,10 @@
-import { useEffect, useState, MutableRefObject, useCallback } from 'react';
+import {
+  useEffect,
+  useState,
+  MutableRefObject,
+  useCallback,
+  useRef,
+} from 'react';
 import { Bounds } from '@rive-app/canvas';
 import { Dimensions, UseRiveOptions } from '../types';
 import useDevicePixelRatio from './useDevicePixelRatio';
@@ -62,13 +68,11 @@ export default function useResizeCanvas({
   artboardBounds,
 }: UseResizeCanvasProps) {
   const presetOptions = getOptions(options);
-  const [
-    { height: lastContainerHeight, width: lastContainerWidth },
-    setLastContainerDimensions,
-  ] = useState<Dimensions>({
+  const lastContainerDimensions = useRef<Dimensions>({
     height: 0,
     width: 0,
   });
+
   const [
     { height: lastCanvasHeight, width: lastCanvasWidth },
     setLastCanvasSize,
@@ -119,6 +123,10 @@ export default function useResizeCanvas({
     }
 
     const { width, height } = getContainerDimensions();
+
+    const { height: lastContainerHeight, width: lastContainerWidth } =
+      lastContainerDimensions.current;
+
     let hasResized = false;
     if (canvasElem) {
       // Check if the canvas parent container bounds have changed and set
@@ -157,7 +165,8 @@ export default function useResizeCanvas({
         });
         hasResized = true;
       }
-      setLastContainerDimensions({ width, height });
+
+      lastContainerDimensions.current = { width, height };
     }
 
     // Callback to perform any Rive-related actions after resizing the canvas
@@ -176,8 +185,6 @@ export default function useResizeCanvas({
     setIsFirstSizing,
     lastCanvasHeight,
     lastCanvasWidth,
-    lastContainerHeight,
-    lastContainerWidth,
     onCanvasHasResized,
     shouldResizeCanvasToContainer,
     fitCanvasToArtboardHeight,

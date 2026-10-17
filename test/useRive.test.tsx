@@ -3,6 +3,7 @@ import { mocked } from 'jest-mock';
 import { renderHook, act, render, waitFor } from '@testing-library/react';
 
 import useRive from '../src/hooks/useRive';
+import useResizeCanvas from '../src/hooks/useResizeCanvas';
 import * as rive from '@rive-app/canvas';
 import { UseRiveOptions, UseRiveParameters } from '../src/types';
 
@@ -655,6 +656,56 @@ describe('useRive', () => {
 
     expect(canvasSpy.width).toBe(200);
     expect(canvasSpy.height).toBe(200);
+  });
+
+  it('does not cause infinite re-renders when onCanvasHasResized changes on every render', () => {
+    // When DPR changes, useRive recreates onCanvasHasResized via useCallback([rive, devicePixelRatio]).
+    // useResizeCanvas includes onCanvasHasResized in its effect deps.
+    //
+    // OLD code bug: setLastContainerDimensions (useState) was called unconditionally on every
+    // effect run, even when container dimensions had not changed. Combined with an unstable
+    // onCanvasHasResized reference, this produced an infinite loop:
+    //   effect → setState(new obj) → re-render → new onCanvasHasResized → effect → setState → ...
+    //
+    // FIX: lastContainerDimensions is now a useRef. Mutating ref.current does not trigger
+    // a re-render, so the loop cannot form regardless of how often onCanvasHasResized changes.
+
+    global.devicePixelRatio = 2;
+
+    const canvasSpy = document.createElement('canvas');
+    const containerRef = { current: document.createElement('div') };
+    jest.spyOn(containerRef.current, 'clientWidth', 'get').mockReturnValue(100);
+    jest.spyOn(containerRef.current, 'clientHeight', 'get').mockReturnValue(100);
+
+    // Guard: throw explicitly if the hook re-renders more than expected.
+    // Without this, an infinite loop in React 18 (concurrent scheduler) would
+    // cause the test process to hang rather than throw.
+    const MAX_RENDERS = 10;
+    let renderCount = 0;
+
+    // A new arrow function on every render — no useCallback — simulates an unstable
+    // onCanvasHasResized after a DPR change (useRive recreates it with new devicePixelRatio
+    // in the closure). With the old useState-based code this caused an infinite re-render
+    // loop; with the fix (useRef) the hook stabilises in ≤ MAX_RENDERS renders.
+    renderHook(() => {
+      renderCount += 1;
+      if (renderCount > MAX_RENDERS) {
+        throw new Error(
+          `Infinite re-render loop detected: hook re-rendered ${renderCount} times. ` +
+            'lastContainerDimensions must be stored in a ref, not state.'
+        );
+      }
+      return useResizeCanvas({
+        riveLoaded: true,
+        canvasElem: canvasSpy,
+        containerRef,
+        onCanvasHasResized: () => {},
+      });
+    });
+
+    expect(canvasSpy).toHaveAttribute('width', '200');
+    expect(canvasSpy).toHaveAttribute('height', '200');
+    expect(canvasSpy).toHaveAttribute('style', 'width: 100px; height: 100px;');
   });
 });
 

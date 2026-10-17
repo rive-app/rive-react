@@ -46,9 +46,12 @@ export interface RiveProps {
    * - `true` normally, so multiple Rive graphics on a page share one context.
    * - `false` when `enableGPUCanvas` is on, because GPU Canvas needs a context
    *   of its own for each `<canvas>`.
+   * - `false` when `enableInkbleed` is on, because inkbleed needs a context of
+   *   its own for each `<canvas>`.
    *
    * Setting it explicitly always wins. Setting it to `true` alongside
-   * `enableGPUCanvas` means GPU Canvas content will not draw.
+   * `enableGPUCanvas` means GPU Canvas content will not draw, and alongside
+   * `enableInkbleed` means inkbleed stays off.
    */
   useOffscreenRenderer?: boolean;
   /**
@@ -66,6 +69,18 @@ export interface RiveProps {
    * have (the limit varies by browser), so enabling it on too many at once can throw.
    */
   enableGPUCanvas?: boolean;
+  /**
+   * @experimental (WebGL2 only) Renders with inkbleed antialiasing instead
+   * of MSAA. Fills that don't use the clockwise fill rule are converted to clockwise on a
+   * best-effort basis. False by default.
+   *
+   * IMPORTANT: Turning this on makes `useOffscreenRenderer` default to `false` for this
+   * component if it was not specified, since inkbleed needs a WebGL context of its own.
+   * 
+   * Each of these takes its own WebGL context, and browsers cap how many a page may
+   * have (the limit varies by browser), so enabling it on too many at once can throw.
+   */
+  enableInkbleed?: boolean;
   /**
    * Specify whether to disable Rive listeners on the canvas, thus preventing any event listeners to be attached to the canvas element
    */
@@ -104,6 +119,7 @@ const Rive = ({
   // undefined, it falls through to defaultOptions — which will still be `true`.
   useOffscreenRenderer,
   enableGPUCanvas,
+  enableInkbleed,
   shouldDisableRiveListeners = false,
   shouldResizeCanvasToContainer = true,
   automaticallyHandleEvents = false,
@@ -121,6 +137,7 @@ const Rive = ({
     shouldDisableRiveListeners,
     automaticallyHandleEvents,
     enableGPUCanvas,
+    enableInkbleed,
   };
 
   const options = {

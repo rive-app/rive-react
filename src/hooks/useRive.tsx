@@ -87,6 +87,9 @@ export default function useRive(
    * is React runtime's (see `defaultOptions`). So opting into GPU Canvas only has
    * to unwind React's default — an explicit value from the caller still wins, and
    * still loses GPU Canvas, which the effect below warns about.
+   *
+   * Inkbleed is the same: it needs the canvas's own context, created with
+   * depth/stencil and without MSAA, which the shared offscreen context isn't.
    */
   const explicitOffscreenRenderer =
     riveParams?.useOffscreenRenderer ?? opts.useOffscreenRenderer;
@@ -99,9 +102,13 @@ export default function useRive(
     Boolean(riveParams?.enableGPUCanvas) ||
     Boolean(riveParams?.riveFile?.deferredRequested);
 
+  const wantsInkbleed = Boolean(riveParams?.enableInkbleed);
+
   const useOffscreenRenderer =
     explicitOffscreenRenderer ??
-    (wantsGPUCanvas ? false : defaultOptions.useOffscreenRenderer);
+    (wantsGPUCanvas || wantsInkbleed
+      ? false
+      : defaultOptions.useOffscreenRenderer);
 
   // The runtime warns about this too, but from where it sits it cannot say that
   // a hook option is what turned the offscreen renderer on.
@@ -116,6 +123,18 @@ export default function useRive(
       );
     }
   }, [wantsGPUCanvas, useOffscreenRenderer]);
+
+  useEffect(() => {
+    if (wantsInkbleed && useOffscreenRenderer) {
+      console.warn(
+        '[Rive] `enableInkbleed` and `useOffscreenRenderer` cannot both be on. ' +
+          'Inkbleed needs a WebGL context of its own, while the offscreen renderer ' +
+          'shares one context across every <canvas> on the page. This instance ' +
+          'renders without inkbleed — drop the explicit `useOffscreenRenderer: true` ' +
+          'to use it.'
+      );
+    }
+  }, [wantsInkbleed, useOffscreenRenderer]);
 
   const devicePixelRatio = useDevicePixelRatio();
 

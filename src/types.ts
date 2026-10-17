@@ -28,9 +28,12 @@ export type UseRiveOptions = {
    * - `true` normally, so multiple Rive graphics on a page share one context.
    * - `false` when `enableGPUCanvas` is on, because GPU Canvas needs a context
    *   of its own for each `<canvas>`.
+   * - `false` when `enableInkbleed` is on, because inkbleed needs a context of
+   *   its own for each `<canvas>`.
    *
    * Setting it explicitly always wins. Setting it to `true` alongside
-   * `enableGPUCanvas` means GPU Canvas content will not draw.
+   * `enableGPUCanvas` means GPU Canvas content will not draw, and alongside
+   * `enableInkbleed` means inkbleed stays off.
    */
   useOffscreenRenderer: boolean;
   shouldResizeCanvasToContainer: boolean;

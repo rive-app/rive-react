@@ -46,7 +46,7 @@ Paste this into Claude Code, Codex, Cursor, or any agent that runs commands on y
 Install the Rive CLI from rive.app/cli. Build an interactive hero as a Rive file and add it to my React app with the Rive React runtime.
 ```
 
-Your agent installs the [Rive CLI](https://rive.app/agents), writes the scene, and opens a preview window that rebuilds every time it saves. Keep giving it notes, or open the same file in the [Rive Editor](https://editor.rive.app/) and shape it by hand. Trying it needs no account. Writing the `.riv` that ships in your app needs a free Rive account. See [Getting started with the Rive CLI](https://rive.app/docs/cli/getting-started).
+Your agent installs the [Rive CLI](https://rive.app/agents), writes the scene, and opens a preview window that rebuilds every time it saves. Keep giving it notes, or open the same file in the [Rive Editor](https://editor.rive.app/) and shape it by hand. Trying it needs no account. Writing the `.riv` that ships in your app needs a free Rive account. Free exports play a short Rive splash screen; [paid plans](https://rive.app/pricing) export without it. See [Getting started with the Rive CLI](https://rive.app/docs/cli/getting-started).
 
 ## Getting started
 

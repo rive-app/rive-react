@@ -6,7 +6,7 @@
 
 ![Rive hero image](https://cdn.rive.app/rive_logo_dark_bg.png)
 
-[Rive](https://rive.app) combines an interactive design tool, a new stateful graphics format, a lightweight multi-platform runtime, and a blazing-fast vector renderer. This end-to-end pipeline guarantees that what you build in the Rive Editor is exactly what ships in your apps, games, and websites.
+Rive React is the React runtime for [Rive](https://rive.app).
 
 This library is a wrapper around the [JS/Wasm runtime](https://github.com/rive-app/rive-wasm), giving full control over the JS/Wasm runtime while providing components and hooks for React applications.
 
@@ -20,6 +20,7 @@ For more information, check out the following resources:
 ## Table of contents
 
 - :star: [Rive Overview](#rive-overview)
+- 🤖 [Build with your agent](#build-with-your-agent)
 - 🚀 [Getting Started & API docs](#getting-started)
 - :mag: [Supported Versions](#supported-versions)
 - :books: [Examples](#examples)
@@ -29,13 +30,23 @@ For more information, check out the following resources:
 
 ## Rive overview
 
-[Rive](https://rive.app) is a real-time interactive design and animation tool that helps teams create and run interactive animations anywhere. Designers and developers use our collaborative editor to create motion graphics that respond to different states and user inputs. Our lightweight open-source runtime libraries allow them to load their animations into apps, games, and websites.
+[Rive](https://rive.app) is an agent-native 2D and 3D engine for games, apps, and interactive UI. Use it as your whole engine, or add it to the products you already have. Build with your coding agent through the [Rive CLI](https://rive.app/agents), or draw, rig, and animate by hand with the professional design and animation tools in the [Rive Editor](https://rive.app/editor). Both work on the same files. The open-source runtimes play those files (`.riv`) natively on web, mobile, desktop, game engines, consoles, smart TVs, and cars, with no royalties or runtime fees.
 
 :house_with_garden: [Homepage](https://rive.app/)
 
 :blue_book: [General help docs](https://rive.app/community/doc/)
 
 🛠 [Rive Forums](https://rive.app/community/forums/home)
+
+## Build with your agent
+
+Paste this into Claude Code, Codex, Cursor, or any agent that runs commands on your computer:
+
+```text
+Install the Rive CLI from rive.app/cli. Build an interactive hero as a Rive file and add it to my React app with the Rive React runtime.
+```
+
+Your agent installs the [Rive CLI](https://rive.app/agents), writes the scene, and opens a preview window that rebuilds every time it saves. Keep giving it notes, or open the same file in the [Rive Editor](https://editor.rive.app/) and shape it by hand. Trying it needs no account. Writing the `.riv` that ships in your app needs a free Rive account. See [Getting started with the Rive CLI](https://rive.app/docs/cli/getting-started).
 
 ## Getting started
 

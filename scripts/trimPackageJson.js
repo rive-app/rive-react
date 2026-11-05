@@ -7,7 +7,16 @@ const package = require(path + '/package.json');
 
 function trimNpmPackage() {
   package.name = `@rive-app/react-${renderer}`;
-  package.description = `React wrapper around the @rive-app/${renderer} library`;
+  package.description = `React runtime for Rive, using @rive-app/${renderer}. Rive is an agent-native 2D and 3D engine for games, apps, and interactive UI.`;
+  package.keywords = [
+    'rive',
+    'react',
+    'animation',
+    'interactive',
+    'ui',
+    'game-engine',
+    'graphics',
+  ];
   const webDependencyName = `@rive-app/${renderer}`;
   const canvasDep = package.dependencies[webDependencyName];
   package.dependencies = {

@@ -1,7 +1,8 @@
 {
   "name": "@rive-app/react-webgl2",
   "version": "4.38.1",
-  "description": "React wrapper around the @rive-app/webgl2 library",
+  "description": "React runtime for Rive, using @rive-app/webgl2. Rive is an agent-native 2D and 3D engine for games, apps, and interactive UI.",
+  "keywords": ["rive", "react", "animation", "interactive", "ui", "game-engine", "graphics"],
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "files": [

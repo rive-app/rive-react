@@ -1,7 +1,8 @@
 {
   "name": "@rive-app/react-canvas",
   "version": "4.38.1",
-  "description": "React wrapper around the @rive-app/canvas library",
+  "description": "React runtime for Rive, using @rive-app/canvas. Rive is an agent-native 2D and 3D engine for games, apps, and interactive UI.",
+  "keywords": ["rive", "react", "animation", "interactive", "ui", "game-engine", "graphics"],
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "files": [

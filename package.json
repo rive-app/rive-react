@@ -1,7 +1,7 @@
 {
   "name": "rive-react",
   "version": "4.38.1",
-  "description": "React wrapper around the rive-js library",
+  "description": "React runtime for Rive. Rive is an agent-native 2D and 3D engine for games, apps, and interactive UI.",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "files": [

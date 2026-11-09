@@ -1,6 +1,6 @@
 {
   "name": "rive-react",
-  "version": "4.38.1",
+  "version": "4.39.0",
   "description": "React runtime for Rive. Rive is an agent-native 2D and 3D engine for games, apps, and interactive UI.",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",

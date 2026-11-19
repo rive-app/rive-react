@@ -1,6 +1,6 @@
 {
   "name": "@rive-app/react-webgl2",
-  "version": "4.39.0",
+  "version": "4.40.0",
   "description": "React runtime for Rive, using @rive-app/webgl2. Rive is an agent-native 2D and 3D engine for games, apps, and interactive UI.",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/rive-app/rive-react#readme",
   "dependencies": {
-    "@rive-app/webgl2": "2.50.0"
+    "@rive-app/webgl2": "2.52.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0"
